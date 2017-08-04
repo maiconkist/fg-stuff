@@ -2,22 +2,11 @@
 # -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
-# Title: Split 1
-# Description: Split1
-# Generated: Wed Aug  2 15:31:55 2017
+# Title: Split 2
+# Description: Split 2
+# Generated: Fri Aug  4 16:45:40 2017
 ##################################################
 
-if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
-
-from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
@@ -28,55 +17,40 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
-import numpy
-import sys
 import threading
 import time
-from gnuradio import qtgui
 
 
-class split1(gr.top_block, Qt.QWidget):
+class Split2(gr.top_block):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Split 1")
-        Qt.QWidget.__init__(self)
-        self.setWindowTitle("Split 1")
-        qtgui.util.check_set_qss()
-        try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except:
-            pass
-        self.top_scroll_layout = Qt.QVBoxLayout()
-        self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-        self.top_scroll_layout.addWidget(self.top_scroll)
-        self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
-        self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
-
-        self.settings = Qt.QSettings("GNU Radio", "split1")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        gr.top_block.__init__(self, "Split 2")
 
         ##################################################
         # Variables
         ##################################################
         self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
         self.length_tag_key = length_tag_key = "packet_len"
-        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0]
+        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
+        self._split2ip_config = ConfigParser.ConfigParser()
+        self._split2ip_config.read('default')
+        try: split2ip = self._split2ip_config.get("split2", "ip")
+        except: split2ip = "127.0.0.1"
+        self.split2ip = split2ip
+        self.split2 = split2 = 0
         self._split1ip_config = ConfigParser.ConfigParser()
         self._split1ip_config.read('default')
         try: split1ip = self._split1ip_config.get("split1", "ip")
         except: split1ip = "127.0.0.1"
         self.split1ip = split1ip
-        self.split1_1 = split1_1 = 0
-        self.split1_0 = split1_0 = 0
         self.samp_rate = samp_rate = 100000
         self.rolloff = rolloff = 0
+        self._preofdmport_config = ConfigParser.ConfigParser()
+        self._preofdmport_config.read('default')
+        try: preofdmport = self._preofdmport_config.get("split2", "preofdmport")
+        except: preofdmport = '2200'
+        self.preofdmport = preofdmport
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self._payloadport_config = ConfigParser.ConfigParser()
@@ -98,66 +72,41 @@ class split1(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.probe1_1 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
-        self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
-        print "tcp://" + split1ip + ":" + payloadport
-        self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, False, -1)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, False, -1)
+        self.probe2 = blocks.probe_rate(gr.sizeof_gr_complex*1, 500.0, 0.15)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, False, -1)
+        self.zeromq_pull_source_1 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, False, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, False, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
-
-        def _split1_1_probe():
+        
+        def _split2_probe():
             while True:
-                val = self.probe1_1.rate()
+                val = self.probe2.rate()
                 try:
-                    self.set_split1_1(val)
+                    self.set_split2(val)
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
-        _split1_1_thread = threading.Thread(target=_split1_1_probe)
-        _split1_1_thread.daemon = True
-        _split1_1_thread.start()
-
-
-        def _split1_0_probe():
-            while True:
-                val = self.probe1_0.rate()
-                try:
-                    self.set_split1_0(val)
-                except AttributeError:
-                    pass
-                time.sleep(1.0 / (10))
-        _split1_0_thread = threading.Thread(target=_split1_0_probe)
-        _split1_0_thread.daemon = True
-        _split1_0_thread.start()
-
-        self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, length_tag_key)
-        self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
-        self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, packet_len, length_tag_key)
-        self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
-        self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
-        self.analog_random_source_x_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 255, 1000)), True)
+        _split2_thread = threading.Thread(target=_split2_probe)
+        _split2_thread.daemon = True
+        _split2_thread.start()
+            
+        self.digital_chunks_to_symbols_xx_0_0 = digital.chunks_to_symbols_bc((payload_mod.points()), 1)
+        self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bc((header_mod.points()), 1)
+        self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, length_tag_key, 0)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_random_source_x_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))
-        self.connect((self.blocks_repack_bits_bb_0, 0), (self.probe1_1, 0))
-        self.connect((self.blocks_repack_bits_bb_0, 0), (self.zeromq_push_sink_1, 0))
-        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))
-        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))
-        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_crc32_bb_0, 0))
-        self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))
-        self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
-        self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))
-
-    def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "split1")
-        self.settings.setValue("geometry", self.saveGeometry())
-        event.accept()
+        self.connect((self.blocks_tagged_stream_mux_0, 0), (self.probe2, 0))    
+        self.connect((self.blocks_tagged_stream_mux_0, 0), (self.zeromq_push_sink_0, 0))    
+        self.connect((self.digital_chunks_to_symbols_xx_0, 0), (self.blocks_tagged_stream_mux_0, 0))    
+        self.connect((self.digital_chunks_to_symbols_xx_0_0, 0), (self.blocks_tagged_stream_mux_0, 1))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.digital_chunks_to_symbols_xx_0, 0))    
+        self.connect((self.zeromq_pull_source_1, 0), (self.digital_chunks_to_symbols_xx_0_0, 0))    
 
     def get_occupied_carriers(self):
         return self.occupied_carriers
@@ -185,23 +134,23 @@ class split1(gr.top_block, Qt.QWidget):
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
 
+    def get_split2ip(self):
+        return self.split2ip
+
+    def set_split2ip(self, split2ip):
+        self.split2ip = split2ip
+
+    def get_split2(self):
+        return self.split2
+
+    def set_split2(self, split2):
+        self.split2 = split2
+
     def get_split1ip(self):
         return self.split1ip
 
     def set_split1ip(self, split1ip):
         self.split1ip = split1ip
-
-    def get_split1_1(self):
-        return self.split1_1
-
-    def set_split1_1(self, split1_1):
-        self.split1_1 = split1_1
-
-    def get_split1_0(self):
-        return self.split1_0
-
-    def set_split1_0(self, split1_0):
-        self.split1_0 = split1_0
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -214,6 +163,12 @@ class split1(gr.top_block, Qt.QWidget):
 
     def set_rolloff(self, rolloff):
         self.rolloff = rolloff
+
+    def get_preofdmport(self):
+        return self.preofdmport
+
+    def set_preofdmport(self, preofdmport):
+        self.preofdmport = preofdmport
 
     def get_pilot_symbols(self):
         return self.pilot_symbols
@@ -244,8 +199,6 @@ class split1(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.blocks_stream_to_tagged_stream_0.set_packet_len(self.packet_len)
-        self.blocks_stream_to_tagged_stream_0.set_packet_len_pmt(self.packet_len)
 
     def get_headerport(self):
         return self.headerport
@@ -272,23 +225,11 @@ class split1(gr.top_block, Qt.QWidget):
         self.fft_len = fft_len
 
 
-def main(top_block_cls=split1, options=None):
-
-    from distutils.version import StrictVersion
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
-    qapp = Qt.QApplication(sys.argv)
+def main(top_block_cls=Split2, options=None):
 
     tb = top_block_cls()
     tb.start()
-    tb.show()
-
-    def quitting():
-        tb.stop()
-        tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
-    qapp.exec_()
+    tb.wait()
 
 
 if __name__ == '__main__':
