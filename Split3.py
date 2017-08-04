@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Fri Aug  4 16:53:00 2017
+# Generated: Fri Aug  4 16:56:15 2017
 ##################################################
 
 from gnuradio import blocks
@@ -38,10 +38,8 @@ class Split3(gr.top_block):
         try: timedomainport = self._timedomainport_config.get("split3", "timedomainport")
         except: timedomainport = "2300"
         self.timedomainport = timedomainport
-        self.tag_rate = tag_rate = 0
         self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
-        self.symbol_rate = symbol_rate = 0
         self._split3ip_config = ConfigParser.ConfigParser()
         self._split3ip_config.read('default')
         try: split3ip = self._split3ip_config.get("split3", "ip")
@@ -79,32 +77,6 @@ class Split3(gr.top_block):
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
-        
-        def _tag_rate_probe():
-            while True:
-                val = self.tagger.rate()
-                try:
-                    self.set_tag_rate(val)
-                except AttributeError:
-                    pass
-                time.sleep(1.0 / (10))
-        _tag_rate_thread = threading.Thread(target=_tag_rate_probe)
-        _tag_rate_thread.daemon = True
-        _tag_rate_thread.start()
-            
-        
-        def _symbol_rate_probe():
-            while True:
-                val = self.symbolr.rate()
-                try:
-                    self.set_symbol_rate(val)
-                except AttributeError:
-                    pass
-                time.sleep(1.0 / (10))
-        _symbol_rate_thread = threading.Thread(target=_symbol_rate_probe)
-        _symbol_rate_thread.daemon = True
-        _symbol_rate_thread.start()
-            
         
         def _split3_probe():
             while True:
@@ -151,12 +123,6 @@ class Split3(gr.top_block):
     def set_timedomainport(self, timedomainport):
         self.timedomainport = timedomainport
 
-    def get_tag_rate(self):
-        return self.tag_rate
-
-    def set_tag_rate(self, tag_rate):
-        self.tag_rate = tag_rate
-
     def get_sync_word2(self):
         return self.sync_word2
 
@@ -168,12 +134,6 @@ class Split3(gr.top_block):
 
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
-
-    def get_symbol_rate(self):
-        return self.symbol_rate
-
-    def set_symbol_rate(self, symbol_rate):
-        self.symbol_rate = symbol_rate
 
     def get_split3ip(self):
         return self.split3ip
