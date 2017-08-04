@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Fri Aug  4 16:45:35 2017
+# Generated: Fri Aug  4 16:52:08 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -98,8 +98,8 @@ class Split1(gr.top_block, Qt.QWidget):
         ##################################################
         self.probe1_1 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
         self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
-        self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, False, -1)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, False, -1)
+        self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, True, -1)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)

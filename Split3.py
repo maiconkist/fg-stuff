@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Fri Aug  4 16:45:39 2017
+# Generated: Fri Aug  4 16:53:00 2017
 ##################################################
 
 from gnuradio import blocks
@@ -72,8 +72,8 @@ class Split3(gr.top_block):
         # Blocks
         ##################################################
         self.probe3 = blocks.probe_rate(gr.sizeof_gr_complex*1, 500.0, 0.15)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split3ip + ":" + timedomainport, 100, False, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, False, -1)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split3ip + ":" + timedomainport, 100, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)

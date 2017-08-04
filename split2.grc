@@ -1029,7 +1029,7 @@
     </param>
     <param>
       <key>pass_tags</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>timeout</key>
@@ -1092,7 +1092,7 @@
     </param>
     <param>
       <key>pass_tags</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>timeout</key>
@@ -1147,7 +1147,7 @@
     </param>
     <param>
       <key>pass_tags</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>timeout</key>

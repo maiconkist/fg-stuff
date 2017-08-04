@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 2
 # Description: Split 2
-# Generated: Fri Aug  4 16:45:40 2017
+# Generated: Fri Aug  4 16:52:35 2017
 ##################################################
 
 from gnuradio import blocks
@@ -73,9 +73,9 @@ class Split2(gr.top_block):
         # Blocks
         ##################################################
         self.probe2 = blocks.probe_rate(gr.sizeof_gr_complex*1, 500.0, 0.15)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, False, -1)
-        self.zeromq_pull_source_1 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, False, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, False, -1)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, True, -1)
+        self.zeromq_pull_source_1 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
