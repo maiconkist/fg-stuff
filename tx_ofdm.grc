@@ -582,7 +582,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1120, 504)</value>
+      <value>(984, 496)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1154,7 +1154,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>2</value>
     </param>
     <param>
       <key>epsilon</key>
@@ -1166,7 +1166,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 880)</value>
+      <value>(296, 880)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1751,7 +1751,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1096, 452)</value>
+      <value>(800, 508)</value>
     </param>
     <param>
       <key>_rotation</key>

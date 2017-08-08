@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Tx
 # Description: Example of an OFDM Transmitter
-# Generated: Tue Aug  8 14:26:45 2017
+# Generated: Tue Aug  8 15:34:13 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -261,14 +261,6 @@ class tx_ofdm(gr.top_block, Qt.QWidget):
         self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
         self.digital_chunks_to_symbols_xx_0_0 = digital.chunks_to_symbols_bc((payload_mod.points()), 1)
         self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bc((header_mod.points()), 1)
-        self.channels_channel_model_0 = channels.channel_model(
-        	noise_voltage=0.0,
-        	frequency_offset=0.0,
-        	epsilon=1.0,
-        	taps=(1.0 + 1.0j, ),
-        	noise_seed=0,
-        	block_tags=True
-        )
         self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu('tap0', 10000, True)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, length_tag_key, 0)
@@ -289,10 +281,9 @@ class tx_ofdm(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))
         self.connect((self.blocks_tagged_stream_mux_0, 0), (self.digital_ofdm_carrier_allocator_cvc_0, 0))
         self.connect((self.blocks_tagged_stream_mux_0, 0), (self.probe2, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.channels_channel_model_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.channels_channel_model_0, 0), (self.zeromq_push_sink_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.zeromq_push_sink_0, 0))
         self.connect((self.digital_chunks_to_symbols_xx_0, 0), (self.blocks_tagged_stream_mux_0, 0))
         self.connect((self.digital_chunks_to_symbols_xx_0_0, 0), (self.blocks_tagged_stream_mux_0, 1))
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))
