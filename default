@@ -2,6 +2,7 @@
 ip = 192.168.10.101
 headerport = 2100
 payloadport = 2101
+throttle=100000e9
 xmlrpcport = 8081
 
 [split2]

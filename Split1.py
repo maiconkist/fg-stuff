@@ -4,20 +4,9 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Fri Aug  4 16:52:08 2017
+# Generated: Tue Aug  8 10:53:12 2017
 ##################################################
 
-if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
-
-from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
@@ -28,43 +17,26 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
-import numpy
-import sys
 import threading
 import time
 
 
-class Split1(gr.top_block, Qt.QWidget):
+class Split1(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "Split 1")
-        Qt.QWidget.__init__(self)
-        self.setWindowTitle("Split 1")
-        try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except:
-            pass
-        self.top_scroll_layout = Qt.QVBoxLayout()
-        self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-        self.top_scroll_layout.addWidget(self.top_scroll)
-        self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
-        self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
-
-        self.settings = Qt.QSettings("GNU Radio", "Split1")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
         # Variables
         ##################################################
         self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
         self.length_tag_key = length_tag_key = "packet_len"
-        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
+        self._throttle_config = ConfigParser.ConfigParser()
+        self._throttle_config.read('default')
+        try: throttle = self._throttle_config.getint("split1", "throttle")
+        except: throttle = int(100e3)
+        self.throttle = throttle
+        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0]
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
         self._split1ip_config = ConfigParser.ConfigParser()
         self._split1ip_config.read('default')
@@ -105,7 +77,7 @@ class Split1(gr.top_block, Qt.QWidget):
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
-        
+
         def _split1_1_probe():
             while True:
                 val = self.probe1_1.rate()
@@ -117,8 +89,8 @@ class Split1(gr.top_block, Qt.QWidget):
         _split1_1_thread = threading.Thread(target=_split1_1_probe)
         _split1_1_thread.daemon = True
         _split1_1_thread.start()
-            
-        
+
+
         def _split1_0_probe():
             while True:
                 val = self.probe1_0.rate()
@@ -130,31 +102,26 @@ class Split1(gr.top_block, Qt.QWidget):
         _split1_0_thread = threading.Thread(target=_split1_0_probe)
         _split1_0_thread.daemon = True
         _split1_0_thread.start()
-            
+
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, length_tag_key)
         self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
-        self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, packet_len, length_tag_key)
+        self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, True)
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
-        self.analog_random_source_x_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 255, 1000)), True)
+        self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_random_source_x_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))    
-        self.connect((self.blocks_repack_bits_bb_0, 0), (self.probe1_1, 0))    
-        self.connect((self.blocks_repack_bits_bb_0, 0), (self.zeromq_push_sink_1, 0))    
-        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))    
-        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))    
-        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_crc32_bb_0, 0))    
-        self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))    
-        self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))    
-        self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))    
-
-    def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "Split1")
-        self.settings.setValue("geometry", self.saveGeometry())
-        event.accept()
+        self.msg_connect((self.blocks_tuntap_pdu_1, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))
+        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.blocks_repack_bits_bb_0, 0), (self.probe1_1, 0))
+        self.connect((self.blocks_repack_bits_bb_0, 0), (self.zeromq_push_sink_1, 0))
+        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))
+        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))
+        self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))
+        self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
+        self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))
 
     def get_occupied_carriers(self):
         return self.occupied_carriers
@@ -169,6 +136,12 @@ class Split1(gr.top_block, Qt.QWidget):
     def set_length_tag_key(self, length_tag_key):
         self.length_tag_key = length_tag_key
         self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
+
+    def get_throttle(self):
+        return self.throttle
+
+    def set_throttle(self, throttle):
+        self.throttle = throttle
 
     def get_sync_word2(self):
         return self.sync_word2
@@ -241,8 +214,6 @@ class Split1(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.blocks_stream_to_tagged_stream_0.set_packet_len(self.packet_len)
-        self.blocks_stream_to_tagged_stream_0.set_packet_len_pmt(self.packet_len)
 
     def get_headerport(self):
         return self.headerport
@@ -271,21 +242,9 @@ class Split1(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=Split1, options=None):
 
-    from distutils.version import StrictVersion
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
-    qapp = Qt.QApplication(sys.argv)
-
     tb = top_block_cls()
     tb.start()
-    tb.show()
-
-    def quitting():
-        tb.stop()
-        tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
-    qapp.exec_()
+    tb.wait()
 
 
 if __name__ == '__main__':
