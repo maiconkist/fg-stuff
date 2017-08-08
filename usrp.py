@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp
 # Description: USRP
-# Generated: Fri Aug  4 16:53:10 2017
+# Generated: Tue Aug  8 12:37:56 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -21,7 +21,6 @@ from PyQt4 import Qt
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
-from gnuradio import uhd
 from gnuradio import zeromq
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
@@ -31,7 +30,7 @@ import SimpleXMLRPCServer
 import sip
 import sys
 import threading
-import time
+from gnuradio import qtgui
 
 
 class usrp(gr.top_block, Qt.QWidget):
@@ -40,6 +39,7 @@ class usrp(gr.top_block, Qt.QWidget):
         gr.top_block.__init__(self, "usrp")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("usrp")
+        qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
@@ -67,6 +67,16 @@ class usrp(gr.top_block, Qt.QWidget):
         try: xmlrpcport = self._xmlrpcport_config.getint("usrp", 'xmlrpcport')
         except: xmlrpcport = 8081
         self.xmlrpcport = xmlrpcport
+        self._usrpemuport_config = ConfigParser.ConfigParser()
+        self._usrpemuport_config.read('default')
+        try: usrpemuport = self._usrpemuport_config.get("usrpemu", "usrpemuport")
+        except: usrpemuport = "2666"
+        self.usrpemuport = usrpemuport
+        self._usrpemuip_config = ConfigParser.ConfigParser()
+        self._usrpemuip_config.read('default')
+        try: usrpemuip = self._usrpemuip_config.get("usrpemu", "usrpemuip")
+        except: usrpemuip = "127.0.0.1"
+        self.usrpemuip = usrpemuip
         self._samprate_config = ConfigParser.ConfigParser()
         self._samprate_config.read('default')
         try: samprate = self._samprate_config.getfloat("usrp", "samprate")
@@ -96,22 +106,13 @@ class usrp(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + usrpemuip + ":" + usrpemuport, 100, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip + ":" + finalsplitport, 100, True, -1)
         self.xmlrpc_server_0_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', xmlrpcport), allow_none=True)
         self.xmlrpc_server_0_0.register_instance(self)
         self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
         self.xmlrpc_server_0_0_thread.daemon = True
         self.xmlrpc_server_0_0_thread.start()
-        self.uhd_usrp_sink_0 = uhd.usrp_sink(
-        	",".join(("", "")),
-        	uhd.stream_args(
-        		cpu_format="fc32",
-        		channels=range(1),
-        	),
-        )
-        self.uhd_usrp_sink_0.set_samp_rate(samprate)
-        self.uhd_usrp_sink_0.set_center_freq(freq, 0)
-        self.uhd_usrp_sink_0.set_gain(0, 0)
         self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
         	1024, #size
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -123,13 +124,13 @@ class usrp(gr.top_block, Qt.QWidget):
         self.qtgui_waterfall_sink_x_0.set_update_time(0.10)
         self.qtgui_waterfall_sink_x_0.enable_grid(False)
         self.qtgui_waterfall_sink_x_0.enable_axis_labels(True)
-        
+
         if not True:
           self.qtgui_waterfall_sink_x_0.disable_legend()
-        
+
         if "complex" == "float" or "complex" == "msg_float":
           self.qtgui_waterfall_sink_x_0.set_plot_pos_half(not True)
-        
+
         labels = ['', '', '', '', '',
                   '', '', '', '', '']
         colors = [0, 0, 0, 0, 0,
@@ -143,17 +144,17 @@ class usrp(gr.top_block, Qt.QWidget):
                 self.qtgui_waterfall_sink_x_0.set_line_label(i, labels[i])
             self.qtgui_waterfall_sink_x_0.set_color_map(i, colors[i])
             self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alphas[i])
-        
+
         self.qtgui_waterfall_sink_x_0.set_intensity_range(-140, 10)
-        
+
         self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.uhd_usrp_sink_0, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
+        self.connect((self.zeromq_pull_source_0, 0), (self.zeromq_push_sink_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "usrp")
@@ -166,12 +167,23 @@ class usrp(gr.top_block, Qt.QWidget):
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
 
+    def get_usrpemuport(self):
+        return self.usrpemuport
+
+    def set_usrpemuport(self, usrpemuport):
+        self.usrpemuport = usrpemuport
+
+    def get_usrpemuip(self):
+        return self.usrpemuip
+
+    def set_usrpemuip(self, usrpemuip):
+        self.usrpemuip = usrpemuip
+
     def get_samprate(self):
         return self.samprate
 
     def set_samprate(self, samprate):
         self.samprate = samprate
-        self.uhd_usrp_sink_0.set_samp_rate(self.samprate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samprate)
 
     def get_gain(self):
@@ -185,7 +197,6 @@ class usrp(gr.top_block, Qt.QWidget):
 
     def set_freq(self, freq):
         self.freq = freq
-        self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
 
     def get_finalsplitport(self):
         return self.finalsplitport
