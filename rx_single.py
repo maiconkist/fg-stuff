@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
-# Title: OFDM Rx
-# Description: Example of an OFDM receiver
-# Generated: Tue Aug  8 15:34:11 2017
+# Title: OFDM Single
+# Description: Single
+# Generated: Tue Aug  8 15:42:21 2017
 ##################################################
 
 from gnuradio import blocks
@@ -20,10 +20,10 @@ from optparse import OptionParser
 import ConfigParser
 
 
-class rx_ofdm(gr.top_block):
+class rx_single(gr.top_block):
 
     def __init__(self):
-        gr.top_block.__init__(self, "OFDM Rx")
+        gr.top_block.__init__(self, "OFDM Single")
 
         ##################################################
         # Variables
@@ -94,13 +94,17 @@ class rx_ofdm(gr.top_block):
         	noise_seed=0,
         	block_tags=True
         )
+        self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu('tap0', 10000, True)
+        self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
         self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
 
         ##################################################
         # Connections
         ##################################################
+        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_0, 'pdus'))
         self.connect((self.channels_channel_model_0, 0), (self.digital_ofdm_rx_0, 0))
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0, 0))
+        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))
         self.connect((self.zeromq_pull_source_0, 0), (self.channels_channel_model_0, 0))
 
     def get_pilot_symbols(self):
@@ -229,7 +233,7 @@ class rx_ofdm(gr.top_block):
         self.freq = freq
 
 
-def main(top_block_cls=rx_ofdm, options=None):
+def main(top_block_cls=rx_single, options=None):
 
     tb = top_block_cls()
     tb.start()

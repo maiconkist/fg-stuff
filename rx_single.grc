@@ -22,7 +22,7 @@
     </param>
     <param>
       <key>description</key>
-      <value>Example of an OFDM receiver</value>
+      <value>Single</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>rx_ofdm</value>
+      <value>rx_single</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -78,7 +78,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>OFDM Rx</value>
+      <value>OFDM Single</value>
     </param>
   </block>
   <block>
@@ -718,7 +718,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(736, 212)</value>
+      <value>(736, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -765,11 +765,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(616, 372)</value>
+      <value>(656, 372)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -812,7 +812,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>istunflag</key>
@@ -820,7 +820,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 356)</value>
+      <value>(952, 356)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -938,7 +938,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 156)</value>
+      <value>(464, 164)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2391,7 +2391,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(16, 212)</value>
+      <value>(16, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
