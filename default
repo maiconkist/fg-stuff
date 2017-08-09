@@ -17,8 +17,8 @@ xmlrpcport = 8083
 
 # use the ip of the last split used
 [usrp]
-finalsplitip = 192.168.10.103
-finalsplitport = 2300
+ip = 192.168.10.103
+port = 2300
 xmlrpcport = 8084
 freq = 4.4e6
 samprate = 1e6
