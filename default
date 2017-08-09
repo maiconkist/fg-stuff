@@ -7,12 +7,12 @@ xmlrpcport = 8081
 
 [split2]
 ip = 192.168.10.102
-preofdmport = 2200
+port = 2200
 xmlrpcport = 8082
 
 [split3]
 ip = 192.168.10.103
-timedomainport = 2300
+port = 2300
 xmlrpcport = 8083
 
 # use the ip of the last split used
@@ -28,3 +28,4 @@ gain = 40
 [rx]
 ip = 192.168.10.104
 port = 2401
+xmlrpcport = 8085

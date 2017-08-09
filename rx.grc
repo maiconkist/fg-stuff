@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
+<?grc format='1' created='3.7.10'?>
 <flow_graph>
   <timestamp>Wed Jul  9 15:50:17 2014</timestamp>
   <block>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>rx_single</value>
+      <value>rx</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -128,7 +128,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(904, 736)</value>
+      <value>(912, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -175,7 +175,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1152, 736)</value>
+      <value>(1160, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -284,6 +284,53 @@
     </param>
   </block>
   <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"127.0.0.1"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 568)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ip</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"ip"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"rx"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -308,100 +355,6 @@
     <param>
       <key>value</key>
       <value>"frame_len"</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"127.0.0.1"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(408, 728)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>myip</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"ip"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"rx"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"2666"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(280, 728)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>myport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"port"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"rx"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
     </param>
   </block>
   <block>
@@ -605,6 +558,53 @@
     </param>
     <param>
       <key>value</key>
+      <value>"2666"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(480, 568)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>port</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"port"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"rx"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
       <value>4e6</value>
     </param>
     <param>
@@ -613,7 +613,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1032, 736)</value>
+      <value>(1040, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -706,6 +706,53 @@
     </param>
     <param>
       <key>value</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(760, 576)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>timeout</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"zmqtimeout"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"global"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>int</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
       <value>"127.0.0.1"</value>
     </param>
     <param>
@@ -714,7 +761,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 736)</value>
+      <value>(128, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -761,7 +808,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 736)</value>
+      <value>(0, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1379,7 +1426,7 @@
     </param>
     <param>
       <key>timeout</key>
-      <value>100</value>
+      <value>timeout</value>
     </param>
     <param>
       <key>vlen</key>
@@ -1390,7 +1437,7 @@
     <key>zeromq_push_sink</key>
     <param>
       <key>address</key>
-      <value>"tcp://" + myip + ":" + myport</value>
+      <value>"tcp://" + ip + ":" + port</value>
     </param>
     <param>
       <key>alias</key>
@@ -1434,7 +1481,7 @@
     </param>
     <param>
       <key>timeout</key>
-      <value>100</value>
+      <value>timeout</value>
     </param>
     <param>
       <key>vlen</key>

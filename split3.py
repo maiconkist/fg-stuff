@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Fri Aug  4 16:56:15 2017
+# Generated: Wed Aug  9 16:30:15 2017
 ##################################################
 
 from gnuradio import blocks
@@ -23,7 +23,7 @@ import threading
 import time
 
 
-class Split3(gr.top_block):
+class split3(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "Split 3")
@@ -33,19 +33,18 @@ class Split3(gr.top_block):
         ##################################################
         self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
         self.length_tag_key = length_tag_key = "packet_len"
-        self._timedomainport_config = ConfigParser.ConfigParser()
-        self._timedomainport_config.read('default')
-        try: timedomainport = self._timedomainport_config.get("split3", "timedomainport")
-        except: timedomainport = "2300"
-        self.timedomainport = timedomainport
+        self._xmlrpcport_config = ConfigParser.ConfigParser()
+        self._xmlrpcport_config.read('default')
+        try: xmlrpcport = self._xmlrpcport_config.getint("split3", 'xmlrpcport')
+        except: xmlrpcport = 8081
+        self.xmlrpcport = xmlrpcport
+        self._timeout_config = ConfigParser.ConfigParser()
+        self._timeout_config.read('default')
+        try: timeout = self._timeout_config.getint("global", "zmqtimeout")
+        except: timeout = 100
+        self.timeout = timeout
         self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
-        self._split3ip_config = ConfigParser.ConfigParser()
-        self._split3ip_config.read('default')
-        try: split3ip = self._split3ip_config.get("split3", "ip")
-        except: split3ip = "127.0.0.1"
-        self.split3ip = split3ip
-        self.split3 = split3 = 0
         self._split2ip_config = ConfigParser.ConfigParser()
         self._split2ip_config.read('default')
         try: split2ip = self._split2ip_config.get("split2", "ip")
@@ -53,15 +52,26 @@ class Split3(gr.top_block):
         self.split2ip = split2ip
         self.samp_rate = samp_rate = 100000
         self.rolloff = rolloff = 0
+        self.rate = rate = 0
         self._preofdmport_config = ConfigParser.ConfigParser()
         self._preofdmport_config.read('default')
         try: preofdmport = self._preofdmport_config.get("split2", "preofdmport")
         except: preofdmport = "2200"
         self.preofdmport = preofdmport
+        self._port_config = ConfigParser.ConfigParser()
+        self._port_config.read('default')
+        try: port = self._port_config.get("split3", "port")
+        except: port = "2300"
+        self.port = port
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self.payload_mod = payload_mod = digital.constellation_qpsk()
         self.packet_len = packet_len = 96
+        self._ip_config = ConfigParser.ConfigParser()
+        self._ip_config.read('default')
+        try: ip = self._ip_config.get("split3", "ip")
+        except: ip = "127.0.0.1"
+        self.ip = ip
         self.header_mod = header_mod = digital.constellation_bpsk()
         self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)
         self.fft_len = fft_len = 64
@@ -69,26 +79,26 @@ class Split3(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
-        self.probe3 = blocks.probe_rate(gr.sizeof_gr_complex*1, 500.0, 0.15)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + split3ip + ":" + timedomainport, 100, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, 100, True, -1)
-        self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
+        self.probe3 = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, timeout, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + split2ip + ":" + preofdmport, timeout, True, -1)
+        self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', xmlrpcport), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
         
-        def _split3_probe():
+        def _rate_probe():
             while True:
                 val = self.probe3.rate()
                 try:
-                    self.set_split3(val)
+                    self.set_rate(val)
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
-        _split3_thread = threading.Thread(target=_split3_probe)
-        _split3_thread.daemon = True
-        _split3_thread.start()
+        _rate_thread = threading.Thread(target=_rate_probe)
+        _rate_thread.daemon = True
+        _rate_thread.start()
             
         self.fft_vxx_0 = fft.fft_vcc(fft_len, False, (()), True, 1)
         self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+fft_len/4, rolloff, length_tag_key)
@@ -117,11 +127,17 @@ class Split3(gr.top_block):
         self.length_tag_key = length_tag_key
         self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
 
-    def get_timedomainport(self):
-        return self.timedomainport
+    def get_xmlrpcport(self):
+        return self.xmlrpcport
 
-    def set_timedomainport(self, timedomainport):
-        self.timedomainport = timedomainport
+    def set_xmlrpcport(self, xmlrpcport):
+        self.xmlrpcport = xmlrpcport
+
+    def get_timeout(self):
+        return self.timeout
+
+    def set_timeout(self, timeout):
+        self.timeout = timeout
 
     def get_sync_word2(self):
         return self.sync_word2
@@ -134,18 +150,6 @@ class Split3(gr.top_block):
 
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
-
-    def get_split3ip(self):
-        return self.split3ip
-
-    def set_split3ip(self, split3ip):
-        self.split3ip = split3ip
-
-    def get_split3(self):
-        return self.split3
-
-    def set_split3(self, split3):
-        self.split3 = split3
 
     def get_split2ip(self):
         return self.split2ip
@@ -165,11 +169,23 @@ class Split3(gr.top_block):
     def set_rolloff(self, rolloff):
         self.rolloff = rolloff
 
+    def get_rate(self):
+        return self.rate
+
+    def set_rate(self, rate):
+        self.rate = rate
+
     def get_preofdmport(self):
         return self.preofdmport
 
     def set_preofdmport(self, preofdmport):
         self.preofdmport = preofdmport
+
+    def get_port(self):
+        return self.port
+
+    def set_port(self, port):
+        self.port = port
 
     def get_pilot_symbols(self):
         return self.pilot_symbols
@@ -195,6 +211,12 @@ class Split3(gr.top_block):
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
 
+    def get_ip(self):
+        return self.ip
+
+    def set_ip(self, ip):
+        self.ip = ip
+
     def get_header_mod(self):
         return self.header_mod
 
@@ -214,7 +236,7 @@ class Split3(gr.top_block):
         self.fft_len = fft_len
 
 
-def main(top_block_cls=Split3, options=None):
+def main(top_block_cls=split3, options=None):
 
     tb = top_block_cls()
     tb.start()

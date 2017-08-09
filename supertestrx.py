@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Supertestrx
-# Generated: Wed Aug  9 10:37:43 2017
+# Generated: Wed Aug  9 16:30:09 2017
 ##################################################
 
 from gnuradio import blocks
@@ -52,10 +52,10 @@ class supertestrx(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_0, 'pdus'))
-        self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))
-        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.zeromq_push_sink_0, 0))
-        self.connect((self.zeromq_pull_source_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))
+        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_0, 'pdus'))    
+        self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
+        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.zeromq_push_sink_0, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
 
     def get_repforwardip(self):
         return self.repforwardip
