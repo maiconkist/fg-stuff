@@ -32,4 +32,4 @@ usrpemuport = 2300
 
 [ping]
 repforwardip = 192.168.10.104
-repforwardport = 2667
+repforwardport = 2101
