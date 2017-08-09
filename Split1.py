@@ -4,11 +4,10 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Tue Aug  8 16:53:54 2017
+# Generated: Wed Aug  9 12:21:37 2017
 ##################################################
 
 from gnuradio import blocks
-from gnuradio import channels
 from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -47,17 +46,17 @@ class Split1(gr.top_block):
         self.split1_1 = split1_1 = 0
         self.split1_0 = split1_0 = 0
         self.samp_rate = samp_rate = 100000
+        self._rxport_config = ConfigParser.ConfigParser()
+        self._rxport_config.read('default')
+        try: rxport = self._rxport_config.get("rx", "port")
+        except: rxport = "2101"
+        self.rxport = rxport
+        self._rxip_config = ConfigParser.ConfigParser()
+        self._rxip_config.read('default')
+        try: rxip = self._rxip_config.get("rx", "ip")
+        except: rxip = "127.0.0.1"
+        self.rxip = rxip
         self.rolloff = rolloff = 0
-        self._repforwardport_config = ConfigParser.ConfigParser()
-        self._repforwardport_config.read('default')
-        try: repforwardport = self._repforwardport_config.get("ping", "repforwardport")
-        except: repforwardport = "2101"
-        self.repforwardport = repforwardport
-        self._repforwardip_config = ConfigParser.ConfigParser()
-        self._repforwardip_config.read('default')
-        try: repforwardip = self._repforwardip_config.get("ping", "repforwardip")
-        except: repforwardip = "127.0.0.1"
-        self.repforwardip = repforwardip
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self._payloadport_config = ConfigParser.ConfigParser()
@@ -83,7 +82,7 @@ class Split1(gr.top_block):
         self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
         self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, 100, True, -1)
         self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, 100, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + repforwardip + ":" + repforwardport, 100, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + rxip + ":" + rxport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
@@ -131,15 +130,7 @@ class Split1(gr.top_block):
         	  scramble_bits=False
         	 )
         self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
-        self.channels_channel_model_0 = channels.channel_model(
-        	noise_voltage=0.0,
-        	frequency_offset=0.0,
-        	epsilon=1.0,
-        	taps=(1.0 + 1.0j, ),
-        	noise_seed=0,
-        	block_tags=True
-        )
-        self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, True)
+        self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, False)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
@@ -155,12 +146,11 @@ class Split1(gr.top_block):
         self.connect((self.blocks_repack_bits_bb_0, 0), (self.zeromq_push_sink_1, 0))
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))
-        self.connect((self.channels_channel_model_0, 0), (self.digital_ofdm_rx_0, 0))
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))
-        self.connect((self.zeromq_pull_source_0, 0), (self.channels_channel_model_0, 0))
+        self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_rx_0, 0))
 
     def get_occupied_carriers(self):
         return self.occupied_carriers
@@ -218,23 +208,23 @@ class Split1(gr.top_block):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
 
+    def get_rxport(self):
+        return self.rxport
+
+    def set_rxport(self, rxport):
+        self.rxport = rxport
+
+    def get_rxip(self):
+        return self.rxip
+
+    def set_rxip(self, rxip):
+        self.rxip = rxip
+
     def get_rolloff(self):
         return self.rolloff
 
     def set_rolloff(self, rolloff):
         self.rolloff = rolloff
-
-    def get_repforwardport(self):
-        return self.repforwardport
-
-    def set_repforwardport(self, repforwardport):
-        self.repforwardport = repforwardport
-
-    def get_repforwardip(self):
-        return self.repforwardip
-
-    def set_repforwardip(self, repforwardip):
-        self.repforwardip = repforwardip
 
     def get_pilot_symbols(self):
         return self.pilot_symbols

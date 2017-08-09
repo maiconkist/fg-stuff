@@ -24,12 +24,7 @@ freq = 4.4e6
 samprate = 1e6
 gain = 40
 
-[usrpemu]
-usrpemuip = 192.168.10.103
-usrpemuport = 2300
-#usrpemuip = 192.168.10.101
-#usrpemuport = 2101
-
-[ping]
-repforwardip = 192.168.10.104
-repforwardport = 2667
+# use the ip of usrp
+[rx]
+ip = 192.168.10.104
+port = 2401
