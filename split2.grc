@@ -1040,7 +1040,7 @@
     <key>xmlrpc_server</key>
     <param>
       <key>addr</key>
-      <value>localhost</value>
+      <value>ip</value>
     </param>
     <param>
       <key>alias</key>

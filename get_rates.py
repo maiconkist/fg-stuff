@@ -7,6 +7,7 @@ class Split(object):
     def __init__(self, name, ip, port, params):
         self.name = name
         self.params = params
+        print name
         self.server = xmlrpclib.ServerProxy("http://%s:%d" % (ip, port))
 
         self.rates = {k[0]:0 for k in self.params}
@@ -14,6 +15,7 @@ class Split(object):
 
     def update(self):
         for k in self.rates.iterkeys():
+            print self.name
             self.rates[k] = getattr(self.server, "get_" + k)()
 
 
@@ -31,14 +33,12 @@ def main():
               Split('split2', '192.168.10.102', 8082, [('split2', 32), ]),
               Split('split3', '192.168.10.103', 8083, [('split3', 32), ]),
             ]
- 
 
    while True:
       for s in splits:
           s.update()
 
           print s
-
 
       print("-------------------------------")
       time.sleep(2)
