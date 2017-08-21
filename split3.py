@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Tue Aug 15 16:05:20 2017
+# Generated: Mon Aug 21 11:54:37 2017
 ##################################################
 
 from gnuradio import blocks
@@ -50,7 +50,6 @@ class split3(gr.top_block):
         try: split2ip = self._split2ip_config.get("split2", "ip")
         except: split2ip = "127.0.0.1"
         self.split2ip = split2ip
-        self.samp_rate = samp_rate = 100000
         self.rolloff = rolloff = 0
         self.rate = rate = 0
         self._preofdmport_config = ConfigParser.ConfigParser()
@@ -66,7 +65,11 @@ class split3(gr.top_block):
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self.payload_mod = payload_mod = digital.constellation_qpsk()
-        self.packet_len = packet_len = 96
+        self._maxnoutput_config = ConfigParser.ConfigParser()
+        self._maxnoutput_config.read('default')
+        try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
+        except: maxnoutput = 100
+        self.maxnoutput = maxnoutput
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
         try: ip = self._ip_config.get("split3", "ip")
@@ -157,12 +160,6 @@ class split3(gr.top_block):
     def set_split2ip(self, split2ip):
         self.split2ip = split2ip
 
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-
     def get_rolloff(self):
         return self.rolloff
 
@@ -205,11 +202,11 @@ class split3(gr.top_block):
     def set_payload_mod(self, payload_mod):
         self.payload_mod = payload_mod
 
-    def get_packet_len(self):
-        return self.packet_len
+    def get_maxnoutput(self):
+        return self.maxnoutput
 
-    def set_packet_len(self, packet_len):
-        self.packet_len = packet_len
+    def set_maxnoutput(self, maxnoutput):
+        self.maxnoutput = maxnoutput
 
     def get_ip(self):
         return self.ip
@@ -239,7 +236,7 @@ class split3(gr.top_block):
 def main(top_block_cls=split3, options=None):
 
     tb = top_block_cls()
-    tb.start()
+    tb.start(100)
     tb.wait()
 
 

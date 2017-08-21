@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Tue Aug 15 16:04:35 2017
+# Generated: Mon Aug 21 12:04:06 2017
 ##################################################
 
 from gnuradio import blocks
@@ -17,6 +17,7 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
+import pmt
 import threading
 import time
 
@@ -36,6 +37,16 @@ class split1(gr.top_block):
         try: xmlrpcport = self._xmlrpcport_config.getint("split1", "xmlrpcport")
         except: xmlrpcport = 8080
         self.xmlrpcport = xmlrpcport
+        self._usrprxport_config = ConfigParser.ConfigParser()
+        self._usrprxport_config.read('default')
+        try: usrprxport = self._usrprxport_config.get("usrp", "rxoutport")
+        except: usrprxport = "2101"
+        self.usrprxport = usrprxport
+        self._usrpip_config = ConfigParser.ConfigParser()
+        self._usrpip_config.read('default')
+        try: usrpip = self._usrpip_config.get("usrp", "ip")
+        except: usrpip = "127.0.0.1"
+        self.usrpip = usrpip
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
@@ -49,16 +60,6 @@ class split1(gr.top_block):
         self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
         self.samp_rate = samp_rate = 100000
-        self._rxport_config = ConfigParser.ConfigParser()
-        self._rxport_config.read('default')
-        try: rxport = self._rxport_config.get("rx", "port")
-        except: rxport = "2101"
-        self.rxport = rxport
-        self._rxip_config = ConfigParser.ConfigParser()
-        self._rxip_config.read('default')
-        try: rxip = self._rxip_config.get("rx", "ip")
-        except: rxip = "127.0.0.1"
-        self.rxip = rxip
         self.rolloff = rolloff = 0
         self.rate1 = rate1 = 0
         self.rate0 = rate0 = 0
@@ -71,6 +72,11 @@ class split1(gr.top_block):
         self.payloadport = payloadport
         self.payload_mod = payload_mod = digital.constellation_qpsk()
         self.packet_len = packet_len = 96
+        self._maxnoutput_config = ConfigParser.ConfigParser()
+        self._maxnoutput_config.read('default')
+        try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
+        except: maxnoutput = 100
+        self.maxnoutput = maxnoutput
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
         try: ip = self._ip_config.get("split1", "ip")
@@ -92,7 +98,7 @@ class split1(gr.top_block):
         self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
         self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + payloadport, timeout, True, -1)
         self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + headerport, timeout, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + rxip + ":" + rxport, 100, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrprxport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
@@ -142,8 +148,10 @@ class split1(gr.top_block):
         self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
         self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, False)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
+        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
+        self.blocks_random_pdu_0 = blocks.random_pdu(50, 2000, chr(0xFF), 2)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
 
         ##################################################
@@ -158,6 +166,7 @@ class split1(gr.top_block):
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))    
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))    
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))    
+        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0, 0))    
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_rx_0, 0))    
@@ -181,6 +190,18 @@ class split1(gr.top_block):
 
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
+
+    def get_usrprxport(self):
+        return self.usrprxport
+
+    def set_usrprxport(self, usrprxport):
+        self.usrprxport = usrprxport
+
+    def get_usrpip(self):
+        return self.usrpip
+
+    def set_usrpip(self, usrpip):
+        self.usrpip = usrpip
 
     def get_timeout(self):
         return self.timeout
@@ -211,18 +232,6 @@ class split1(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-
-    def get_rxport(self):
-        return self.rxport
-
-    def set_rxport(self, rxport):
-        self.rxport = rxport
-
-    def get_rxip(self):
-        return self.rxip
-
-    def set_rxip(self, rxip):
-        self.rxip = rxip
 
     def get_rolloff(self):
         return self.rolloff
@@ -272,6 +281,12 @@ class split1(gr.top_block):
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
 
+    def get_maxnoutput(self):
+        return self.maxnoutput
+
+    def set_maxnoutput(self, maxnoutput):
+        self.maxnoutput = maxnoutput
+
     def get_ip(self):
         return self.ip
 
@@ -306,7 +321,7 @@ class split1(gr.top_block):
 def main(top_block_cls=split1, options=None):
 
     tb = top_block_cls()
-    tb.start()
+    tb.start(100)
     tb.wait()
 
 

@@ -4,11 +4,10 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Mon Aug 21 11:54:27 2017
+# Generated: Mon Aug 21 11:54:29 2017
 ##################################################
 
 from gnuradio import blocks
-from gnuradio import channels
 from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -20,7 +19,7 @@ from optparse import OptionParser
 import ConfigParser
 
 
-class rx(gr.top_block):
+class bs_single(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "OFDM Single")
@@ -36,16 +35,6 @@ class rx(gr.top_block):
         self.length_tag_key = length_tag_key = "frame_len"
         self.header_mod = header_mod = digital.constellation_bpsk()
         self.fft_len = fft_len = 64
-        self._usrpport_config = ConfigParser.ConfigParser()
-        self._usrpport_config.read('default')
-        try: usrpport = self._usrpport_config.get("usrp", "txoutport")
-        except: usrpport = "2666"
-        self.usrpport = usrpport
-        self._usrpip_config = ConfigParser.ConfigParser()
-        self._usrpip_config.read('default')
-        try: usrpip = self._usrpip_config.get("usrp", "ip")
-        except: usrpip = "127.0.0.1"
-        self.usrpip = usrpip
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
@@ -53,14 +42,19 @@ class rx(gr.top_block):
         self.timeout = timeout
         self.sync_word2 = sync_word2 = [0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), 0j, 0j, 0j, 0j, 0j]
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
-        self._samprate_config = ConfigParser.ConfigParser()
-        self._samprate_config.read('default')
-        try: samprate = self._samprate_config.getfloat("usrp", "samprate")
-        except: samprate = 4e6
-        self.samprate = samprate
+        self._rxport_config = ConfigParser.ConfigParser()
+        self._rxport_config.read('default')
+        try: rxport = self._rxport_config.get("rx", "port")
+        except: rxport = "2666"
+        self.rxport = rxport
+        self._rxip_config = ConfigParser.ConfigParser()
+        self._rxip_config.read('default')
+        try: rxip = self._rxip_config.get("rx", "ip")
+        except: rxip = "127.0.0.1"
+        self.rxip = rxip
         self._port_config = ConfigParser.ConfigParser()
         self._port_config.read('default')
-        try: port = self._port_config.get("rx", "port")
+        try: port = self._port_config.get("bs_single", "port")
         except: port = "2666"
         self.port = port
         self.payload_equalizer = payload_equalizer = digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols, 1)
@@ -71,27 +65,17 @@ class rx(gr.top_block):
         self.maxnoutput = maxnoutput
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
-        try: ip = self._ip_config.get("rx", "ip")
+        try: ip = self._ip_config.get("bs_single", "ip")
         except: ip = "127.0.0.1"
         self.ip = ip
         self.header_formatter = header_formatter = digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key, frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)
         self.header_equalizer = header_equalizer = digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols)
-        self._gain_config = ConfigParser.ConfigParser()
-        self._gain_config.read('default')
-        try: gain = self._gain_config.getfloat("usrp", "gain")
-        except: gain = 50
-        self.gain = gain
-        self._freq_config = ConfigParser.ConfigParser()
-        self._freq_config.read('default')
-        try: freq = self._freq_config.getfloat("usrp", "freq")
-        except: freq = 4.4e9
-        self.freq = freq
 
         ##################################################
         # Blocks
         ##################################################
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, timeout, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrpport, timeout, True, -1)
+        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, timeout, True, -1)
+        self.zeromq_pull_source_0_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + rxip + ":" + rxport, timeout, True, -1)
         self.digital_ofdm_tx_0 = digital.ofdm_tx(
         	  fft_len=fft_len, cp_len=fft_len/4,
         	  packet_length_tag_key=packet_length_tag_key,
@@ -120,26 +104,10 @@ class rx(gr.top_block):
         	  debug_log=False,
         	  scramble_bits=False
         	 )
-        self.channels_channel_model_0_0 = channels.channel_model(
-        	noise_voltage=0.0,
-        	frequency_offset=0.0,
-        	epsilon=1.0,
-        	taps=(1.0 + 1.0j, ),
-        	noise_seed=0,
-        	block_tags=True
-        )
-        self.channels_channel_model_0 = channels.channel_model(
-        	noise_voltage=0.0,
-        	frequency_offset=0.0,
-        	epsilon=1.0,
-        	taps=(1.0 + 1.0j, ),
-        	noise_seed=0,
-        	block_tags=True
-        )
         self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu('tap0', 10000, False)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
-        self.blocks_tag_debug_0_0 = blocks.tag_debug(gr.sizeof_char*1, "Tx'd Packets", ""); self.blocks_tag_debug_0_0.set_display(True)
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
+        self.blocks_tag_debug_0_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0_0.set_display(True)
+        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Tx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
 
         ##################################################
@@ -147,14 +115,12 @@ class rx(gr.top_block):
         ##################################################
         self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_0, 'pdus'))    
         self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
-        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_tag_debug_0_0, 0))    
+        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_tag_debug_0, 0))    
         self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0, 0))    
-        self.connect((self.channels_channel_model_0, 0), (self.digital_ofdm_rx_0, 0))    
-        self.connect((self.channels_channel_model_0_0, 0), (self.zeromq_push_sink_0, 0))    
-        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0, 0))    
+        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0_0, 0))    
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
-        self.connect((self.digital_ofdm_tx_0, 0), (self.channels_channel_model_0_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.channels_channel_model_0, 0))    
+        self.connect((self.digital_ofdm_tx_0, 0), (self.zeromq_push_sink_0_0, 0))    
+        self.connect((self.zeromq_pull_source_0_0, 0), (self.digital_ofdm_rx_0, 0))    
 
     def get_pilot_symbols(self):
         return self.pilot_symbols
@@ -215,18 +181,6 @@ class rx(gr.top_block):
         self.set_payload_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, payload_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols, 1))
         self.set_header_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, header_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols))
 
-    def get_usrpport(self):
-        return self.usrpport
-
-    def set_usrpport(self, usrpport):
-        self.usrpport = usrpport
-
-    def get_usrpip(self):
-        return self.usrpip
-
-    def set_usrpip(self, usrpip):
-        self.usrpip = usrpip
-
     def get_timeout(self):
         return self.timeout
 
@@ -245,11 +199,17 @@ class rx(gr.top_block):
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
 
-    def get_samprate(self):
-        return self.samprate
+    def get_rxport(self):
+        return self.rxport
 
-    def set_samprate(self, samprate):
-        self.samprate = samprate
+    def set_rxport(self, rxport):
+        self.rxport = rxport
+
+    def get_rxip(self):
+        return self.rxip
+
+    def set_rxip(self, rxip):
+        self.rxip = rxip
 
     def get_port(self):
         return self.port
@@ -287,20 +247,8 @@ class rx(gr.top_block):
     def set_header_equalizer(self, header_equalizer):
         self.header_equalizer = header_equalizer
 
-    def get_gain(self):
-        return self.gain
 
-    def set_gain(self, gain):
-        self.gain = gain
-
-    def get_freq(self):
-        return self.freq
-
-    def set_freq(self, freq):
-        self.freq = freq
-
-
-def main(top_block_cls=rx, options=None):
+def main(top_block_cls=bs_single, options=None):
 
     tb = top_block_cls()
     tb.start(100)

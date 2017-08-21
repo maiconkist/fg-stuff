@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 2
 # Description: Split 2
-# Generated: Tue Aug 15 16:04:49 2017
+# Generated: Mon Aug 21 11:54:35 2017
 ##################################################
 
 from gnuradio import blocks
@@ -48,7 +48,6 @@ class split2(gr.top_block):
         try: split1ip = self._split1ip_config.get("split1", "ip")
         except: split1ip = "127.0.0.1"
         self.split1ip = split1ip
-        self.samp_rate = samp_rate = 100000
         self.rolloff = rolloff = 0
         self.rate = rate = 0
         self._port_config = ConfigParser.ConfigParser()
@@ -65,6 +64,11 @@ class split2(gr.top_block):
         self.payloadport = payloadport
         self.payload_mod = payload_mod = digital.constellation_qpsk()
         self.packet_len = packet_len = 96
+        self._maxnoutput_config = ConfigParser.ConfigParser()
+        self._maxnoutput_config.read('default')
+        try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
+        except: maxnoutput = 100
+        self.maxnoutput = maxnoutput
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
         try: ip = self._ip_config.get("split2", "ip")
@@ -86,7 +90,7 @@ class split2(gr.top_block):
         self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, timeout, True, -1)
         self.zeromq_pull_source_1 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + payloadport, timeout, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_char, 1, "tcp://" + split1ip + ":" + headerport, timeout, True, -1)
-        self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, 8080), allow_none=True)
+        self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
@@ -162,12 +166,6 @@ class split2(gr.top_block):
     def set_split1ip(self, split1ip):
         self.split1ip = split1ip
 
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-
     def get_rolloff(self):
         return self.rolloff
 
@@ -216,6 +214,12 @@ class split2(gr.top_block):
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
 
+    def get_maxnoutput(self):
+        return self.maxnoutput
+
+    def set_maxnoutput(self, maxnoutput):
+        self.maxnoutput = maxnoutput
+
     def get_ip(self):
         return self.ip
 
@@ -250,7 +254,7 @@ class split2(gr.top_block):
 def main(top_block_cls=split2, options=None):
 
     tb = top_block_cls()
-    tb.start()
+    tb.start(100)
     tb.wait()
 
 

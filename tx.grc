@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.10'?>
 <flow_graph>
-  <timestamp>Wed Jul  9 15:49:47 2014</timestamp>
+  <timestamp>Wed Jul  9 15:50:17 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -10,7 +10,7 @@
     </param>
     <param>
       <key>window_size</key>
-      <value>1280, 1024</value>
+      <value>1280, 1280</value>
     </param>
     <param>
       <key>category</key>
@@ -22,7 +22,7 @@
     </param>
     <param>
       <key>description</key>
-      <value>Split1</value>
+      <value>Single</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -46,11 +46,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>split1</value>
+      <value>rx</value>
     </param>
     <param>
       <key>max_nouts</key>
-      <value>maxnoutput</value>
+      <value>0</value>
     </param>
     <param>
       <key>qt_qss_theme</key>
@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>run</value>
+      <value>prompt</value>
     </param>
     <param>
       <key>run</key>
@@ -78,7 +78,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>Split 1</value>
+      <value>OFDM Single</value>
     </param>
   </block>
   <block>
@@ -93,7 +93,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(181, -1)</value>
+      <value>(301, -1)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -109,18 +109,26 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>variable_config</key>
     <param>
       <key>comment</key>
       <value></value>
     </param>
     <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4.4e9</value>
+    </param>
+    <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(720, 69)</value>
+      <value>(912, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -128,11 +136,70 @@
     </param>
     <param>
       <key>id</key>
-      <value>hdr_format</value>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"freq"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
     </param>
     <param>
       <key>value</key>
-      <value>digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)</value>
+      <value>50</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1160, 576)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"gain"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
     </param>
   </block>
   <block>
@@ -147,7 +214,61 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(567, 0)</value>
+      <value>(931, 69)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>header_equalizer</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols)</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(855, 0)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>header_formatter</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key, frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(490, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -174,53 +295,6 @@
     </param>
     <param>
       <key>value</key>
-      <value>"2100"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(856, 832)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>headerport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"headerport"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"split1"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
       <value>"127.0.0.1"</value>
     </param>
     <param>
@@ -229,7 +303,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 832)</value>
+      <value>(320, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -245,7 +319,7 @@
     </param>
     <param>
       <key>section</key>
-      <value>"split1"</value>
+      <value>"rx"</value>
     </param>
     <param>
       <key>type</key>
@@ -268,7 +342,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(352, 0)</value>
+      <value>(367, -1)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -280,54 +354,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"packet_len"</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 824)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>maxnoutput</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"maxnoutput"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"global"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
+      <value>"frame_len"</value>
     </param>
   </block>
   <block>
@@ -342,7 +369,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 69)</value>
+      <value>(541, 70)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -369,7 +396,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(476, 0)</value>
+      <value>(1034, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -396,7 +423,61 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(734, 0)</value>
+      <value>(1132, 0)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>packet_length_tag_key</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"packet_len"</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1112, 73)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>payload_equalizer</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols, 1)</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(663, 1)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -412,53 +493,6 @@
     </param>
   </block>
   <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"2101"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(984, 832)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>payloadport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"payloadport"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"split1"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -470,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 69)</value>
+      <value>(692, 70)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -497,7 +531,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 69)</value>
+      <value>(824, 68)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -513,30 +547,26 @@
     </param>
   </block>
   <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>block_id</key>
-      <value>probe1_0</value>
-    </param>
+    <key>variable_config</key>
     <param>
       <key>comment</key>
       <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"2666"</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>rate</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(1136, 256)</value>
+      <value>(480, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -544,42 +574,46 @@
     </param>
     <param>
       <key>id</key>
-      <value>rate0</value>
+      <value>port</value>
     </param>
     <param>
-      <key>value</key>
-      <value>0</value>
+      <key>option</key>
+      <value>"port"</value>
     </param>
     <param>
-      <key>poll_rate</key>
-      <value>10</value>
+      <key>section</key>
+      <value>"rx"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
     </param>
   </block>
   <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>block_id</key>
-      <value>probe1_1</value>
-    </param>
+    <key>variable_config</key>
     <param>
       <key>comment</key>
       <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4e6</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>rate</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(936, 344)</value>
+      <value>(1040, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -587,42 +621,23 @@
     </param>
     <param>
       <key>id</key>
-      <value>rate1</value>
+      <value>samprate</value>
     </param>
     <param>
-      <key>value</key>
-      <value>0</value>
+      <key>option</key>
+      <value>"samprate"</value>
     </param>
     <param>
-      <key>poll_rate</key>
-      <value>10</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
+      <key>section</key>
+      <value>"usrp"</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>1</value>
+      <key>type</key>
+      <value>real</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(898, -1)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>rolloff</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
+      <key>writeback</key>
+      <value>None</value>
     </param>
   </block>
   <block>
@@ -637,34 +652,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(255, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100000</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 93)</value>
+      <value>(255, 67)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -691,7 +679,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(152, 93)</value>
+      <value>(399, 66)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -703,54 +691,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] </value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(100e3)</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(728, 832)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>throttle</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"throttle"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"split1"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
+      <value>[0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), 0j, 0j, 0j, 0j, 0j]</value>
     </param>
   </block>
   <block>
@@ -773,7 +714,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(136, 824)</value>
+      <value>(760, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -820,7 +761,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(376, 832)</value>
+      <value>(128, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -859,7 +800,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"2101"</value>
+      <value>"2666"</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -867,7 +808,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 832)</value>
+      <value>(0, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -875,11 +816,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>usrprxport</value>
+      <value>usrpport</value>
     </param>
     <param>
       <key>option</key>
-      <value>"rxoutport"</value>
+      <value>"port"</value>
     </param>
     <param>
       <key>section</key>
@@ -888,53 +829,6 @@
     <param>
       <key>type</key>
       <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>8080</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1144, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>xmlrpcport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"xmlrpcport"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"split1"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
     </param>
     <param>
       <key>writeback</key>
@@ -961,11 +855,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 204)</value>
+      <value>(736, 436)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
@@ -986,124 +880,6 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_repack_bits_bb</key>
-    <param>
-      <key>k</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>l</key>
-      <value>payload_mod.bits_per_symbol()</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_LSB_FIRST</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(672, 236)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_repack_bits_bb_0</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>align_output</key>
-      <value>False</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_repack_bits_bb</key>
-    <param>
-      <key>k</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>l</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_LSB_FIRST</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(896, 148)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_repack_bits_bb_0_0</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>align_output</key>
-      <value>False</value>
     </param>
   </block>
   <block>
@@ -1130,11 +906,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 588)</value>
+      <value>(784, 292)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>id</key>
@@ -1177,15 +953,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 676)</value>
+      <value>(736, 236)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>id</key>
@@ -1224,7 +1000,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>istunflag</key>
@@ -1232,7 +1008,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(48, 188)</value>
+      <value>(984, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1240,7 +1016,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_tuntap_pdu_1</value>
+      <value>blocks_tuntap_pdu_0</value>
     </param>
     <param>
       <key>ifn</key>
@@ -1260,10 +1036,14 @@
     </param>
   </block>
   <block>
-    <key>digital_crc32_bb</key>
+    <key>channels_channel_model</key>
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>block_tags</key>
+      <value>True</value>
     </param>
     <param>
       <key>comment</key>
@@ -1278,8 +1058,16 @@
       <value>True</value>
     </param>
     <param>
+      <key>epsilon</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>0.0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(440, 188)</value>
+      <value>(248, 200)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1287,11 +1075,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>digital_crc32_bb_0</value>
-    </param>
-    <param>
-      <key>lengthtagname</key>
-      <value>length_tag_key</value>
+      <value>channels_channel_model_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1302,12 +1086,79 @@
       <value>0</value>
     </param>
     <param>
-      <key>check</key>
-      <value>False</value>
+      <key>noise_voltage</key>
+      <value>0.0</value>
     </param>
     <param>
-      <key>packed</key>
+      <key>seed</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0 + 1.0j</value>
+    </param>
+  </block>
+  <block>
+    <key>channels_channel_model</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>block_tags</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>epsilon</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(240, 400)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>channels_channel_model_0_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>noise_voltage</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0 + 1.0j</value>
     </param>
   </block>
   <block>
@@ -1330,7 +1181,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>True</value>
     </param>
     <param>
       <key>fft_len</key>
@@ -1338,11 +1189,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 604)</value>
+      <value>(464, 164)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>header_mod</key>
@@ -1398,7 +1249,7 @@
     </param>
   </block>
   <block>
-    <key>digital_protocol_formatter_bb</key>
+    <key>digital_ofdm_tx</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -1412,98 +1263,40 @@
       <value></value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>format</key>
-      <value>hdr_format</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(672, 148)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>digital_protocol_formatter_bb_0</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>comment</key>
-      <value></value>
+      <key>cp_len</key>
+      <value>fft_len/4</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(1104, 156)</value>
+      <value>(464, 360)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
+    </param>
+    <param>
+      <key>header_mod</key>
+      <value>"BPSK"</value>
     </param>
     <param>
       <key>id</key>
-      <value>header_bits</value>
+      <value>digital_ofdm_tx_0</value>
     </param>
     <param>
-      <key>stream_id</key>
-      <value>Header Bits</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_probe_rate</key>
-    <param>
-      <key>alias</key>
-      <value></value>
+      <key>packet_len_key</key>
+      <value>packet_length_tag_key</value>
     </param>
     <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
+      <key>log</key>
       <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1104, 204)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>probe1_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1514,160 +1307,40 @@
       <value>0</value>
     </param>
     <param>
-      <key>mintime</key>
-      <value>500.0</value>
+      <key>occupied_carriers</key>
+      <value>occupied_carriers</value>
     </param>
     <param>
-      <key>alpha</key>
-      <value>0.15</value>
+      <key>payload_mod</key>
+      <value>"QPSK"</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>pilot_carriers</key>
+      <value>pilot_carriers</value>
+    </param>
+    <param>
+      <key>pilot_symbols</key>
+      <value>pilot_symbols</value>
+    </param>
+    <param>
+      <key>rolloff</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>scramble_bits</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>sync_word1</key>
+      <value>sync_word1</value>
+    </param>
+    <param>
+      <key>sync_word2</key>
+      <value>sync_word2</value>
     </param>
   </block>
   <block>
-    <key>blocks_probe_rate</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(896, 292)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>probe1_1</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>mintime</key>
-      <value>500.0</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.15</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(896, 244)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>virtual_sink_0_0</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Payload Bits</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_source</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(56, 316)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>virtual_source_0</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Header Bits</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_source</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(56, 396)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>virtual_source_1</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Payload Bits</value>
-    </param>
-  </block>
-  <block>
-    <key>xmlrpc_server</key>
-    <param>
-      <key>addr</key>
-      <value>ip</value>
-    </param>
+    <key>import</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -1682,7 +1355,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1024, 4)</value>
+      <value>(163, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1690,18 +1363,18 @@
     </param>
     <param>
       <key>id</key>
-      <value>xmlrpc_server_0</value>
+      <value>import_1</value>
     </param>
     <param>
-      <key>port</key>
-      <value>xmlrpcport</value>
+      <key>import</key>
+      <value>from gnuradio.digital.utils import tagged_streams</value>
     </param>
   </block>
   <block>
     <key>zeromq_pull_source</key>
     <param>
       <key>address</key>
-      <value>"tcp://" + usrpip + ":" + usrprxport</value>
+      <value>"tcp://" + usrpip + ":" + usrpport</value>
     </param>
     <param>
       <key>alias</key>
@@ -1721,11 +1394,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1096, 660)</value>
+      <value>(16, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>hwm</key>
@@ -1753,61 +1426,6 @@
     </param>
     <param>
       <key>timeout</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>zeromq_push_sink</key>
-    <param>
-      <key>address</key>
-      <value>"tcp://" + ip + ":" + headerport</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(256, 300)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>hwm</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>zeromq_push_sink_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>pass_tags</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>timeout</key>
       <value>timeout</value>
     </param>
     <param>
@@ -1819,7 +1437,7 @@
     <key>zeromq_push_sink</key>
     <param>
       <key>address</key>
-      <value>"tcp://" + ip + ":" + payloadport</value>
+      <value>"tcp://" + ip + ":" + port</value>
     </param>
     <param>
       <key>alias</key>
@@ -1839,11 +1457,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 380)</value>
+      <value>(24, 420)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>hwm</key>
@@ -1851,11 +1469,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>zeromq_push_sink_1</value>
+      <value>zeromq_push_sink_0</value>
     </param>
     <param>
       <key>type</key>
-      <value>byte</value>
+      <value>complex</value>
     </param>
     <param>
       <key>pass_tags</key>
@@ -1872,55 +1490,31 @@
   </block>
   <connection>
     <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
-    <sink_block_id>digital_crc32_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_0</source_block_id>
-    <sink_block_id>probe1_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_0</source_block_id>
-    <sink_block_id>virtual_sink_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_0_0</source_block_id>
-    <sink_block_id>header_bits</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_0_0</source_block_id>
-    <sink_block_id>probe1_0</sink_block_id>
+    <sink_block_id>digital_ofdm_tx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
-    <sink_block_id>blocks_tuntap_pdu_1</sink_block_id>
+    <sink_block_id>blocks_tuntap_pdu_0</sink_block_id>
     <source_key>pdus</source_key>
     <sink_key>pdus</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_tuntap_pdu_1</source_block_id>
+    <source_block_id>blocks_tuntap_pdu_0</source_block_id>
     <sink_block_id>blocks_pdu_to_tagged_stream_0</sink_block_id>
     <source_key>pdus</source_key>
     <sink_key>pdus</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_crc32_bb_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_0</sink_block_id>
+    <source_block_id>channels_channel_model_0</source_block_id>
+    <sink_block_id>digital_ofdm_rx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_crc32_bb_0</source_block_id>
-    <sink_block_id>digital_protocol_formatter_bb_0</sink_block_id>
+    <source_block_id>channels_channel_model_0_0</source_block_id>
+    <sink_block_id>zeromq_push_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1937,26 +1531,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_protocol_formatter_bb_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>virtual_source_0</source_block_id>
-    <sink_block_id>zeromq_push_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>virtual_source_1</source_block_id>
-    <sink_block_id>zeromq_push_sink_1</sink_block_id>
+    <source_block_id>digital_ofdm_tx_0</source_block_id>
+    <sink_block_id>channels_channel_model_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>zeromq_pull_source_0</source_block_id>
-    <sink_block_id>digital_ofdm_rx_0</sink_block_id>
+    <sink_block_id>channels_channel_model_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

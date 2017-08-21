@@ -50,7 +50,7 @@
     </param>
     <param>
       <key>max_nouts</key>
-      <value>0</value>
+      <value>maxnoutput</value>
     </param>
     <param>
       <key>qt_qss_theme</key>
@@ -303,7 +303,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 568)</value>
+      <value>(616, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -358,6 +358,53 @@
     </param>
   </block>
   <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 720)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>maxnoutput</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"maxnoutput"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"global"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>int</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -382,33 +429,6 @@
     <param>
       <key>value</key>
       <value>(range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1034, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>packet_len</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>96</value>
     </param>
   </block>
   <block>
@@ -566,7 +586,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 568)</value>
+      <value>(776, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -714,7 +734,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(760, 576)</value>
+      <value>(144, 720)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -761,7 +781,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 568)</value>
+      <value>(8, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -808,7 +828,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 568)</value>
+      <value>(160, 568)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -820,7 +840,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"port"</value>
+      <value>"txoutport"</value>
     </param>
     <param>
       <key>section</key>
@@ -855,7 +875,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(736, 436)</value>
+      <value>(888, 436)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -927,6 +947,61 @@
     <param>
       <key>name</key>
       <value>Rx'd Packets</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(704, 484)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>Tx'd Packets</value>
     </param>
     <param>
       <key>num_inputs</key>
@@ -1488,6 +1563,12 @@
       <value>1</value>
     </param>
   </block>
+  <connection>
+    <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
+    <sink_block_id>blocks_tag_debug_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
   <connection>
     <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
     <sink_block_id>digital_ofdm_tx_0</sink_block_id>

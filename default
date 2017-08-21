@@ -15,17 +15,29 @@ ip = 192.168.10.103
 port = 2300
 xmlrpcport = 8083
 
-# use the ip of the last split used
 [usrp]
-ip = 192.168.10.103
-port = 2300
+ip = 192.168.10.104
+txoutport = 2300
+rxoutport = 2301
 xmlrpcport = 8084
 freq = 4.4e6
 samprate = 1e6
 gain = 40
+# use the ip/port of the last split
+finalsplitip = 192.168.10.103
+finalsplitport = 2300
 
-# use the ip of usrp
 [rx]
-ip = 192.168.10.104
+ip = 192.168.10.105
 port = 2401
 xmlrpcport = 8085
+
+[bs_single]
+ip = 192.168.10.101
+port = 2300
+throttle=100000e9
+xmlrpcport = 8081
+
+[global]
+zmqtimeout = 100
+maxnoutput = 1
