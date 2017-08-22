@@ -28,7 +28,7 @@ finalsplitip = 192.168.10.103
 finalsplitport = 2300
 
 [rx]
-ip = 192.168.10.105
+ip = 192.168.10.30
 port = 2401
 xmlrpcport = 8085
 
@@ -40,4 +40,4 @@ xmlrpcport = 8081
 
 [global]
 zmqtimeout = 100
-maxnoutput = 1
+maxnoutput = 0

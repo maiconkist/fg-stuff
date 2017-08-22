@@ -1,0 +1,3 @@
+lxd-bridge -> /etc/default/lxd-bridge
+interfaces -> /etc/network/interfaces
+dns.conf   -> /etc/default/dns.conf
