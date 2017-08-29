@@ -4,26 +4,61 @@
 # GNU Radio Python Flow Graph
 # Title: usrp
 # Description: USRP
-# Generated: Mon Aug 21 12:07:08 2017
+# Generated: Tue Aug 29 10:40:52 2017
 ##################################################
 
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+
+from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import qtgui
+from gnuradio import uhd
 from gnuradio import zeromq
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
+import sip
+import sys
 import threading
 import time
 
 
-class usrp(gr.top_block):
+class usrp(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "usrp")
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("usrp")
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+            pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+
+        self.settings = Qt.QSettings("GNU Radio", "usrp")
+        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
         # Variables
@@ -46,7 +81,7 @@ class usrp(gr.top_block):
         self._samprate_config = ConfigParser.ConfigParser()
         self._samprate_config.read('default')
         try: samprate = self._samprate_config.getfloat("usrp", "samprate")
-        except: samprate = 4e6
+        except: samprate = 1e6
         self.samprate = samprate
         self._rxport_config = ConfigParser.ConfigParser()
         self._rxport_config.read('default')
@@ -76,8 +111,8 @@ class usrp(gr.top_block):
         self.ip = ip
         self._gain_config = ConfigParser.ConfigParser()
         self._gain_config.read('default')
-        try: gain = self._gain_config.getfloat("usrp", "gain")
-        except: gain = 50
+        try: gain = self._gain_config.getint("usrp", "gain")
+        except: gain = 70
         self.gain = gain
         self._freq_config = ConfigParser.ConfigParser()
         self._freq_config.read('default')
@@ -99,15 +134,24 @@ class usrp(gr.top_block):
         # Blocks
         ##################################################
         self.zrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
-        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxoutport, 100, True, -1)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + txoutport, 100, True, -1)
-        self.zeromq_pull_source_0_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + rxip + ":" + rxoutport, timeout, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip + ":" + finalsplitport, timeout, True, -1)
         self.xmlrpc_server_0_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0_0.register_instance(self)
         self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
         self.xmlrpc_server_0_0_thread.daemon = True
         self.xmlrpc_server_0_0_thread.start()
+        self.uhd_usrp_sink_0 = uhd.usrp_sink(
+        	",".join(("", "")),
+        	uhd.stream_args(
+        		cpu_format="fc32",
+        		channels=range(1),
+        	),
+        )
+        self.uhd_usrp_sink_0.set_samp_rate(samprate)
+        self.uhd_usrp_sink_0.set_center_freq(freq, 0)
+        self.uhd_usrp_sink_0.set_gain(gain, 0)
+        self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
+        self.uhd_usrp_sink_0.set_bandwidth(samprate, 0)
         
         def _rate_probe():
             while True:
@@ -121,13 +165,54 @@ class usrp(gr.top_block):
         _rate_thread.daemon = True
         _rate_thread.start()
             
+        self.qtgui_waterfall_sink_x_1 = qtgui.waterfall_sink_c(
+        	1024, #size
+        	firdes.WIN_BLACKMAN_hARRIS, #wintype
+        	0, #fc
+        	samprate, #bw
+        	"", #name
+                1 #number of inputs
+        )
+        self.qtgui_waterfall_sink_x_1.set_update_time(0.10)
+        self.qtgui_waterfall_sink_x_1.enable_grid(False)
+        self.qtgui_waterfall_sink_x_1.enable_axis_labels(True)
+        
+        if not True:
+          self.qtgui_waterfall_sink_x_1.disable_legend()
+        
+        if "complex" == "float" or "complex" == "msg_float":
+          self.qtgui_waterfall_sink_x_1.set_plot_pos_half(not True)
+        
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        colors = [0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+        for i in xrange(1):
+            if len(labels[i]) == 0:
+                self.qtgui_waterfall_sink_x_1.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_waterfall_sink_x_1.set_line_label(i, labels[i])
+            self.qtgui_waterfall_sink_x_1.set_color_map(i, colors[i])
+            self.qtgui_waterfall_sink_x_1.set_line_alpha(i, alphas[i])
+        
+        self.qtgui_waterfall_sink_x_1.set_intensity_range(-140, 10)
+        
+        self._qtgui_waterfall_sink_x_1_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_1.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_1_win)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.zeromq_pull_source_0, 0), (self.zeromq_push_sink_0, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_1, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.uhd_usrp_sink_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.zrate, 0))    
-        self.connect((self.zeromq_pull_source_0_0, 0), (self.zeromq_push_sink_0_0, 0))    
+
+    def closeEvent(self, event):
+        self.settings = Qt.QSettings("GNU Radio", "usrp")
+        self.settings.setValue("geometry", self.saveGeometry())
+        event.accept()
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -152,6 +237,9 @@ class usrp(gr.top_block):
 
     def set_samprate(self, samprate):
         self.samprate = samprate
+        self.uhd_usrp_sink_0.set_samp_rate(self.samprate)
+        self.uhd_usrp_sink_0.set_bandwidth(self.samprate, 0)
+        self.qtgui_waterfall_sink_x_1.set_frequency_range(0, self.samprate)
 
     def get_rxport(self):
         return self.rxport
@@ -194,12 +282,15 @@ class usrp(gr.top_block):
 
     def set_gain(self, gain):
         self.gain = gain
+        self.uhd_usrp_sink_0.set_gain(self.gain, 0)
+        	
 
     def get_freq(self):
         return self.freq
 
     def set_freq(self, freq):
         self.freq = freq
+        self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
 
     def get_finalsplitport(self):
         return self.finalsplitport
@@ -216,9 +307,21 @@ class usrp(gr.top_block):
 
 def main(top_block_cls=usrp, options=None):
 
+    from distutils.version import StrictVersion
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
+    qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls()
     tb.start(100)
-    tb.wait()
+    tb.show()
+
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.exec_()
 
 
 if __name__ == '__main__':

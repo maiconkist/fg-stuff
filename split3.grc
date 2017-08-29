@@ -439,53 +439,6 @@
     </param>
   </block>
   <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"2200"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 600)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>preofdmport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"preofdmport"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"split2"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
     <key>variable_function_probe</key>
     <param>
       <key>block_id</key>
@@ -588,6 +541,53 @@
     <param>
       <key>option</key>
       <value>"ip"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"split2"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"2200"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 600)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>split2port</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"port"</value>
     </param>
     <param>
       <key>section</key>
@@ -1025,7 +1025,7 @@
     <key>zeromq_pull_source</key>
     <param>
       <key>address</key>
-      <value>"tcp://" + split2ip + ":" + preofdmport</value>
+      <value>"tcp://" + split2ip + ":" + split2port</value>
     </param>
     <param>
       <key>alias</key>

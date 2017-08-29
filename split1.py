@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Mon Aug 21 12:04:06 2017
+# Generated: Tue Aug 22 13:54:38 2017
 ##################################################
 
 from gnuradio import blocks
@@ -17,7 +17,6 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
-import pmt
 import threading
 import time
 
@@ -37,11 +36,11 @@ class split1(gr.top_block):
         try: xmlrpcport = self._xmlrpcport_config.getint("split1", "xmlrpcport")
         except: xmlrpcport = 8080
         self.xmlrpcport = xmlrpcport
-        self._usrprxport_config = ConfigParser.ConfigParser()
-        self._usrprxport_config.read('default')
-        try: usrprxport = self._usrprxport_config.get("usrp", "rxoutport")
-        except: usrprxport = "2101"
-        self.usrprxport = usrprxport
+        self._usrpport_config = ConfigParser.ConfigParser()
+        self._usrpport_config.read('default')
+        try: usrpport = self._usrpport_config.get("usrp", "rxoutport")
+        except: usrpport = "2101"
+        self.usrpport = usrpport
         self._usrpip_config = ConfigParser.ConfigParser()
         self._usrpip_config.read('default')
         try: usrpip = self._usrpip_config.get("usrp", "ip")
@@ -98,7 +97,7 @@ class split1(gr.top_block):
         self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
         self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + payloadport, timeout, True, -1)
         self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + headerport, timeout, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrprxport, 100, True, -1)
+        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrpport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
@@ -151,7 +150,6 @@ class split1(gr.top_block):
         self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
-        self.blocks_random_pdu_0 = blocks.random_pdu(50, 2000, chr(0xFF), 2)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
 
         ##################################################
@@ -191,11 +189,11 @@ class split1(gr.top_block):
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
 
-    def get_usrprxport(self):
-        return self.usrprxport
+    def get_usrpport(self):
+        return self.usrpport
 
-    def set_usrprxport(self, usrprxport):
-        self.usrprxport = usrprxport
+    def set_usrpport(self, usrpport):
+        self.usrpport = usrpport
 
     def get_usrpip(self):
         return self.usrpip

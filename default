@@ -24,11 +24,11 @@ freq = 4.4e6
 samprate = 1e6
 gain = 40
 # use the ip/port of the last split
-finalsplitip = 192.168.10.103
+finalsplitip = 192.168.10.101
 finalsplitport = 2300
 
 [rx]
-ip = 192.168.10.30
+ip = 192.168.10.105
 port = 2401
 xmlrpcport = 8085
 
@@ -40,4 +40,4 @@ xmlrpcport = 8081
 
 [global]
 zmqtimeout = 100
-maxnoutput = 0
+maxnoutput = 1
