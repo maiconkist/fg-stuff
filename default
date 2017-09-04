@@ -20,9 +20,11 @@ ip = 192.168.10.104
 txoutport = 2300
 rxoutport = 2301
 xmlrpcport = 8084
-freq = 4.4e6
+freq = 950e6
 samprate = 1e6
-gain = 40
+txgain = 1
+txamplitude = 0.05
+rxgain = 0
 # use the ip/port of the last split
 finalsplitip = 192.168.10.101
 finalsplitport = 2300
@@ -31,6 +33,9 @@ finalsplitport = 2300
 ip = 192.168.10.105
 port = 2401
 xmlrpcport = 8085
+txgain = 1
+txamplitude = 0.05
+rxgain = 0
 
 [bs_single]
 ip = 192.168.10.101

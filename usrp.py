@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp
 # Description: USRP
-# Generated: Tue Aug 29 10:40:52 2017
+# Generated: Mon Sep  4 16:51:40 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -19,9 +19,9 @@ if __name__ == '__main__':
 
 from PyQt4 import Qt
 from gnuradio import blocks
+from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
-from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio import zeromq
 from gnuradio.eng_option import eng_option
@@ -29,7 +29,6 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
-import sip
 import sys
 import threading
 import time
@@ -68,11 +67,17 @@ class usrp(gr.top_block, Qt.QWidget):
         try: xmlrpcport = self._xmlrpcport_config.getint("usrp", 'xmlrpcport')
         except: xmlrpcport = 8081
         self.xmlrpcport = xmlrpcport
+        self.txrate = txrate = 0
         self._txoutport_config = ConfigParser.ConfigParser()
         self._txoutport_config.read('default')
         try: txoutport = self._txoutport_config.get("usrp", "txoutport")
         except: txoutport = "2666"
         self.txoutport = txoutport
+        self._txgain_config = ConfigParser.ConfigParser()
+        self._txgain_config.read('default')
+        try: txgain = self._txgain_config.getfloat("usrp", "txgain")
+        except: txgain = 0.9
+        self.txgain = txgain
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
@@ -83,6 +88,7 @@ class usrp(gr.top_block, Qt.QWidget):
         try: samprate = self._samprate_config.getfloat("usrp", "samprate")
         except: samprate = 1e6
         self.samprate = samprate
+        self.rxrate = rxrate = 0
         self._rxport_config = ConfigParser.ConfigParser()
         self._rxport_config.read('default')
         try: rxport = self._rxport_config.get("rx", "port")
@@ -98,7 +104,11 @@ class usrp(gr.top_block, Qt.QWidget):
         try: rxip = self._rxip_config.get("rx", "ip")
         except: rxip = "127.0.0.1"
         self.rxip = rxip
-        self.rate = rate = 0
+        self._rxgain_config = ConfigParser.ConfigParser()
+        self._rxgain_config.read('default')
+        try: rxgain = self._rxgain_config.getfloat("usrp", "rxgain")
+        except: rxgain = 0.9
+        self.rxgain = rxgain
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -109,11 +119,6 @@ class usrp(gr.top_block, Qt.QWidget):
         try: ip = self._ip_config.get("usrp", "ip")
         except: ip = "127.0.0.1"
         self.ip = ip
-        self._gain_config = ConfigParser.ConfigParser()
-        self._gain_config.read('default')
-        try: gain = self._gain_config.getint("usrp", "gain")
-        except: gain = 70
-        self.gain = gain
         self._freq_config = ConfigParser.ConfigParser()
         self._freq_config.read('default')
         try: freq = self._freq_config.getfloat("usrp", "freq")
@@ -129,17 +134,36 @@ class usrp(gr.top_block, Qt.QWidget):
         try: finalsplitip = self._finalsplitip_config.get("usrp", "finalsplitip")
         except: finalsplitip = "127.0.0.1"
         self.finalsplitip = finalsplitip
+        self._amplitude_config = ConfigParser.ConfigParser()
+        self._amplitude_config.read('default')
+        try: amplitude = self._amplitude_config.getfloat("usrp", "txamplitude")
+        except: amplitude = 0.1
+        self.amplitude = amplitude
 
         ##################################################
         # Blocks
         ##################################################
-        self.zrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
+        self.ztxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
+        self.zrxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
+        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxoutport, 100, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip + ":" + finalsplitport, timeout, True, -1)
         self.xmlrpc_server_0_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0_0.register_instance(self)
         self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
         self.xmlrpc_server_0_0_thread.daemon = True
         self.xmlrpc_server_0_0_thread.start()
+        self.uhd_usrp_source_0 = uhd.usrp_source(
+        	",".join(("", "")),
+        	uhd.stream_args(
+        		cpu_format="fc32",
+        		channels=range(1),
+        	),
+        )
+        self.uhd_usrp_source_0.set_samp_rate(samprate)
+        self.uhd_usrp_source_0.set_center_freq(freq + 4e6, 0)
+        self.uhd_usrp_source_0.set_normalized_gain(rxgain, 0)
+        self.uhd_usrp_source_0.set_antenna('RX2', 0)
+        self.uhd_usrp_source_0.set_bandwidth(samprate, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -149,65 +173,47 @@ class usrp(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_sink_0.set_samp_rate(samprate)
         self.uhd_usrp_sink_0.set_center_freq(freq, 0)
-        self.uhd_usrp_sink_0.set_gain(gain, 0)
+        self.uhd_usrp_sink_0.set_normalized_gain(txgain, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_sink_0.set_bandwidth(samprate, 0)
         
-        def _rate_probe():
+        def _txrate_probe():
             while True:
-                val = self.zrate.rate()
+                val = self.ztxrate.rate()
                 try:
-                    self.set_rate(val)
+                    self.set_txrate(val)
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
-        _rate_thread = threading.Thread(target=_rate_probe)
-        _rate_thread.daemon = True
-        _rate_thread.start()
+        _txrate_thread = threading.Thread(target=_txrate_probe)
+        _txrate_thread.daemon = True
+        _txrate_thread.start()
             
-        self.qtgui_waterfall_sink_x_1 = qtgui.waterfall_sink_c(
-        	1024, #size
-        	firdes.WIN_BLACKMAN_hARRIS, #wintype
-        	0, #fc
-        	samprate, #bw
-        	"", #name
-                1 #number of inputs
-        )
-        self.qtgui_waterfall_sink_x_1.set_update_time(0.10)
-        self.qtgui_waterfall_sink_x_1.enable_grid(False)
-        self.qtgui_waterfall_sink_x_1.enable_axis_labels(True)
         
-        if not True:
-          self.qtgui_waterfall_sink_x_1.disable_legend()
-        
-        if "complex" == "float" or "complex" == "msg_float":
-          self.qtgui_waterfall_sink_x_1.set_plot_pos_half(not True)
-        
-        labels = ['', '', '', '', '',
-                  '', '', '', '', '']
-        colors = [0, 0, 0, 0, 0,
-                  0, 0, 0, 0, 0]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_waterfall_sink_x_1.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_waterfall_sink_x_1.set_line_label(i, labels[i])
-            self.qtgui_waterfall_sink_x_1.set_color_map(i, colors[i])
-            self.qtgui_waterfall_sink_x_1.set_line_alpha(i, alphas[i])
-        
-        self.qtgui_waterfall_sink_x_1.set_intensity_range(-140, 10)
-        
-        self._qtgui_waterfall_sink_x_1_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_1.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_1_win)
+        def _rxrate_probe():
+            while True:
+                val = self.zrxrate.rate()
+                try:
+                    self.set_rxrate(val)
+                except AttributeError:
+                    pass
+                time.sleep(1.0 / (10))
+        _rxrate_thread = threading.Thread(target=_rxrate_probe)
+        _rxrate_thread.daemon = True
+        _rxrate_thread.start()
+            
+        self.digital_burst_shaper_xx_0 = digital.burst_shaper_cc((([])), 2000, 100, False, "packet_len")
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((amplitude, ))
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_1, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.uhd_usrp_sink_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.zrate, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.digital_burst_shaper_xx_0, 0))    
+        self.connect((self.digital_burst_shaper_xx_0, 0), (self.uhd_usrp_sink_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.zrxrate, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.ztxrate, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "usrp")
@@ -220,11 +226,25 @@ class usrp(gr.top_block, Qt.QWidget):
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
 
+    def get_txrate(self):
+        return self.txrate
+
+    def set_txrate(self, txrate):
+        self.txrate = txrate
+
     def get_txoutport(self):
         return self.txoutport
 
     def set_txoutport(self, txoutport):
         self.txoutport = txoutport
+
+    def get_txgain(self):
+        return self.txgain
+
+    def set_txgain(self, txgain):
+        self.txgain = txgain
+        self.uhd_usrp_sink_0.set_normalized_gain(self.txgain, 0)
+        	
 
     def get_timeout(self):
         return self.timeout
@@ -237,9 +257,16 @@ class usrp(gr.top_block, Qt.QWidget):
 
     def set_samprate(self, samprate):
         self.samprate = samprate
+        self.uhd_usrp_source_0.set_samp_rate(self.samprate)
+        self.uhd_usrp_source_0.set_bandwidth(self.samprate, 0)
         self.uhd_usrp_sink_0.set_samp_rate(self.samprate)
         self.uhd_usrp_sink_0.set_bandwidth(self.samprate, 0)
-        self.qtgui_waterfall_sink_x_1.set_frequency_range(0, self.samprate)
+
+    def get_rxrate(self):
+        return self.rxrate
+
+    def set_rxrate(self, rxrate):
+        self.rxrate = rxrate
 
     def get_rxport(self):
         return self.rxport
@@ -259,11 +286,13 @@ class usrp(gr.top_block, Qt.QWidget):
     def set_rxip(self, rxip):
         self.rxip = rxip
 
-    def get_rate(self):
-        return self.rate
+    def get_rxgain(self):
+        return self.rxgain
 
-    def set_rate(self, rate):
-        self.rate = rate
+    def set_rxgain(self, rxgain):
+        self.rxgain = rxgain
+        self.uhd_usrp_source_0.set_normalized_gain(self.rxgain, 0)
+        	
 
     def get_maxnoutput(self):
         return self.maxnoutput
@@ -277,19 +306,12 @@ class usrp(gr.top_block, Qt.QWidget):
     def set_ip(self, ip):
         self.ip = ip
 
-    def get_gain(self):
-        return self.gain
-
-    def set_gain(self, gain):
-        self.gain = gain
-        self.uhd_usrp_sink_0.set_gain(self.gain, 0)
-        	
-
     def get_freq(self):
         return self.freq
 
     def set_freq(self, freq):
         self.freq = freq
+        self.uhd_usrp_source_0.set_center_freq(self.freq + 4e6, 0)
         self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
 
     def get_finalsplitport(self):
@@ -303,6 +325,13 @@ class usrp(gr.top_block, Qt.QWidget):
 
     def set_finalsplitip(self, finalsplitip):
         self.finalsplitip = finalsplitip
+
+    def get_amplitude(self):
+        return self.amplitude
+
+    def set_amplitude(self, amplitude):
+        self.amplitude = amplitude
+        self.blocks_multiply_const_vxx_0.set_k((self.amplitude, ))
 
 
 def main(top_block_cls=usrp, options=None):

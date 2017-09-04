@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Tue Aug 29 10:36:32 2017
+# Generated: Mon Sep  4 16:51:42 2017
 ##################################################
 
 from gnuradio import blocks
@@ -17,7 +17,6 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
-import numpy
 
 
 class bs_single(gr.top_block):
@@ -53,6 +52,11 @@ class bs_single(gr.top_block):
         self.timeout = timeout
         self.sync_word2 = sync_word2 = [0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), 0j, 0j, 0j, 0j, 0j]
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
+        self._samprate_config = ConfigParser.ConfigParser()
+        self._samprate_config.read('default')
+        try: samprate = self._samprate_config.getfloat("usrp", "samprate")
+        except: samprate = 1e6
+        self.samprate = samprate
         self._port_config = ConfigParser.ConfigParser()
         self._port_config.read('default')
         try: port = self._port_config.get("bs_single", "port")
@@ -71,38 +75,60 @@ class bs_single(gr.top_block):
         self.ip = ip
         self.header_formatter = header_formatter = digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key, frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)
         self.header_equalizer = header_equalizer = digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols)
+        self._freq_config = ConfigParser.ConfigParser()
+        self._freq_config.read('default')
+        try: freq = self._freq_config.getfloat("usrp", "freq")
+        except: freq = 4.4e9
+        self.freq = freq
 
         ##################################################
         # Blocks
         ##################################################
-        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, timeout, True, -1)
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + port, 100, True, -1)
+        self.zeromq_pull_source_0_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrpport, timeout, True, -1)
         self.digital_ofdm_tx_0 = digital.ofdm_tx(
         	  fft_len=fft_len, cp_len=fft_len/4,
-        	  packet_length_tag_key=packet_length_tag_key,
+        	  packet_length_tag_key="packet_len",
         	  occupied_carriers=occupied_carriers,
         	  pilot_carriers=pilot_carriers,
         	  pilot_symbols=pilot_symbols,
         	  sync_word1=sync_word1,
         	  sync_word2=sync_word2,
         	  bps_header=1,
-        	  bps_payload=2,
+        	  bps_payload=1,
         	  rolloff=0,
         	  debug_log=True,
         	  scramble_bits=False
         	 )
-        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, 1e6,True)
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Tx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
-        self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 100, "packet_len")
-        self.analog_random_source_x_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 100, 1000)), True)
+        self.digital_ofdm_rx_0 = digital.ofdm_rx(
+        	  fft_len=fft_len, cp_len=fft_len/4,
+        	  frame_length_tag_key='frame_'+"packet_len",
+        	  packet_length_tag_key="packet_len",
+        	  occupied_carriers=occupied_carriers,
+        	  pilot_carriers=pilot_carriers,
+        	  pilot_symbols=pilot_symbols,
+        	  sync_word1=sync_word1,
+        	  sync_word2=sync_word2,
+        	  bps_header=1,
+        	  bps_payload=1,
+        	  debug_log=False,
+        	  scramble_bits=False
+        	 )
+        self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu('tap0', 1000, False)
+        self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
+        self.blocks_tag_debug_0_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0_0.set_display(True)
+        self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, "packet_len")
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_random_source_x_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))    
-        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.blocks_tag_debug_0, 0))    
-        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0, 0))    
-        self.connect((self.blocks_throttle_0, 0), (self.zeromq_push_sink_0_0, 0))    
-        self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_throttle_0, 0))    
+        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_0, 'pdus'))    
+        self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
+        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0, 0))    
+        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0_0, 0))    
+        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
+        self.connect((self.digital_ofdm_tx_0, 0), (self.zeromq_push_sink_0, 0))    
+        self.connect((self.zeromq_pull_source_0_0, 0), (self.digital_ofdm_rx_0, 0))    
 
     def get_pilot_symbols(self):
         return self.pilot_symbols
@@ -193,6 +219,12 @@ class bs_single(gr.top_block):
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
 
+    def get_samprate(self):
+        return self.samprate
+
+    def set_samprate(self, samprate):
+        self.samprate = samprate
+
     def get_port(self):
         return self.port
 
@@ -229,11 +261,22 @@ class bs_single(gr.top_block):
     def set_header_equalizer(self, header_equalizer):
         self.header_equalizer = header_equalizer
 
+    def get_freq(self):
+        return self.freq
+
+    def set_freq(self, freq):
+        self.freq = freq
+
 
 def main(top_block_cls=bs_single, options=None):
 
     tb = top_block_cls()
     tb.start(100)
+    try:
+        raw_input('Press Enter to quit: ')
+    except EOFError:
+        pass
+    tb.stop()
     tb.wait()
 
 
