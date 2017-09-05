@@ -4,20 +4,9 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Mon Sep  4 16:51:46 2017
+# Generated: Mon Sep  4 17:54:22 2017
 ##################################################
 
-if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
-
-from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
@@ -28,46 +17,17 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
-import sys
 import time
 
 
-class rx(gr.top_block, Qt.QWidget):
+class rx(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "OFDM Single")
-        Qt.QWidget.__init__(self)
-        self.setWindowTitle("OFDM Single")
-        try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except:
-            pass
-        self.top_scroll_layout = Qt.QVBoxLayout()
-        self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-        self.top_scroll_layout.addWidget(self.top_scroll)
-        self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
-        self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
-
-        self.settings = Qt.QSettings("GNU Radio", "rx")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
         # Variables
         ##################################################
-        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
-        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
-        self.payload_mod = payload_mod = digital.constellation_qpsk()
-        self.packet_length_tag_key = packet_length_tag_key = "packet_len"
-        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
-        self.length_tag_key = length_tag_key = "frame_len"
-        self.header_mod = header_mod = digital.constellation_bpsk()
-        self.fft_len = fft_len = 64
         self._usrpport_config = ConfigParser.ConfigParser()
         self._usrpport_config.read('default')
         try: usrpport = self._usrpport_config.get("usrp", "txoutport")
@@ -105,24 +65,27 @@ class rx(gr.top_block, Qt.QWidget):
         try: port = self._port_config.get("rx", "port")
         except: port = "2666"
         self.port = port
-        self.payload_equalizer = payload_equalizer = digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols, 1)
+        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
+        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
+        self.packet_length_tag_key = packet_length_tag_key = "packet_len"
+        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
         except: maxnoutput = 100
         self.maxnoutput = maxnoutput
+        self.length_tag_key = length_tag_key = "frame_len"
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
         try: ip = self._ip_config.get("rx", "ip")
         except: ip = "127.0.0.1"
         self.ip = ip
-        self.header_formatter = header_formatter = digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key, frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)
-        self.header_equalizer = header_equalizer = digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols)
         self._freq_config = ConfigParser.ConfigParser()
         self._freq_config.read('default')
         try: freq = self._freq_config.getfloat("usrp", "freq")
         except: freq = 4.4e9
         self.freq = freq
+        self.fft_len = fft_len = 64
         self._amplitude_config = ConfigParser.ConfigParser()
         self._amplitude_config.read('default')
         try: amplitude = self._amplitude_config.getfloat("rx", "txamplitude")
@@ -203,70 +166,6 @@ class rx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.digital_ofdm_rx_0, 0))    
 
-    def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "rx")
-        self.settings.setValue("geometry", self.saveGeometry())
-        event.accept()
-
-    def get_pilot_symbols(self):
-        return self.pilot_symbols
-
-    def set_pilot_symbols(self, pilot_symbols):
-        self.pilot_symbols = pilot_symbols
-        self.set_payload_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, payload_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols, 1))
-        self.set_header_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, header_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols))
-
-    def get_pilot_carriers(self):
-        return self.pilot_carriers
-
-    def set_pilot_carriers(self, pilot_carriers):
-        self.pilot_carriers = pilot_carriers
-        self.set_payload_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, payload_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols, 1))
-        self.set_header_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, header_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols))
-
-    def get_payload_mod(self):
-        return self.payload_mod
-
-    def set_payload_mod(self, payload_mod):
-        self.payload_mod = payload_mod
-
-    def get_packet_length_tag_key(self):
-        return self.packet_length_tag_key
-
-    def set_packet_length_tag_key(self, packet_length_tag_key):
-        self.packet_length_tag_key = packet_length_tag_key
-        self.set_header_formatter(digital.packet_header_ofdm(self.occupied_carriers, n_syms=1, len_tag_key=self.packet_length_tag_key, frame_len_tag_key=self.length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False))
-
-    def get_occupied_carriers(self):
-        return self.occupied_carriers
-
-    def set_occupied_carriers(self, occupied_carriers):
-        self.occupied_carriers = occupied_carriers
-        self.set_payload_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, payload_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols, 1))
-        self.set_header_formatter(digital.packet_header_ofdm(self.occupied_carriers, n_syms=1, len_tag_key=self.packet_length_tag_key, frame_len_tag_key=self.length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False))
-        self.set_header_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, header_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols))
-
-    def get_length_tag_key(self):
-        return self.length_tag_key
-
-    def set_length_tag_key(self, length_tag_key):
-        self.length_tag_key = length_tag_key
-        self.set_header_formatter(digital.packet_header_ofdm(self.occupied_carriers, n_syms=1, len_tag_key=self.packet_length_tag_key, frame_len_tag_key=self.length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False))
-
-    def get_header_mod(self):
-        return self.header_mod
-
-    def set_header_mod(self, header_mod):
-        self.header_mod = header_mod
-
-    def get_fft_len(self):
-        return self.fft_len
-
-    def set_fft_len(self, fft_len):
-        self.fft_len = fft_len
-        self.set_payload_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, payload_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols, 1))
-        self.set_header_equalizer(digital.ofdm_equalizer_simpledfe(self.fft_len, header_mod.base(), self.occupied_carriers, self.pilot_carriers, self.pilot_symbols))
-
     def get_usrpport(self):
         return self.usrpport
 
@@ -328,11 +227,29 @@ class rx(gr.top_block, Qt.QWidget):
     def set_port(self, port):
         self.port = port
 
-    def get_payload_equalizer(self):
-        return self.payload_equalizer
+    def get_pilot_symbols(self):
+        return self.pilot_symbols
 
-    def set_payload_equalizer(self, payload_equalizer):
-        self.payload_equalizer = payload_equalizer
+    def set_pilot_symbols(self, pilot_symbols):
+        self.pilot_symbols = pilot_symbols
+
+    def get_pilot_carriers(self):
+        return self.pilot_carriers
+
+    def set_pilot_carriers(self, pilot_carriers):
+        self.pilot_carriers = pilot_carriers
+
+    def get_packet_length_tag_key(self):
+        return self.packet_length_tag_key
+
+    def set_packet_length_tag_key(self, packet_length_tag_key):
+        self.packet_length_tag_key = packet_length_tag_key
+
+    def get_occupied_carriers(self):
+        return self.occupied_carriers
+
+    def set_occupied_carriers(self, occupied_carriers):
+        self.occupied_carriers = occupied_carriers
 
     def get_maxnoutput(self):
         return self.maxnoutput
@@ -340,23 +257,17 @@ class rx(gr.top_block, Qt.QWidget):
     def set_maxnoutput(self, maxnoutput):
         self.maxnoutput = maxnoutput
 
+    def get_length_tag_key(self):
+        return self.length_tag_key
+
+    def set_length_tag_key(self, length_tag_key):
+        self.length_tag_key = length_tag_key
+
     def get_ip(self):
         return self.ip
 
     def set_ip(self, ip):
         self.ip = ip
-
-    def get_header_formatter(self):
-        return self.header_formatter
-
-    def set_header_formatter(self, header_formatter):
-        self.header_formatter = header_formatter
-
-    def get_header_equalizer(self):
-        return self.header_equalizer
-
-    def set_header_equalizer(self, header_equalizer):
-        self.header_equalizer = header_equalizer
 
     def get_freq(self):
         return self.freq
@@ -365,6 +276,12 @@ class rx(gr.top_block, Qt.QWidget):
         self.freq = freq
         self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
         self.uhd_usrp_sink_0.set_center_freq(self.freq  + 4e6, 0)
+
+    def get_fft_len(self):
+        return self.fft_len
+
+    def set_fft_len(self, fft_len):
+        self.fft_len = fft_len
 
     def get_amplitude(self):
         return self.amplitude
@@ -376,21 +293,14 @@ class rx(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=rx, options=None):
 
-    from distutils.version import StrictVersion
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
-    qapp = Qt.QApplication(sys.argv)
-
     tb = top_block_cls()
     tb.start(100)
-    tb.show()
-
-    def quitting():
-        tb.stop()
-        tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
-    qapp.exec_()
+    try:
+        raw_input('Press Enter to quit: ')
+    except EOFError:
+        pass
+    tb.stop()
+    tb.wait()
 
 
 if __name__ == '__main__':

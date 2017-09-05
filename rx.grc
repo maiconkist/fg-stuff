@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>qt_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -203,7 +203,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(301, -1)</value>
+      <value>(928, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -266,87 +266,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(931, 69)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>header_equalizer</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(855, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>header_formatter</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key, frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(), bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(490, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>header_mod</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.constellation_bpsk()</value>
-    </param>
-  </block>
-  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -405,7 +324,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(367, -1)</value>
+      <value>(1000, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -479,7 +398,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(541, 70)</value>
+      <value>(688, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -506,7 +425,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1132, 0)</value>
+      <value>(1128, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -533,61 +452,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 73)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>payload_equalizer</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers, pilot_carriers, pilot_symbols, 1)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(663, 1)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>payload_mod</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.constellation_qpsk()</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(692, 70)</value>
+      <value>(416, 68)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -614,7 +479,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 68)</value>
+      <value>(552, 68)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -845,7 +710,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(255, 67)</value>
+      <value>(400, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -872,7 +737,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(399, 66)</value>
+      <value>(544, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1815,7 +1680,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(163, 0)</value>
+      <value>(256, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
