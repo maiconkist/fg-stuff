@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>run</value>
+      <value>prompt</value>
     </param>
     <param>
       <key>run</key>
@@ -132,7 +132,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)</value>
+      <value>digital.header_format_ofdm(occupied_carriers, 1, "packet_len",)</value>
     </param>
   </block>
   <block>
@@ -147,7 +147,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(567, 0)</value>
+      <value>(536, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -257,33 +257,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(352, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"packet_len"</value>
-    </param>
-  </block>
-  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -369,33 +342,6 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(476, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>packet_len</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>96</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
       <value>(734, 0)</value>
     </param>
     <param>
@@ -408,7 +354,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>digital.constellation_qpsk()</value>
+      <value>digital.constellation_bpsk()</value>
     </param>
   </block>
   <block>
@@ -470,7 +416,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 69)</value>
+      <value>(952, 492)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -497,7 +443,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 69)</value>
+      <value>(968, 556)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -664,7 +610,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 93)</value>
+      <value>(1080, 492)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -691,7 +637,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(152, 93)</value>
+      <value>(1080, 556)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1020,7 +966,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 236)</value>
+      <value>(680, 236)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1032,7 +978,7 @@
     </param>
     <param>
       <key>len_tag_key</key>
-      <value>length_tag_key</value>
+      <value>"packet_len"</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1091,7 +1037,7 @@
     </param>
     <param>
       <key>len_tag_key</key>
-      <value>length_tag_key</value>
+      <value>"packet_len"</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1130,7 +1076,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 588)</value>
+      <value>(600, 596)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1181,7 +1127,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 676)</value>
+      <value>(552, 692)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1232,7 +1178,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(48, 188)</value>
+      <value>(40, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1291,7 +1237,7 @@
     </param>
     <param>
       <key>lengthtagname</key>
-      <value>length_tag_key</value>
+      <value>"packet_len"</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1338,7 +1284,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 604)</value>
+      <value>(832, 620)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1374,7 +1320,7 @@
     </param>
     <param>
       <key>payload_mod</key>
-      <value>"QPSK"</value>
+      <value>"BPSK"</value>
     </param>
     <param>
       <key>pilot_carriers</key>
@@ -1421,7 +1367,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 148)</value>
+      <value>(680, 148)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1433,7 +1379,7 @@
     </param>
     <param>
       <key>len_tag_key</key>
-      <value>length_tag_key</value>
+      <value>"packet_len"</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1721,7 +1667,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1096, 660)</value>
+      <value>(1096, 676)</value>
     </param>
     <param>
       <key>_rotation</key>

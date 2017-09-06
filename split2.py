@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 2
 # Description: Split 2
-# Generated: Tue Aug 22 13:54:40 2017
+# Generated: Tue Sep  5 13:09:16 2017
 ##################################################
 
 from gnuradio import blocks
@@ -62,7 +62,7 @@ class split2(gr.top_block):
         try: payloadport = self._payloadport_config.get("split1", "payloadport")
         except: payloadport = "2101"
         self.payloadport = payloadport
-        self.payload_mod = payload_mod = digital.constellation_qpsk()
+        self.payload_mod = payload_mod = digital.constellation_bpsk()
         self.packet_len = packet_len = 96
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')

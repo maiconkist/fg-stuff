@@ -116,33 +116,6 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(720, 69)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>hdr_format</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
@@ -257,33 +230,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(360, 4)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"packet_len"</value>
-    </param>
-  </block>
-  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -342,60 +288,6 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 69)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>occupied_carriers</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>(range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(476, 0)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>packet_len</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>96</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
       <value>(734, 0)</value>
     </param>
     <param>
@@ -408,7 +300,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>digital.constellation_qpsk()</value>
+      <value>digital.constellation_bpsk()</value>
     </param>
   </block>
   <block>
@@ -456,60 +348,6 @@
     <param>
       <key>writeback</key>
       <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(480, 69)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>pilot_carriers</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>((-21, -7, 7, 21,),)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(608, 69)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>pilot_symbols</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>((1, 1, 1, -1,),)</value>
     </param>
   </block>
   <block>
@@ -600,33 +438,6 @@
     <param>
       <key>poll_rate</key>
       <value>10</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(898, -1)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>rolloff</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
     </param>
   </block>
   <block>
@@ -860,7 +671,7 @@
     </param>
     <param>
       <key>lengthtagname</key>
-      <value>length_tag_key</value>
+      <value>"packet_len"</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -966,7 +777,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 324)</value>
+      <value>(256, 324)</value>
     </param>
     <param>
       <key>_rotation</key>

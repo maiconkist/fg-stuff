@@ -26,7 +26,7 @@ txgain = 1
 txamplitude = 0.05
 rxgain = 0
 # use the ip/port of the last split
-finalsplitip = 192.168.10.101
+finalsplitip = 192.168.10.103
 finalsplitport = 2300
 
 [rx]

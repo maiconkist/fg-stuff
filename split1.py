@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Tue Aug 22 13:54:38 2017
+# Generated: Tue Sep  5 16:38:48 2017
 ##################################################
 
 from gnuradio import blocks
@@ -30,7 +30,6 @@ class split1(gr.top_block):
         # Variables
         ##################################################
         self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
-        self.length_tag_key = length_tag_key = "packet_len"
         self._xmlrpcport_config = ConfigParser.ConfigParser()
         self._xmlrpcport_config.read('default')
         try: xmlrpcport = self._xmlrpcport_config.getint("split1", "xmlrpcport")
@@ -69,8 +68,7 @@ class split1(gr.top_block):
         try: payloadport = self._payloadport_config.get("split1", "payloadport")
         except: payloadport = "2101"
         self.payloadport = payloadport
-        self.payload_mod = payload_mod = digital.constellation_qpsk()
-        self.packet_len = packet_len = 96
+        self.payload_mod = payload_mod = digital.constellation_bpsk()
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -87,7 +85,7 @@ class split1(gr.top_block):
         except: headerport = "2100"
         self.headerport = headerport
         self.header_mod = header_mod = digital.constellation_bpsk()
-        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)
+        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, "packet_len",)
         self.fft_len = fft_len = 64
 
         ##################################################
@@ -129,7 +127,7 @@ class split1(gr.top_block):
         _rate0_thread.daemon = True
         _rate0_thread.start()
             
-        self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, length_tag_key)
+        self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_ofdm_rx_0 = digital.ofdm_rx(
         	  fft_len=fft_len, cp_len=fft_len/4,
         	  frame_length_tag_key='frame_'+'packet_len',
@@ -140,16 +138,16 @@ class split1(gr.top_block):
         	  sync_word1=sync_word1,
         	  sync_word2=sync_word2,
         	  bps_header=1,
-        	  bps_payload=2,
+        	  bps_payload=1,
         	  debug_log=False,
         	  scramble_bits=False
         	 )
-        self.digital_crc32_bb_0 = digital.crc32_bb(False, length_tag_key, True)
+        self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, False)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
         self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
-        self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, length_tag_key, False, gr.GR_LSB_FIRST)
-        self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), length_tag_key, False, gr.GR_LSB_FIRST)
+        self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_LSB_FIRST)
+        self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), "packet_len", False, gr.GR_LSB_FIRST)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
 
         ##################################################
@@ -174,14 +172,7 @@ class split1(gr.top_block):
 
     def set_occupied_carriers(self, occupied_carriers):
         self.occupied_carriers = occupied_carriers
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
-
-    def get_length_tag_key(self):
-        return self.length_tag_key
-
-    def set_length_tag_key(self, length_tag_key):
-        self.length_tag_key = length_tag_key
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
+        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, "packet_len",))
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -273,12 +264,6 @@ class split1(gr.top_block):
     def set_payload_mod(self, payload_mod):
         self.payload_mod = payload_mod
 
-    def get_packet_len(self):
-        return self.packet_len
-
-    def set_packet_len(self, packet_len):
-        self.packet_len = packet_len
-
     def get_maxnoutput(self):
         return self.maxnoutput
 
@@ -320,6 +305,11 @@ def main(top_block_cls=split1, options=None):
 
     tb = top_block_cls()
     tb.start(100)
+    try:
+        raw_input('Press Enter to quit: ')
+    except EOFError:
+        pass
+    tb.stop()
     tb.wait()
 
 

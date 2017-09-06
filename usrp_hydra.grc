@@ -22,7 +22,7 @@
     </param>
     <param>
       <key>description</key>
-      <value>USRP</value>
+      <value>USRP with hydra</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>no_gui</value>
+      <value>qt_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>usrp</value>
+      <value>usrp_hydra</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>prompt</value>
+      <value>run</value>
     </param>
     <param>
       <key>run</key>
@@ -78,7 +78,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>usrp</value>
+      <value>usrp_hydra</value>
     </param>
   </block>
   <block>
@@ -93,11 +93,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 360)</value>
+      <value>(1016, 360)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -160,7 +160,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -438,11 +438,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 480)</value>
+      <value>(1016, 480)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -505,7 +505,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -826,11 +826,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 600)</value>
+      <value>(1016, 600)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -893,7 +893,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -995,7 +995,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(280, 408)</value>
+      <value>(280, 376)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1085,7 +1085,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(288, 276)</value>
+      <value>(536, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1128,11 +1128,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 248)</value>
+      <value>(728, 184)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1176,6 +1176,65 @@
     </param>
   </block>
   <block>
+    <key>hydra_hydra_sink</key>
+    <param>
+      <key>bandwidth</key>
+      <value>samprate</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>central_frequency</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>fft_m_size</key>
+      <value>64</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(288, 192)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>hydra_hydra_sink_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vradio_config</key>
+      <value>((freq, samprate),)</value>
+    </param>
+  </block>
+  <block>
     <key>qtgui_waterfall_sink_x</key>
     <param>
       <key>axislabels</key>
@@ -1203,7 +1262,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>fftsize</key>
@@ -1211,7 +1270,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 156)</value>
+      <value>(892, 400)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1219,7 +1278,7 @@
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>270</value>
     </param>
     <param>
       <key>grid</key>
@@ -1227,7 +1286,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>qtgui_waterfall_sink_x_1</value>
+      <value>qtgui_waterfall_sink_x_0</value>
     </param>
     <param>
       <key>int_max</key>
@@ -2070,7 +2129,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 216)</value>
+      <value>(976, 152)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3619,7 +3678,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(16, 260)</value>
+      <value>(16, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3788,7 +3847,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 356)</value>
+      <value>(264, 324)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3831,7 +3890,19 @@
   </connection>
   <connection>
     <source_block_id>digital_burst_shaper_xx_0</source_block_id>
+    <sink_block_id>qtgui_waterfall_sink_x_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_burst_shaper_xx_0</source_block_id>
     <sink_block_id>uhd_usrp_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>hydra_hydra_sink_0</source_block_id>
+    <sink_block_id>blocks_multiply_const_vxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3849,13 +3920,7 @@
   </connection>
   <connection>
     <source_block_id>zeromq_pull_source_0</source_block_id>
-    <sink_block_id>blocks_multiply_const_vxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>zeromq_pull_source_0</source_block_id>
-    <sink_block_id>qtgui_waterfall_sink_x_1</sink_block_id>
+    <sink_block_id>hydra_hydra_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

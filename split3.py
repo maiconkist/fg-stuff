@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Tue Aug 22 13:54:43 2017
+# Generated: Tue Sep  5 14:23:08 2017
 ##################################################
 
 from gnuradio import blocks
@@ -32,7 +32,6 @@ class split3(gr.top_block):
         # Variables
         ##################################################
         self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
-        self.length_tag_key = length_tag_key = "packet_len"
         self._xmlrpcport_config = ConfigParser.ConfigParser()
         self._xmlrpcport_config.read('default')
         try: xmlrpcport = self._xmlrpcport_config.getint("split3", 'xmlrpcport')
@@ -64,7 +63,6 @@ class split3(gr.top_block):
         self.port = port
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
-        self.payload_mod = payload_mod = digital.constellation_qpsk()
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -75,8 +73,7 @@ class split3(gr.top_block):
         try: ip = self._ip_config.get("split3", "ip")
         except: ip = "127.0.0.1"
         self.ip = ip
-        self.header_mod = header_mod = digital.constellation_bpsk()
-        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)
+        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, "packet_len",)
         self.fft_len = fft_len = 64
 
         ##################################################
@@ -104,8 +101,8 @@ class split3(gr.top_block):
         _rate_thread.start()
             
         self.fft_vxx_0 = fft.fft_vcc(fft_len, False, (()), True, 1)
-        self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+fft_len/4, rolloff, length_tag_key)
-        self.digital_ofdm_carrier_allocator_cvc_0 = digital.ofdm_carrier_allocator_cvc(fft_len, occupied_carriers, pilot_carriers, pilot_symbols, (sync_word1, sync_word2), length_tag_key)
+        self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+fft_len/4, rolloff, "packet_len")
+        self.digital_ofdm_carrier_allocator_cvc_0 = digital.ofdm_carrier_allocator_cvc(fft_len, occupied_carriers, pilot_carriers, pilot_symbols, (sync_word1, sync_word2), "packet_len")
 
         ##################################################
         # Connections
@@ -121,14 +118,7 @@ class split3(gr.top_block):
 
     def set_occupied_carriers(self, occupied_carriers):
         self.occupied_carriers = occupied_carriers
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
-
-    def get_length_tag_key(self):
-        return self.length_tag_key
-
-    def set_length_tag_key(self, length_tag_key):
-        self.length_tag_key = length_tag_key
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
+        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, "packet_len",))
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -196,12 +186,6 @@ class split3(gr.top_block):
     def set_pilot_carriers(self, pilot_carriers):
         self.pilot_carriers = pilot_carriers
 
-    def get_payload_mod(self):
-        return self.payload_mod
-
-    def set_payload_mod(self, payload_mod):
-        self.payload_mod = payload_mod
-
     def get_maxnoutput(self):
         return self.maxnoutput
 
@@ -213,12 +197,6 @@ class split3(gr.top_block):
 
     def set_ip(self, ip):
         self.ip = ip
-
-    def get_header_mod(self):
-        return self.header_mod
-
-    def set_header_mod(self, header_mod):
-        self.header_mod = header_mod
 
     def get_hdr_format(self):
         return self.hdr_format
