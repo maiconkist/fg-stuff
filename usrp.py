@@ -4,28 +4,63 @@
 # GNU Radio Python Flow Graph
 # Title: usrp
 # Description: USRP
-# Generated: Tue Sep  5 19:09:51 2017
+# Generated: Mon Sep 11 17:45:17 2017
 ##################################################
 
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+
+from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio import zeromq
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
+from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
+import sip
+import sys
 import threading
 import time
 
 
-class usrp(gr.top_block):
+class usrp(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "usrp")
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("usrp")
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+            pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+
+        self.settings = Qt.QSettings("GNU Radio", "usrp")
+        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
         # Variables
@@ -41,11 +76,7 @@ class usrp(gr.top_block):
         try: txoutport = self._txoutport_config.get("usrp", "txoutport")
         except: txoutport = "2666"
         self.txoutport = txoutport
-        self._txgain_config = ConfigParser.ConfigParser()
-        self._txgain_config.read('default')
-        try: txgain = self._txgain_config.getfloat("usrp", "txgain")
-        except: txgain = 0.9
-        self.txgain = txgain
+        self.txgain = txgain = 1
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
@@ -72,11 +103,7 @@ class usrp(gr.top_block):
         try: rxip = self._rxip_config.get("rx", "ip")
         except: rxip = "127.0.0.1"
         self.rxip = rxip
-        self._rxgain_config = ConfigParser.ConfigParser()
-        self._rxgain_config.read('default')
-        try: rxgain = self._rxgain_config.getfloat("usrp", "rxgain")
-        except: rxgain = 0.9
-        self.rxgain = rxgain
+        self.rxgain = rxgain = 0
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -102,15 +129,20 @@ class usrp(gr.top_block):
         try: finalsplitip = self._finalsplitip_config.get("usrp", "finalsplitip")
         except: finalsplitip = "127.0.0.1"
         self.finalsplitip = finalsplitip
-        self._amplitude_config = ConfigParser.ConfigParser()
-        self._amplitude_config.read('default')
-        try: amplitude = self._amplitude_config.getfloat("usrp", "txamplitude")
-        except: amplitude = 0.1
-        self.amplitude = amplitude
+        self.amplitude = amplitude = 0.05
 
         ##################################################
         # Blocks
         ##################################################
+        self._txgain_range = Range(0, 1, 0.01, 1, 200)
+        self._txgain_win = RangeWidget(self._txgain_range, self.set_txgain, 'txgain', "counter_slider", float)
+        self.top_layout.addWidget(self._txgain_win)
+        self._rxgain_range = Range(0, 1, 0.01, 0, 200)
+        self._rxgain_win = RangeWidget(self._rxgain_range, self.set_rxgain, 'rxgain', "counter_slider", float)
+        self.top_layout.addWidget(self._rxgain_win)
+        self._amplitude_range = Range(0, 1, 0.01, 0.05, 200)
+        self._amplitude_win = RangeWidget(self._amplitude_range, self.set_amplitude, 'amplitude', "counter_slider", float)
+        self.top_layout.addWidget(self._amplitude_win)
         self.ztxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
         self.zrxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
         self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxoutport, 100, True, -1)
@@ -170,6 +202,42 @@ class usrp(gr.top_block):
         _rxrate_thread.daemon = True
         _rxrate_thread.start()
             
+        self.qtgui_waterfall_sink_x_1 = qtgui.waterfall_sink_c(
+        	1024, #size
+        	firdes.WIN_BLACKMAN_hARRIS, #wintype
+        	0, #fc
+        	samprate, #bw
+        	"", #name
+                1 #number of inputs
+        )
+        self.qtgui_waterfall_sink_x_1.set_update_time(0.10)
+        self.qtgui_waterfall_sink_x_1.enable_grid(False)
+        self.qtgui_waterfall_sink_x_1.enable_axis_labels(True)
+        
+        if not True:
+          self.qtgui_waterfall_sink_x_1.disable_legend()
+        
+        if "complex" == "float" or "complex" == "msg_float":
+          self.qtgui_waterfall_sink_x_1.set_plot_pos_half(not True)
+        
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        colors = [0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+        for i in xrange(1):
+            if len(labels[i]) == 0:
+                self.qtgui_waterfall_sink_x_1.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_waterfall_sink_x_1.set_line_label(i, labels[i])
+            self.qtgui_waterfall_sink_x_1.set_color_map(i, colors[i])
+            self.qtgui_waterfall_sink_x_1.set_line_alpha(i, alphas[i])
+        
+        self.qtgui_waterfall_sink_x_1.set_intensity_range(-140, 10)
+        
+        self._qtgui_waterfall_sink_x_1_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_1.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_1_win)
         self.digital_burst_shaper_xx_0 = digital.burst_shaper_cc((([])), 2000, 100, False, "packet_len")
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((amplitude, ))
 
@@ -181,7 +249,13 @@ class usrp(gr.top_block):
         self.connect((self.uhd_usrp_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.zrxrate, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_1, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.ztxrate, 0))    
+
+    def closeEvent(self, event):
+        self.settings = Qt.QSettings("GNU Radio", "usrp")
+        self.settings.setValue("geometry", self.saveGeometry())
+        event.accept()
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -224,6 +298,7 @@ class usrp(gr.top_block):
         self.uhd_usrp_source_0.set_bandwidth(self.samprate, 0)
         self.uhd_usrp_sink_0.set_samp_rate(self.samprate)
         self.uhd_usrp_sink_0.set_bandwidth(self.samprate, 0)
+        self.qtgui_waterfall_sink_x_1.set_frequency_range(0, self.samprate)
 
     def get_rxrate(self):
         return self.rxrate
@@ -299,14 +374,21 @@ class usrp(gr.top_block):
 
 def main(top_block_cls=usrp, options=None):
 
+    from distutils.version import StrictVersion
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
+    qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls()
-    tb.start(100)
-    try:
-        raw_input('Press Enter to quit: ')
-    except EOFError:
-        pass
-    tb.stop()
-    tb.wait()
+    tb.start()
+    tb.show()
+
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.exec_()
 
 
 if __name__ == '__main__':

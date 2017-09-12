@@ -211,7 +211,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 816)</value>
+      <value>(632, 752)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -219,15 +219,62 @@
     </param>
     <param>
       <key>id</key>
-      <value>finalsplitip</value>
+      <value>finalsplitip1</value>
     </param>
     <param>
       <key>option</key>
-      <value>"finalsplitip"</value>
+      <value>"finalsplitip1"</value>
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"127.0.0.1"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(632, 888)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>finalsplitip2</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"finalsplitip2"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -258,7 +305,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 816)</value>
+      <value>(784, 752)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -266,15 +313,15 @@
     </param>
     <param>
       <key>id</key>
-      <value>finalsplitport</value>
+      <value>finalsplitport1</value>
     </param>
     <param>
       <key>option</key>
-      <value>"finalsplitport"</value>
+      <value>"finalsplitport1"</value>
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -297,7 +344,54 @@
     </param>
     <param>
       <key>value</key>
-      <value>4.4e9</value>
+      <value>"2300"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(784, 888)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>finalsplitport2</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"finalsplitport2"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>950e6</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -321,7 +415,54 @@
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>950e6</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(376, 752)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>freq1</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"freq1"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -352,7 +493,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 816)</value>
+      <value>(0, 728)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -368,7 +509,7 @@
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -399,7 +540,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(416, 816)</value>
+      <value>(0, 864)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -556,7 +697,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(984, 816)</value>
+      <value>(1008, 728)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -603,7 +744,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(288, 816)</value>
+      <value>(152, 728)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -619,7 +760,7 @@
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -650,7 +791,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1136, 816)</value>
+      <value>(1160, 728)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -701,7 +842,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 600)</value>
+      <value>(280, 608)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -756,7 +897,54 @@
     </param>
     <param>
       <key>section</key>
-      <value>"usrp"</value>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1e6</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(504, 752)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>samprate1</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"samprate1"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
     </param>
     <param>
       <key>type</key>
@@ -787,7 +975,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 8)</value>
+      <value>(464, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -925,53 +1113,6 @@
     </param>
   </block>
   <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"2666"</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(152, 816)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>txoutport</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"txoutport"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"usrp"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
     <key>variable_function_probe</key>
     <param>
       <key>block_id</key>
@@ -995,7 +1136,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(280, 376)</value>
+      <value>(336, 352)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1085,7 +1226,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(536, 212)</value>
+      <value>(568, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1113,6 +1254,61 @@
     </param>
   </block>
   <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(568, 340)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>Rx'd Packets</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>digital_burst_shaper_xx</key>
     <param>
       <key>alias</key>
@@ -1132,7 +1328,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 184)</value>
+      <value>(744, 184)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1207,7 +1403,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(288, 192)</value>
+      <value>(312, 192)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1231,7 +1427,7 @@
     </param>
     <param>
       <key>vradio_config</key>
-      <value>((freq, samprate),)</value>
+      <value>((freq1, samprate1),)</value>
     </param>
   </block>
   <block>
@@ -1266,11 +1462,11 @@
     </param>
     <param>
       <key>fftsize</key>
-      <value>1024</value>
+      <value>64</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(892, 400)</value>
+      <value>(832, 332)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1278,7 +1474,7 @@
     </param>
     <param>
       <key>_rotation</key>
-      <value>270</value>
+      <value>0</value>
     </param>
     <param>
       <key>grid</key>
@@ -1287,6 +1483,229 @@
     <param>
       <key>id</key>
       <value>qtgui_waterfall_sink_x_0</value>
+    </param>
+    <param>
+      <key>int_max</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>int_min</key>
+      <value>-140</value>
+    </param>
+    <param>
+      <key>legend</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alpha1</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha10</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color10</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha2</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color2</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha3</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color3</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha4</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color4</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha5</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color5</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha6</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color6</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha7</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color7</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha8</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color8</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alpha9</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>color9</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>nconnections</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>showports</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>freqhalf</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>update_time</key>
+      <value>0.10</value>
+    </param>
+    <param>
+      <key>wintype</key>
+      <value>firdes.WIN_BLACKMAN_hARRIS</value>
+    </param>
+  </block>
+  <block>
+    <key>qtgui_waterfall_sink_x</key>
+    <param>
+      <key>axislabels</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>bw</key>
+      <value>samprate</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>fc</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fftsize</key>
+      <value>32</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(800, 420)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>grid</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>qtgui_waterfall_sink_x_0_0</value>
     </param>
     <param>
       <key>int_max</key>
@@ -2292,7 +2711,7 @@
     </param>
     <param>
       <key>bw0</key>
-      <value>samprate</value>
+      <value>samprate1</value>
     </param>
     <param>
       <key>center_freq0</key>
@@ -3658,7 +4077,7 @@
     <key>zeromq_pull_source</key>
     <param>
       <key>address</key>
-      <value>"tcp://" + finalsplitip + ":" + finalsplitport</value>
+      <value>"tcp://" + finalsplitip1 + ":" + finalsplitport1</value>
     </param>
     <param>
       <key>alias</key>
@@ -3678,7 +4097,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(16, 196)</value>
+      <value>(16, 124)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3691,6 +4110,69 @@
     <param>
       <key>id</key>
       <value>zeromq_pull_source_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>pass_tags</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>timeout</key>
+      <value>timeout</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>zeromq_pull_source</key>
+    <param>
+      <key>address</key>
+      <value>"tcp://" + finalsplitip2 + ":" + finalsplitport2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 316)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>hwm</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zeromq_pull_source_0_0</value>
     </param>
     <param>
       <key>type</key>
@@ -3792,7 +4274,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 548)</value>
+      <value>(256, 556)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3847,7 +4329,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 324)</value>
+      <value>(320, 300)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3889,7 +4371,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_burst_shaper_xx_0</source_block_id>
+    <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
     <sink_block_id>qtgui_waterfall_sink_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -3920,7 +4402,19 @@
   </connection>
   <connection>
     <source_block_id>zeromq_pull_source_0</source_block_id>
+    <sink_block_id>blocks_tag_debug_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>zeromq_pull_source_0</source_block_id>
     <sink_block_id>hydra_hydra_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>zeromq_pull_source_0</source_block_id>
+    <sink_block_id>qtgui_waterfall_sink_x_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 2
 # Description: Split 2
-# Generated: Tue Sep  5 13:09:16 2017
+# Generated: Mon Sep 11 17:44:58 2017
 ##################################################
 
 from gnuradio import blocks
@@ -29,8 +29,6 @@ class split2(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
-        self.length_tag_key = length_tag_key = "packet_len"
         self._xmlrpcport_config = ConfigParser.ConfigParser()
         self._xmlrpcport_config.read('default')
         try: xmlrpcport = self._xmlrpcport_config.getint("split2", "xmlrpcport")
@@ -48,22 +46,18 @@ class split2(gr.top_block):
         try: split1ip = self._split1ip_config.get("split1", "ip")
         except: split1ip = "127.0.0.1"
         self.split1ip = split1ip
-        self.rolloff = rolloff = 0
         self.rate = rate = 0
         self._port_config = ConfigParser.ConfigParser()
         self._port_config.read('default')
         try: port = self._port_config.get("split2", "port")
         except: port = '2200'
         self.port = port
-        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
-        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self._payloadport_config = ConfigParser.ConfigParser()
         self._payloadport_config.read('default')
         try: payloadport = self._payloadport_config.get("split1", "payloadport")
         except: payloadport = "2101"
         self.payloadport = payloadport
         self.payload_mod = payload_mod = digital.constellation_bpsk()
-        self.packet_len = packet_len = 96
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -80,8 +74,6 @@ class split2(gr.top_block):
         except: headerport = "2100"
         self.headerport = headerport
         self.header_mod = header_mod = digital.constellation_bpsk()
-        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)
-        self.fft_len = fft_len = 64
 
         ##################################################
         # Blocks
@@ -110,7 +102,7 @@ class split2(gr.top_block):
             
         self.digital_chunks_to_symbols_xx_0_0 = digital.chunks_to_symbols_bc((payload_mod.points()), 1)
         self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bc((header_mod.points()), 1)
-        self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, length_tag_key, 0)
+        self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, "packet_len", 0)
 
         ##################################################
         # Connections
@@ -121,20 +113,6 @@ class split2(gr.top_block):
         self.connect((self.digital_chunks_to_symbols_xx_0_0, 0), (self.blocks_tagged_stream_mux_0, 1))    
         self.connect((self.zeromq_pull_source_0, 0), (self.digital_chunks_to_symbols_xx_0, 0))    
         self.connect((self.zeromq_pull_source_1, 0), (self.digital_chunks_to_symbols_xx_0_0, 0))    
-
-    def get_occupied_carriers(self):
-        return self.occupied_carriers
-
-    def set_occupied_carriers(self, occupied_carriers):
-        self.occupied_carriers = occupied_carriers
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
-
-    def get_length_tag_key(self):
-        return self.length_tag_key
-
-    def set_length_tag_key(self, length_tag_key):
-        self.length_tag_key = length_tag_key
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, self.length_tag_key,))
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -166,12 +144,6 @@ class split2(gr.top_block):
     def set_split1ip(self, split1ip):
         self.split1ip = split1ip
 
-    def get_rolloff(self):
-        return self.rolloff
-
-    def set_rolloff(self, rolloff):
-        self.rolloff = rolloff
-
     def get_rate(self):
         return self.rate
 
@@ -184,18 +156,6 @@ class split2(gr.top_block):
     def set_port(self, port):
         self.port = port
 
-    def get_pilot_symbols(self):
-        return self.pilot_symbols
-
-    def set_pilot_symbols(self, pilot_symbols):
-        self.pilot_symbols = pilot_symbols
-
-    def get_pilot_carriers(self):
-        return self.pilot_carriers
-
-    def set_pilot_carriers(self, pilot_carriers):
-        self.pilot_carriers = pilot_carriers
-
     def get_payloadport(self):
         return self.payloadport
 
@@ -207,12 +167,6 @@ class split2(gr.top_block):
 
     def set_payload_mod(self, payload_mod):
         self.payload_mod = payload_mod
-
-    def get_packet_len(self):
-        return self.packet_len
-
-    def set_packet_len(self, packet_len):
-        self.packet_len = packet_len
 
     def get_maxnoutput(self):
         return self.maxnoutput
@@ -238,23 +192,11 @@ class split2(gr.top_block):
     def set_header_mod(self, header_mod):
         self.header_mod = header_mod
 
-    def get_hdr_format(self):
-        return self.hdr_format
-
-    def set_hdr_format(self, hdr_format):
-        self.hdr_format = hdr_format
-
-    def get_fft_len(self):
-        return self.fft_len
-
-    def set_fft_len(self, fft_len):
-        self.fft_len = fft_len
-
 
 def main(top_block_cls=split2, options=None):
 
     tb = top_block_cls()
-    tb.start(100)
+    tb.start()
     tb.wait()
 
 

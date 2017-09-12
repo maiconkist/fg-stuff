@@ -4,9 +4,20 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Tue Sep  5 16:20:34 2017
+# Generated: Mon Sep 11 17:33:53 2017
 ##################################################
 
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+
+from PyQt4 import Qt
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
@@ -15,34 +26,42 @@ from gnuradio import uhd
 from gnuradio.digital.utils import tagged_streams
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
+from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
 import ConfigParser
+import sys
 import time
 
 
-class rx(gr.top_block):
+class rx(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "OFDM Single")
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("OFDM Single")
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+            pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+
+        self.settings = Qt.QSettings("GNU Radio", "rx")
+        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
         # Variables
         ##################################################
-        self._usrpport_config = ConfigParser.ConfigParser()
-        self._usrpport_config.read('default')
-        try: usrpport = self._usrpport_config.get("usrp", "txoutport")
-        except: usrpport = "2666"
-        self.usrpport = usrpport
-        self._usrpip_config = ConfigParser.ConfigParser()
-        self._usrpip_config.read('default')
-        try: usrpip = self._usrpip_config.get("usrp", "ip")
-        except: usrpip = "127.0.0.1"
-        self.usrpip = usrpip
-        self._txgain_config = ConfigParser.ConfigParser()
-        self._txgain_config.read('default')
-        try: txgain = self._txgain_config.getfloat("rx", "txgain")
-        except: txgain = 0.5
-        self.txgain = txgain
+        self.txgain = txgain = 1
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
@@ -55,16 +74,7 @@ class rx(gr.top_block):
         try: samprate = self._samprate_config.getfloat("usrp", "samprate")
         except: samprate = 4e6
         self.samprate = samprate
-        self._rxgain_config = ConfigParser.ConfigParser()
-        self._rxgain_config.read('default')
-        try: rxgain = self._rxgain_config.getfloat("rx", "rxgain")
-        except: rxgain = 0.5
-        self.rxgain = rxgain
-        self._port_config = ConfigParser.ConfigParser()
-        self._port_config.read('default')
-        try: port = self._port_config.get("rx", "port")
-        except: port = "2666"
-        self.port = port
+        self.rxgain = rxgain = 0
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
         self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
         self.packet_length_tag_key = packet_length_tag_key = "packet_len"
@@ -75,26 +85,26 @@ class rx(gr.top_block):
         except: maxnoutput = 100
         self.maxnoutput = maxnoutput
         self.length_tag_key = length_tag_key = "frame_len"
-        self._ip_config = ConfigParser.ConfigParser()
-        self._ip_config.read('default')
-        try: ip = self._ip_config.get("rx", "ip")
-        except: ip = "127.0.0.1"
-        self.ip = ip
         self._freq_config = ConfigParser.ConfigParser()
         self._freq_config.read('default')
         try: freq = self._freq_config.getfloat("usrp", "freq")
         except: freq = 4.4e9
         self.freq = freq
         self.fft_len = fft_len = 64
-        self._amplitude_config = ConfigParser.ConfigParser()
-        self._amplitude_config.read('default')
-        try: amplitude = self._amplitude_config.getfloat("rx", "txamplitude")
-        except: amplitude = 0.1
-        self.amplitude = amplitude
+        self.amplitude = amplitude = 0.05
 
         ##################################################
         # Blocks
         ##################################################
+        self._txgain_range = Range(0, 1, 0.01, 1, 200)
+        self._txgain_win = RangeWidget(self._txgain_range, self.set_txgain, 'txgain', "counter_slider", float)
+        self.top_layout.addWidget(self._txgain_win)
+        self._rxgain_range = Range(0, 1, 0.01, 0, 200)
+        self._rxgain_win = RangeWidget(self._rxgain_range, self.set_rxgain, 'rxgain', "counter_slider", float)
+        self.top_layout.addWidget(self._rxgain_win)
+        self._amplitude_range = Range(0, 1, 0.01, 0.05, 200)
+        self._amplitude_win = RangeWidget(self._amplitude_range, self.set_amplitude, 'amplitude', "counter_slider", float)
+        self.top_layout.addWidget(self._amplitude_win)
         self.uhd_usrp_source_0 = uhd.usrp_source(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -149,7 +159,8 @@ class rx(gr.top_block):
         self.digital_burst_shaper_xx_0 = digital.burst_shaper_cc((([])), 2000, 100, False, "packet_len")
         self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu('tap0', 10000, False)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
+        (self.blocks_tagged_stream_to_pdu_0).set_processor_affinity([1])
+        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, '', ""); self.blocks_tag_debug_0.set_display(True)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, "packet_len")
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((amplitude, ))
 
@@ -166,17 +177,10 @@ class rx(gr.top_block):
         self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.digital_ofdm_rx_0, 0))    
 
-    def get_usrpport(self):
-        return self.usrpport
-
-    def set_usrpport(self, usrpport):
-        self.usrpport = usrpport
-
-    def get_usrpip(self):
-        return self.usrpip
-
-    def set_usrpip(self, usrpip):
-        self.usrpip = usrpip
+    def closeEvent(self, event):
+        self.settings = Qt.QSettings("GNU Radio", "rx")
+        self.settings.setValue("geometry", self.saveGeometry())
+        event.accept()
 
     def get_txgain(self):
         return self.txgain
@@ -221,12 +225,6 @@ class rx(gr.top_block):
         self.uhd_usrp_source_0.set_normalized_gain(self.rxgain, 0)
         	
 
-    def get_port(self):
-        return self.port
-
-    def set_port(self, port):
-        self.port = port
-
     def get_pilot_symbols(self):
         return self.pilot_symbols
 
@@ -263,12 +261,6 @@ class rx(gr.top_block):
     def set_length_tag_key(self, length_tag_key):
         self.length_tag_key = length_tag_key
 
-    def get_ip(self):
-        return self.ip
-
-    def set_ip(self, ip):
-        self.ip = ip
-
     def get_freq(self):
         return self.freq
 
@@ -293,14 +285,21 @@ class rx(gr.top_block):
 
 def main(top_block_cls=rx, options=None):
 
+    from distutils.version import StrictVersion
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
+    qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls()
-    tb.start(100)
-    try:
-        raw_input('Press Enter to quit: ')
-    except EOFError:
-        pass
-    tb.stop()
-    tb.wait()
+    tb.start()
+    tb.show()
+
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.exec_()
 
 
 if __name__ == '__main__':

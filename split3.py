@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Tue Sep  5 14:23:08 2017
+# Generated: Tue Sep 12 15:03:57 2017
 ##################################################
 
 from gnuradio import blocks
@@ -25,8 +25,13 @@ import time
 
 class split3(gr.top_block):
 
-    def __init__(self):
+    def __init__(self, maxoutbuffer=0):
         gr.top_block.__init__(self, "Split 3")
+
+        ##################################################
+        # Parameters
+        ##################################################
+        self.maxoutbuffer = maxoutbuffer
 
         ##################################################
         # Variables
@@ -112,6 +117,12 @@ class split3(gr.top_block):
         self.connect((self.digital_ofdm_cyclic_prefixer_0, 0), (self.zeromq_push_sink_0, 0))    
         self.connect((self.fft_vxx_0, 0), (self.digital_ofdm_cyclic_prefixer_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_carrier_allocator_cvc_0, 0))    
+
+    def get_maxoutbuffer(self):
+        return self.maxoutbuffer
+
+    def set_maxoutbuffer(self, maxoutbuffer):
+        self.maxoutbuffer = maxoutbuffer
 
     def get_occupied_carriers(self):
         return self.occupied_carriers
@@ -211,10 +222,21 @@ class split3(gr.top_block):
         self.fft_len = fft_len
 
 
-def main(top_block_cls=split3, options=None):
+def argument_parser():
+    description = 'Split3'
+    parser = OptionParser(usage="%prog: [options]", option_class=eng_option, description=description)
+    parser.add_option(
+        "", "--maxoutbuffer", dest="maxoutbuffer", type="intx", default=0,
+        help="Set maxoutbuffer [default=%default]")
+    return parser
 
-    tb = top_block_cls()
-    tb.start(100)
+
+def main(top_block_cls=split3, options=None):
+    if options is None:
+        options, _ = argument_parser().parse_args()
+
+    tb = top_block_cls(maxoutbuffer=options.maxoutbuffer)
+    tb.start()
     tb.wait()
 
 

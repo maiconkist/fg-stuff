@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Tue Sep  5 16:38:48 2017
+# Generated: Mon Sep 11 17:44:47 2017
 ##################################################
 
 from gnuradio import blocks
@@ -57,8 +57,6 @@ class split1(gr.top_block):
         self.throttle = throttle
         self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
-        self.samp_rate = samp_rate = 100000
-        self.rolloff = rolloff = 0
         self.rate1 = rate1 = 0
         self.rate0 = rate0 = 0
         self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
@@ -216,18 +214,6 @@ class split1(gr.top_block):
     def set_sync_word1(self, sync_word1):
         self.sync_word1 = sync_word1
 
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-
-    def get_rolloff(self):
-        return self.rolloff
-
-    def set_rolloff(self, rolloff):
-        self.rolloff = rolloff
-
     def get_rate1(self):
         return self.rate1
 
@@ -304,7 +290,7 @@ class split1(gr.top_block):
 def main(top_block_cls=split1, options=None):
 
     tb = top_block_cls()
-    tb.start(100)
+    tb.start()
     try:
         raw_input('Press Enter to quit: ')
     except EOFError:
