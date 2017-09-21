@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Tue Sep 12 15:03:57 2017
+# Generated: Fri Sep 15 15:27:10 2017
 ##################################################
 
 from gnuradio import blocks
@@ -36,7 +36,10 @@ class split3(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
+        self.pilot_carriers = pilot_carriers = ((-42, -14, -7, 7, 14, 42),)
+        self.pattern2 = pattern2 = [1, -1, 1, -1]
+        self.pattern1 = pattern1 = [0., 1.41421356, 0., -1.41421356]
+        self.fft_len = fft_len = 128
         self._xmlrpcport_config = ConfigParser.ConfigParser()
         self._xmlrpcport_config.read('default')
         try: xmlrpcport = self._xmlrpcport_config.getint("split3", 'xmlrpcport')
@@ -47,8 +50,8 @@ class split3(gr.top_block):
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
         except: timeout = 100
         self.timeout = timeout
-        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
-        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
+        self.sync_word2 = sync_word2 = [0., 0., 0., 0., 0., 0.,] + pattern2 * ((fft_len-12)/len(pattern2))  +[0., 0., 0., 0., 0., 0.,] 
+        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0.,] + pattern1 * ((fft_len-12)/len(pattern1))  +[0., 0., 0., 0., 0., 0.,] 
         self._split2port_config = ConfigParser.ConfigParser()
         self._split2port_config.read('default')
         try: split2port = self._split2port_config.get("split2", "port")
@@ -66,8 +69,8 @@ class split3(gr.top_block):
         try: port = self._port_config.get("split3", "port")
         except: port = "2300"
         self.port = port
-        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
-        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
+        self.pilot_symbols = pilot_symbols = ((-1,1, 1, -1, -1, -1),)
+        self.occupied_carriers = occupied_carriers = (sorted(tuple(set([x for x in range(-26,27)]) - set(pilot_carriers[0]) - set([0,]))),)
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -78,8 +81,6 @@ class split3(gr.top_block):
         try: ip = self._ip_config.get("split3", "ip")
         except: ip = "127.0.0.1"
         self.ip = ip
-        self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, "packet_len",)
-        self.fft_len = fft_len = 64
 
         ##################################################
         # Blocks
@@ -106,7 +107,7 @@ class split3(gr.top_block):
         _rate_thread.start()
             
         self.fft_vxx_0 = fft.fft_vcc(fft_len, False, (()), True, 1)
-        self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+fft_len/4, rolloff, "packet_len")
+        self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+16, rolloff, "packet_len")
         self.digital_ofdm_carrier_allocator_cvc_0 = digital.ofdm_carrier_allocator_cvc(fft_len, occupied_carriers, pilot_carriers, pilot_symbols, (sync_word1, sync_word2), "packet_len")
 
         ##################################################
@@ -124,12 +125,34 @@ class split3(gr.top_block):
     def set_maxoutbuffer(self, maxoutbuffer):
         self.maxoutbuffer = maxoutbuffer
 
-    def get_occupied_carriers(self):
-        return self.occupied_carriers
+    def get_pilot_carriers(self):
+        return self.pilot_carriers
 
-    def set_occupied_carriers(self, occupied_carriers):
-        self.occupied_carriers = occupied_carriers
-        self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, "packet_len",))
+    def set_pilot_carriers(self, pilot_carriers):
+        self.pilot_carriers = pilot_carriers
+        self.set_occupied_carriers((sorted(tuple(set([x for x in range(-26,27)]) - set(self.pilot_carriers[0]) - set([0,]))),))
+
+    def get_pattern2(self):
+        return self.pattern2
+
+    def set_pattern2(self, pattern2):
+        self.pattern2 = pattern2
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_pattern1(self):
+        return self.pattern1
+
+    def set_pattern1(self, pattern1):
+        self.pattern1 = pattern1
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_fft_len(self):
+        return self.fft_len
+
+    def set_fft_len(self, fft_len):
+        self.fft_len = fft_len
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -191,11 +214,11 @@ class split3(gr.top_block):
     def set_pilot_symbols(self, pilot_symbols):
         self.pilot_symbols = pilot_symbols
 
-    def get_pilot_carriers(self):
-        return self.pilot_carriers
+    def get_occupied_carriers(self):
+        return self.occupied_carriers
 
-    def set_pilot_carriers(self, pilot_carriers):
-        self.pilot_carriers = pilot_carriers
+    def set_occupied_carriers(self, occupied_carriers):
+        self.occupied_carriers = occupied_carriers
 
     def get_maxnoutput(self):
         return self.maxnoutput
@@ -208,18 +231,6 @@ class split3(gr.top_block):
 
     def set_ip(self, ip):
         self.ip = ip
-
-    def get_hdr_format(self):
-        return self.hdr_format
-
-    def set_hdr_format(self, hdr_format):
-        self.hdr_format = hdr_format
-
-    def get_fft_len(self):
-        return self.fft_len
-
-    def set_fft_len(self, fft_len):
-        self.fft_len = fft_len
 
 
 def argument_parser():

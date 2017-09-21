@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Mon Sep 11 17:44:47 2017
+# Generated: Fri Sep 15 15:27:07 2017
 ##################################################
 
 from gnuradio import blocks
@@ -29,7 +29,11 @@ class split1(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
+        self.pilot_carriers = pilot_carriers = ((-42, -14, -7, 7, 14, 42),)
+        self.pattern2 = pattern2 = [1, -1, 1, -1]
+        self.pattern1 = pattern1 = [0., 1.41421356, 0., -1.41421356]
+        self.occupied_carriers = occupied_carriers = (sorted(tuple(set([x for x in range(-26, 27)]) - set(pilot_carriers[0]) - set([0,]))),)
+        self.fft_len = fft_len = 128
         self._xmlrpcport_config = ConfigParser.ConfigParser()
         self._xmlrpcport_config.read('default')
         try: xmlrpcport = self._xmlrpcport_config.getint("split1", "xmlrpcport")
@@ -55,12 +59,11 @@ class split1(gr.top_block):
         try: throttle = self._throttle_config.getint("split1", "throttle")
         except: throttle = int(100e3)
         self.throttle = throttle
-        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
-        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
+        self.sync_word2 = sync_word2 = [0., 0., 0., 0., 0., 0.,] + pattern2 * ((fft_len-12)/len(pattern2))  +[0., 0., 0., 0., 0., 0.,] 
+        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0.,] + pattern1 * ((fft_len-12)/len(pattern1))  +[0., 0., 0., 0., 0., 0.,] 
         self.rate1 = rate1 = 0
         self.rate0 = rate0 = 0
-        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
-        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
+        self.pilot_symbols = pilot_symbols = ((-1,1, 1, -1, -1, -1),)
         self._payloadport_config = ConfigParser.ConfigParser()
         self._payloadport_config.read('default')
         try: payloadport = self._payloadport_config.get("split1", "payloadport")
@@ -84,7 +87,6 @@ class split1(gr.top_block):
         self.headerport = headerport
         self.header_mod = header_mod = digital.constellation_bpsk()
         self.hdr_format = hdr_format = digital.header_format_ofdm(occupied_carriers, 1, "packet_len",)
-        self.fft_len = fft_len = 64
 
         ##################################################
         # Blocks
@@ -127,9 +129,9 @@ class split1(gr.top_block):
             
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_ofdm_rx_0 = digital.ofdm_rx(
-        	  fft_len=fft_len, cp_len=fft_len/4,
-        	  frame_length_tag_key='frame_'+'packet_len',
-        	  packet_length_tag_key='packet_len',
+        	  fft_len=fft_len, cp_len=16,
+        	  frame_length_tag_key='frame_'+"packet_len",
+        	  packet_length_tag_key="packet_len",
         	  occupied_carriers=occupied_carriers,
         	  pilot_carriers=pilot_carriers,
         	  pilot_symbols=pilot_symbols,
@@ -165,12 +167,41 @@ class split1(gr.top_block):
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_rx_0, 0))    
 
+    def get_pilot_carriers(self):
+        return self.pilot_carriers
+
+    def set_pilot_carriers(self, pilot_carriers):
+        self.pilot_carriers = pilot_carriers
+        self.set_occupied_carriers((sorted(tuple(set([x for x in range(-26, 27)]) - set(self.pilot_carriers[0]) - set([0,]))),))
+
+    def get_pattern2(self):
+        return self.pattern2
+
+    def set_pattern2(self, pattern2):
+        self.pattern2 = pattern2
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_pattern1(self):
+        return self.pattern1
+
+    def set_pattern1(self, pattern1):
+        self.pattern1 = pattern1
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
+
     def get_occupied_carriers(self):
         return self.occupied_carriers
 
     def set_occupied_carriers(self, occupied_carriers):
         self.occupied_carriers = occupied_carriers
         self.set_hdr_format(digital.header_format_ofdm(self.occupied_carriers, 1, "packet_len",))
+
+    def get_fft_len(self):
+        return self.fft_len
+
+    def set_fft_len(self, fft_len):
+        self.fft_len = fft_len
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
 
     def get_xmlrpcport(self):
         return self.xmlrpcport
@@ -232,12 +263,6 @@ class split1(gr.top_block):
     def set_pilot_symbols(self, pilot_symbols):
         self.pilot_symbols = pilot_symbols
 
-    def get_pilot_carriers(self):
-        return self.pilot_carriers
-
-    def set_pilot_carriers(self, pilot_carriers):
-        self.pilot_carriers = pilot_carriers
-
     def get_payloadport(self):
         return self.payloadport
 
@@ -279,12 +304,6 @@ class split1(gr.top_block):
 
     def set_hdr_format(self, hdr_format):
         self.hdr_format = hdr_format
-
-    def get_fft_len(self):
-        return self.fft_len
-
-    def set_fft_len(self, fft_len):
-        self.fft_len = fft_len
 
 
 def main(top_block_cls=split1, options=None):

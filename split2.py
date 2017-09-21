@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 2
 # Description: Split 2
-# Generated: Mon Sep 11 17:44:58 2017
+# Generated: Thu Sep 14 19:11:23 2017
 ##################################################
 
 from gnuradio import blocks
@@ -39,8 +39,6 @@ class split2(gr.top_block):
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
         except: timeout = 100
         self.timeout = timeout
-        self.sync_word2 = sync_word2 = [0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] 
-        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
         self._split1ip_config = ConfigParser.ConfigParser()
         self._split1ip_config.read('default')
         try: split1ip = self._split1ip_config.get("split1", "ip")
@@ -125,18 +123,6 @@ class split2(gr.top_block):
 
     def set_timeout(self, timeout):
         self.timeout = timeout
-
-    def get_sync_word2(self):
-        return self.sync_word2
-
-    def set_sync_word2(self, sync_word2):
-        self.sync_word2 = sync_word2
-
-    def get_sync_word1(self):
-        return self.sync_word1
-
-    def set_sync_word1(self, sync_word1):
-        self.sync_word1 = sync_word1
 
     def get_split1ip(self):
         return self.split1ip

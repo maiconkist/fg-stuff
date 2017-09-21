@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp_hydra
 # Description: USRP with hydra
-# Generated: Wed Sep  6 20:06:56 2017
+# Generated: Thu Sep 21 16:26:50 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -71,13 +71,23 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: xmlrpcport = self._xmlrpcport_config.getint("usrp", 'xmlrpcport')
         except: xmlrpcport = 8081
         self.xmlrpcport = xmlrpcport
-        self.txrate = txrate = 0
-        self.txgain = txgain = 1
+        self.txrate2 = txrate2 = 0
+        self.txrate1 = txrate1 = 0
+        self._txgain_config = ConfigParser.ConfigParser()
+        self._txgain_config.read('default')
+        try: txgain = self._txgain_config.getfloat("usrp", "txgain")
+        except: txgain = 0.9
+        self.txgain = txgain
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
         except: timeout = 100
         self.timeout = timeout
+        self._samprate2_config = ConfigParser.ConfigParser()
+        self._samprate2_config.read('default')
+        try: samprate2 = self._samprate2_config.getfloat("usrp_hydra", "samprate2")
+        except: samprate2 = 1e6
+        self.samprate2 = samprate2
         self._samprate1_config = ConfigParser.ConfigParser()
         self._samprate1_config.read('default')
         try: samprate1 = self._samprate1_config.getfloat("usrp_hydra", "samprate1")
@@ -88,23 +98,11 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: samprate = self._samprate_config.getfloat("usrp_hydra", "samprate")
         except: samprate = 1e6
         self.samprate = samprate
-        self.rxrate = rxrate = 0
-        self._rxport_config = ConfigParser.ConfigParser()
-        self._rxport_config.read('default')
-        try: rxport = self._rxport_config.get("rx", "port")
-        except: rxport = "2300"
-        self.rxport = rxport
-        self._rxoutport_config = ConfigParser.ConfigParser()
-        self._rxoutport_config.read('default')
-        try: rxoutport = self._rxoutport_config.get("usrp_hydra", "rxoutport")
-        except: rxoutport = "2666"
-        self.rxoutport = rxoutport
-        self._rxip_config = ConfigParser.ConfigParser()
-        self._rxip_config.read('default')
-        try: rxip = self._rxip_config.get("rx", "ip")
-        except: rxip = "127.0.0.1"
-        self.rxip = rxip
-        self.rxgain = rxgain = 0
+        self._rxgain_config = ConfigParser.ConfigParser()
+        self._rxgain_config.read('default')
+        try: rxgain = self._rxgain_config.getfloat("usrp", "rxgain")
+        except: rxgain = 0.9
+        self.rxgain = rxgain
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
@@ -113,13 +111,10 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
         try: ip = self._ip_config.get("usrp_hydra", "ip")
-        except: ip = "127.0.0.1"
+        except: ip = '1e6'
         self.ip = ip
-        self._freq1_config = ConfigParser.ConfigParser()
-        self._freq1_config.read('default')
-        try: freq1 = self._freq1_config.getfloat("usrp_hydra", "freq1")
-        except: freq1 = 950e6
-        self.freq1 = freq1
+        self.freq2 = freq2 = 951.2e6
+        self.freq1 = freq1 = 950e6
         self._freq_config = ConfigParser.ConfigParser()
         self._freq_config.read('default')
         try: freq = self._freq_config.getfloat("usrp_hydra", "freq")
@@ -145,117 +140,72 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: finalsplitip1 = self._finalsplitip1_config.get("usrp_hydra", "finalsplitip1")
         except: finalsplitip1 = "127.0.0.1"
         self.finalsplitip1 = finalsplitip1
-        self.amplitude = amplitude = 0.05
+        self.amplitude2 = amplitude2 = 0.05
+        self.amplitude1 = amplitude1 = 0.05
 
         ##################################################
         # Blocks
         ##################################################
-        self._txgain_range = Range(0, 1, 0.01, 1, 200)
-        self._txgain_win = RangeWidget(self._txgain_range, self.set_txgain, 'txgain', "counter_slider", float)
-        self.top_layout.addWidget(self._txgain_win)
-        self._rxgain_range = Range(0, 1, 0.01, 0, 200)
-        self._rxgain_win = RangeWidget(self._rxgain_range, self.set_rxgain, 'rxgain', "counter_slider", float)
-        self.top_layout.addWidget(self._rxgain_win)
-        self._amplitude_range = Range(0, 1, 0.01, 0.05, 200)
-        self._amplitude_win = RangeWidget(self._amplitude_range, self.set_amplitude, 'amplitude', "counter_slider", float)
-        self.top_layout.addWidget(self._amplitude_win)
         self.ztxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
-        self.zrxrate = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
-        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxoutport, 100, True, -1)
+        self._freq2_range = Range(948e6, 952e6, 50e3, 951.2e6, 200)
+        self._freq2_win = RangeWidget(self._freq2_range, self.set_freq2, 'VR2 freq', "counter_slider", float)
+        self.top_layout.addWidget(self._freq2_win)
+        self._freq1_range = Range(948e6, 952e6, 50e3, 950e6, 200)
+        self._freq1_win = RangeWidget(self._freq1_range, self.set_freq1, 'VR1 freq', "counter_slider", float)
+        self.top_layout.addWidget(self._freq1_win)
+        self._amplitude2_range = Range(0, 1, 0.01, 0.05, 200)
+        self._amplitude2_win = RangeWidget(self._amplitude2_range, self.set_amplitude2, 'VR2 amplitude', "counter_slider", float)
+        self.top_layout.addWidget(self._amplitude2_win)
+        self._amplitude1_range = Range(0, 1, 0.01, 0.05, 200)
+        self._amplitude1_win = RangeWidget(self._amplitude1_range, self.set_amplitude1, 'VR1 amplitude', "counter_slider", float)
+        self.top_layout.addWidget(self._amplitude1_win)
+        self.ztxrate_1 = blocks.probe_rate(gr.sizeof_gr_complex*1, 2000, 0.15)
+        self.zeromq_pull_source_0_1 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip2 + ":" + finalsplitport2, timeout, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip1 + ":" + finalsplitport1, timeout, True, -1)
         self.xmlrpc_server_0_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0_0.register_instance(self)
         self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
         self.xmlrpc_server_0_0_thread.daemon = True
         self.xmlrpc_server_0_0_thread.start()
-        self.uhd_usrp_source_0 = uhd.usrp_source(
+        self.uhd_usrp_sink_1 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
         		cpu_format="fc32",
         		channels=range(1),
         	),
         )
-        self.uhd_usrp_source_0.set_samp_rate(samprate)
-        self.uhd_usrp_source_0.set_center_freq(freq + 4e6, 0)
-        self.uhd_usrp_source_0.set_normalized_gain(rxgain, 0)
-        self.uhd_usrp_source_0.set_antenna('RX2', 0)
-        self.uhd_usrp_source_0.set_bandwidth(samprate1, 0)
-        self.uhd_usrp_sink_0 = uhd.usrp_sink(
-        	",".join(("", "")),
-        	uhd.stream_args(
-        		cpu_format="fc32",
-        		channels=range(1),
-        	),
-        )
-        self.uhd_usrp_sink_0.set_samp_rate(samprate)
-        self.uhd_usrp_sink_0.set_center_freq(freq, 0)
-        self.uhd_usrp_sink_0.set_normalized_gain(txgain, 0)
-        self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
-        self.uhd_usrp_sink_0.set_bandwidth(samprate, 0)
+        self.uhd_usrp_sink_1.set_samp_rate(samprate)
+        self.uhd_usrp_sink_1.set_center_freq(freq, 0)
+        self.uhd_usrp_sink_1.set_normalized_gain(1, 0)
+        self.uhd_usrp_sink_1.set_antenna('TX/RX', 0)
         
-        def _txrate_probe():
+        def _txrate2_probe():
             while True:
                 val = self.ztxrate.rate()
                 try:
-                    self.set_txrate(val)
+                    self.set_txrate2(val)
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
-        _txrate_thread = threading.Thread(target=_txrate_probe)
-        _txrate_thread.daemon = True
-        _txrate_thread.start()
+        _txrate2_thread = threading.Thread(target=_txrate2_probe)
+        _txrate2_thread.daemon = True
+        _txrate2_thread.start()
             
         
-        def _rxrate_probe():
+        def _txrate1_probe():
             while True:
-                val = self.zrxrate.rate()
+                val = self.ztxrate.rate()
                 try:
-                    self.set_rxrate(val)
+                    self.set_txrate1(val)
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
-        _rxrate_thread = threading.Thread(target=_rxrate_probe)
-        _rxrate_thread.daemon = True
-        _rxrate_thread.start()
+        _txrate1_thread = threading.Thread(target=_txrate1_probe)
+        _txrate1_thread.daemon = True
+        _txrate1_thread.start()
             
-        self.qtgui_waterfall_sink_x_0_0 = qtgui.waterfall_sink_c(
-        	32, #size
-        	firdes.WIN_BLACKMAN_hARRIS, #wintype
-        	0, #fc
-        	samprate, #bw
-        	"", #name
-                1 #number of inputs
-        )
-        self.qtgui_waterfall_sink_x_0_0.set_update_time(0.10)
-        self.qtgui_waterfall_sink_x_0_0.enable_grid(False)
-        self.qtgui_waterfall_sink_x_0_0.enable_axis_labels(True)
-        
-        if not True:
-          self.qtgui_waterfall_sink_x_0_0.disable_legend()
-        
-        if "complex" == "float" or "complex" == "msg_float":
-          self.qtgui_waterfall_sink_x_0_0.set_plot_pos_half(not True)
-        
-        labels = ['', '', '', '', '',
-                  '', '', '', '', '']
-        colors = [0, 0, 0, 0, 0,
-                  0, 0, 0, 0, 0]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_waterfall_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_waterfall_sink_x_0_0.set_line_label(i, labels[i])
-            self.qtgui_waterfall_sink_x_0_0.set_color_map(i, colors[i])
-            self.qtgui_waterfall_sink_x_0_0.set_line_alpha(i, alphas[i])
-        
-        self.qtgui_waterfall_sink_x_0_0.set_intensity_range(-140, 10)
-        
-        self._qtgui_waterfall_sink_x_0_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_0_0_win)
         self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
-        	64, #size
+        	1024, #size
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
         	0, #fc
         	samprate, #bw
@@ -290,24 +240,25 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         
         self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
-        self.hydra_hydra_sink_0 = hydra.hydra_sink(1, 64, freq, samprate, ((freq1, samprate1),))
-        self.digital_burst_shaper_xx_0 = digital.burst_shaper_cc((([])), 2000, 100, False, "packet_len")
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_gr_complex*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((amplitude, ))
+        self.hydra_hydra_sink_0 = hydra.hydra_sink(2, 1024, freq, samprate,
+        	 ((freq1, samprate1), 
+        	 (freq2, samprate2),
+        	 ))
+          
+        self.blocks_multiply_const_vxx_0_0 = blocks.multiply_const_vcc((amplitude2, ))
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((amplitude1, ))
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.digital_burst_shaper_xx_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_waterfall_sink_x_0, 0))    
-        self.connect((self.digital_burst_shaper_xx_0, 0), (self.uhd_usrp_sink_0, 0))    
-        self.connect((self.hydra_hydra_sink_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.zrxrate, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.blocks_tag_debug_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.hydra_hydra_sink_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.qtgui_waterfall_sink_x_0_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.hydra_hydra_sink_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.hydra_hydra_sink_0, 1))    
+        self.connect((self.hydra_hydra_sink_0, 0), (self.qtgui_waterfall_sink_x_0, 0))    
+        self.connect((self.hydra_hydra_sink_0, 0), (self.uhd_usrp_sink_1, 0))    
+        self.connect((self.zeromq_pull_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.ztxrate, 0))    
+        self.connect((self.zeromq_pull_source_0_1, 0), (self.blocks_multiply_const_vxx_0_0, 0))    
+        self.connect((self.zeromq_pull_source_0_1, 0), (self.ztxrate_1, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "usrp_hydra")
@@ -320,19 +271,23 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
 
-    def get_txrate(self):
-        return self.txrate
+    def get_txrate2(self):
+        return self.txrate2
 
-    def set_txrate(self, txrate):
-        self.txrate = txrate
+    def set_txrate2(self, txrate2):
+        self.txrate2 = txrate2
+
+    def get_txrate1(self):
+        return self.txrate1
+
+    def set_txrate1(self, txrate1):
+        self.txrate1 = txrate1
 
     def get_txgain(self):
         return self.txgain
 
     def set_txgain(self, txgain):
         self.txgain = txgain
-        self.uhd_usrp_sink_0.set_normalized_gain(self.txgain, 0)
-        	
 
     def get_timeout(self):
         return self.timeout
@@ -340,55 +295,31 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
     def set_timeout(self, timeout):
         self.timeout = timeout
 
+    def get_samprate2(self):
+        return self.samprate2
+
+    def set_samprate2(self, samprate2):
+        self.samprate2 = samprate2
+
     def get_samprate1(self):
         return self.samprate1
 
     def set_samprate1(self, samprate1):
         self.samprate1 = samprate1
-        self.uhd_usrp_source_0.set_bandwidth(self.samprate1, 0)
 
     def get_samprate(self):
         return self.samprate
 
     def set_samprate(self, samprate):
         self.samprate = samprate
-        self.uhd_usrp_source_0.set_samp_rate(self.samprate)
-        self.uhd_usrp_sink_0.set_samp_rate(self.samprate)
-        self.uhd_usrp_sink_0.set_bandwidth(self.samprate, 0)
-        self.qtgui_waterfall_sink_x_0_0.set_frequency_range(0, self.samprate)
+        self.uhd_usrp_sink_1.set_samp_rate(self.samprate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samprate)
-
-    def get_rxrate(self):
-        return self.rxrate
-
-    def set_rxrate(self, rxrate):
-        self.rxrate = rxrate
-
-    def get_rxport(self):
-        return self.rxport
-
-    def set_rxport(self, rxport):
-        self.rxport = rxport
-
-    def get_rxoutport(self):
-        return self.rxoutport
-
-    def set_rxoutport(self, rxoutport):
-        self.rxoutport = rxoutport
-
-    def get_rxip(self):
-        return self.rxip
-
-    def set_rxip(self, rxip):
-        self.rxip = rxip
 
     def get_rxgain(self):
         return self.rxgain
 
     def set_rxgain(self, rxgain):
         self.rxgain = rxgain
-        self.uhd_usrp_source_0.set_normalized_gain(self.rxgain, 0)
-        	
 
     def get_maxnoutput(self):
         return self.maxnoutput
@@ -402,19 +333,26 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
     def set_ip(self, ip):
         self.ip = ip
 
+    def get_freq2(self):
+        return self.freq2
+
+    def set_freq2(self, freq2):
+        self.freq2 = freq2
+        self.hydra_hydra_sink_0.set_central_frequency(1, self.freq2)
+
     def get_freq1(self):
         return self.freq1
 
     def set_freq1(self, freq1):
         self.freq1 = freq1
+        self.hydra_hydra_sink_0.set_central_frequency(0, self.freq1)
 
     def get_freq(self):
         return self.freq
 
     def set_freq(self, freq):
         self.freq = freq
-        self.uhd_usrp_source_0.set_center_freq(self.freq + 4e6, 0)
-        self.uhd_usrp_sink_0.set_center_freq(self.freq, 0)
+        self.uhd_usrp_sink_1.set_center_freq(self.freq, 0)
 
     def get_finalsplitport2(self):
         return self.finalsplitport2
@@ -440,12 +378,19 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
     def set_finalsplitip1(self, finalsplitip1):
         self.finalsplitip1 = finalsplitip1
 
-    def get_amplitude(self):
-        return self.amplitude
+    def get_amplitude2(self):
+        return self.amplitude2
 
-    def set_amplitude(self, amplitude):
-        self.amplitude = amplitude
-        self.blocks_multiply_const_vxx_0.set_k((self.amplitude, ))
+    def set_amplitude2(self, amplitude2):
+        self.amplitude2 = amplitude2
+        self.blocks_multiply_const_vxx_0_0.set_k((self.amplitude2, ))
+
+    def get_amplitude1(self):
+        return self.amplitude1
+
+    def set_amplitude1(self, amplitude1):
+        self.amplitude1 = amplitude1
+        self.blocks_multiply_const_vxx_0.set_k((self.amplitude1, ))
 
 
 def main(top_block_cls=usrp_hydra, options=None):

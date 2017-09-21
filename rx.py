@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Mon Sep 11 17:33:53 2017
+# Generated: Mon Sep 18 11:01:37 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -22,6 +22,7 @@ from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio.digital.utils import tagged_streams
 from gnuradio.eng_option import eng_option
@@ -29,6 +30,7 @@ from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
 import ConfigParser
+import sip
 import sys
 import time
 
@@ -61,37 +63,54 @@ class rx(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
+        self.pilot_carriers = pilot_carriers = ((-42, -14, -7, 7, 14, 42),)
+        self.pattern2 = pattern2 = [1, -1, 1, -1]
+        self.pattern1 = pattern1 = [0., 1.41421356, 0., -1.41421356]
+        self.fft_len = fft_len = 128
+        self._usrpip_config = ConfigParser.ConfigParser()
+        self._usrpip_config.read('default')
+        try: usrpip = self._usrpip_config.get("usrp", "ip")
+        except: usrpip = "127.0.0.1"
+        self.usrpip = usrpip
+        self._txoutport_config = ConfigParser.ConfigParser()
+        self._txoutport_config.read('default')
+        try: txoutport = self._txoutport_config.get("usrp", "txoutport")
+        except: txoutport = "2666"
+        self.txoutport = txoutport
         self.txgain = txgain = 1
+        self._txfreq_config = ConfigParser.ConfigParser()
+        self._txfreq_config.read('default')
+        try: txfreq = self._txfreq_config.getfloat("usrp", "txfreq")
+        except: txfreq = 4.4e9
+        self.txfreq = txfreq
         self._timeout_config = ConfigParser.ConfigParser()
         self._timeout_config.read('default')
         try: timeout = self._timeout_config.getint("global", "zmqtimeout")
         except: timeout = 100
         self.timeout = timeout
-        self.sync_word2 = sync_word2 = [0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), 0j, 0j, 0j, 0j, 0j]
-        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
+        self.sync_word2 = sync_word2 = [0., 0., 0., 0., 0., 0.,] + pattern2 * ((fft_len-12)/len(pattern2))  +[0., 0., 0., 0., 0., 0.,] 
+        self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0.,] + pattern1 * ((fft_len-12)/len(pattern1))  +[0., 0., 0., 0., 0., 0.,] 
         self._samprate_config = ConfigParser.ConfigParser()
         self._samprate_config.read('default')
         try: samprate = self._samprate_config.getfloat("usrp", "samprate")
         except: samprate = 4e6
         self.samprate = samprate
         self.rxgain = rxgain = 0
-        self.pilot_symbols = pilot_symbols = ((1, 1, 1, -1,),)
-        self.pilot_carriers = pilot_carriers = ((-21, -7, 7, 21,),)
+        self._rxfreq_config = ConfigParser.ConfigParser()
+        self._rxfreq_config.read('default')
+        try: rxfreq = self._rxfreq_config.getfloat("usrp", "rxfreq")
+        except: rxfreq = 4.4e9
+        self.rxfreq = rxfreq
+        self.pilot_symbols = pilot_symbols = ((-1,1, 1, -1, -1, -1),)
         self.packet_length_tag_key = packet_length_tag_key = "packet_len"
-        self.occupied_carriers = occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
+        self.occupied_carriers = occupied_carriers = (sorted(tuple(set([x for x in range(-26,27)]) - set(pilot_carriers[0]) - set([0,]))),)
         self._maxnoutput_config = ConfigParser.ConfigParser()
         self._maxnoutput_config.read('default')
         try: maxnoutput = self._maxnoutput_config.getint("global", "maxnoutput")
         except: maxnoutput = 100
         self.maxnoutput = maxnoutput
         self.length_tag_key = length_tag_key = "frame_len"
-        self._freq_config = ConfigParser.ConfigParser()
-        self._freq_config.read('default')
-        try: freq = self._freq_config.getfloat("usrp", "freq")
-        except: freq = 4.4e9
-        self.freq = freq
-        self.fft_len = fft_len = 64
-        self.amplitude = amplitude = 0.05
+        self.amplitude = amplitude = 0.01
 
         ##################################################
         # Blocks
@@ -102,7 +121,7 @@ class rx(gr.top_block, Qt.QWidget):
         self._rxgain_range = Range(0, 1, 0.01, 0, 200)
         self._rxgain_win = RangeWidget(self._rxgain_range, self.set_rxgain, 'rxgain', "counter_slider", float)
         self.top_layout.addWidget(self._rxgain_win)
-        self._amplitude_range = Range(0, 1, 0.01, 0.05, 200)
+        self._amplitude_range = Range(0, 1, 0.01, 0.01, 200)
         self._amplitude_win = RangeWidget(self._amplitude_range, self.set_amplitude, 'amplitude', "counter_slider", float)
         self.top_layout.addWidget(self._amplitude_win)
         self.uhd_usrp_source_0 = uhd.usrp_source(
@@ -113,7 +132,7 @@ class rx(gr.top_block, Qt.QWidget):
         	),
         )
         self.uhd_usrp_source_0.set_samp_rate(samprate)
-        self.uhd_usrp_source_0.set_center_freq(freq, 0)
+        self.uhd_usrp_source_0.set_center_freq(txfreq, 0)
         self.uhd_usrp_source_0.set_normalized_gain(rxgain, 0)
         self.uhd_usrp_source_0.set_antenna('RX2', 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
@@ -124,12 +143,48 @@ class rx(gr.top_block, Qt.QWidget):
         	),
         )
         self.uhd_usrp_sink_0.set_samp_rate(samprate)
-        self.uhd_usrp_sink_0.set_center_freq(freq  + 4e6, 0)
+        self.uhd_usrp_sink_0.set_center_freq(rxfreq, 0)
         self.uhd_usrp_sink_0.set_normalized_gain(txgain, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_sink_0.set_bandwidth(samprate, 0)
+        self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
+        	1024, #size
+        	firdes.WIN_BLACKMAN_hARRIS, #wintype
+        	0, #fc
+        	100, #bw
+        	"", #name
+                1 #number of inputs
+        )
+        self.qtgui_waterfall_sink_x_0.set_update_time(0.10)
+        self.qtgui_waterfall_sink_x_0.enable_grid(False)
+        self.qtgui_waterfall_sink_x_0.enable_axis_labels(True)
+        
+        if not True:
+          self.qtgui_waterfall_sink_x_0.disable_legend()
+        
+        if "complex" == "float" or "complex" == "msg_float":
+          self.qtgui_waterfall_sink_x_0.set_plot_pos_half(not True)
+        
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        colors = [0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+        for i in xrange(1):
+            if len(labels[i]) == 0:
+                self.qtgui_waterfall_sink_x_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_waterfall_sink_x_0.set_line_label(i, labels[i])
+            self.qtgui_waterfall_sink_x_0.set_color_map(i, colors[i])
+            self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alphas[i])
+        
+        self.qtgui_waterfall_sink_x_0.set_intensity_range(-140, 10)
+        
+        self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
         self.digital_ofdm_tx_0 = digital.ofdm_tx(
-        	  fft_len=fft_len, cp_len=fft_len/4,
+        	  fft_len=fft_len, cp_len=16,
         	  packet_length_tag_key="packet_len",
         	  occupied_carriers=occupied_carriers,
         	  pilot_carriers=pilot_carriers,
@@ -139,11 +194,11 @@ class rx(gr.top_block, Qt.QWidget):
         	  bps_header=1,
         	  bps_payload=1,
         	  rolloff=0,
-        	  debug_log=True,
+        	  debug_log=False,
         	  scramble_bits=False
         	 )
         self.digital_ofdm_rx_0 = digital.ofdm_rx(
-        	  fft_len=fft_len, cp_len=fft_len/4,
+        	  fft_len=fft_len, cp_len=16,
         	  frame_length_tag_key='frame_'+"packet_len",
         	  packet_length_tag_key="packet_len",
         	  occupied_carriers=occupied_carriers,
@@ -176,11 +231,53 @@ class rx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
         self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.digital_ofdm_rx_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_waterfall_sink_x_0, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "rx")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
+
+    def get_pilot_carriers(self):
+        return self.pilot_carriers
+
+    def set_pilot_carriers(self, pilot_carriers):
+        self.pilot_carriers = pilot_carriers
+        self.set_occupied_carriers((sorted(tuple(set([x for x in range(-26,27)]) - set(self.pilot_carriers[0]) - set([0,]))),))
+
+    def get_pattern2(self):
+        return self.pattern2
+
+    def set_pattern2(self, pattern2):
+        self.pattern2 = pattern2
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_pattern1(self):
+        return self.pattern1
+
+    def set_pattern1(self, pattern1):
+        self.pattern1 = pattern1
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_fft_len(self):
+        return self.fft_len
+
+    def set_fft_len(self, fft_len):
+        self.fft_len = fft_len
+        self.set_sync_word2([0., 0., 0., 0., 0., 0.,] + self.pattern2 * ((self.fft_len-12)/len(self.pattern2))  +[0., 0., 0., 0., 0., 0.,] )
+        self.set_sync_word1([0., 0., 0., 0., 0., 0.,] + self.pattern1 * ((self.fft_len-12)/len(self.pattern1))  +[0., 0., 0., 0., 0., 0.,] )
+
+    def get_usrpip(self):
+        return self.usrpip
+
+    def set_usrpip(self, usrpip):
+        self.usrpip = usrpip
+
+    def get_txoutport(self):
+        return self.txoutport
+
+    def set_txoutport(self, txoutport):
+        self.txoutport = txoutport
 
     def get_txgain(self):
         return self.txgain
@@ -189,6 +286,13 @@ class rx(gr.top_block, Qt.QWidget):
         self.txgain = txgain
         self.uhd_usrp_sink_0.set_normalized_gain(self.txgain, 0)
         	
+
+    def get_txfreq(self):
+        return self.txfreq
+
+    def set_txfreq(self, txfreq):
+        self.txfreq = txfreq
+        self.uhd_usrp_source_0.set_center_freq(self.txfreq, 0)
 
     def get_timeout(self):
         return self.timeout
@@ -225,17 +329,18 @@ class rx(gr.top_block, Qt.QWidget):
         self.uhd_usrp_source_0.set_normalized_gain(self.rxgain, 0)
         	
 
+    def get_rxfreq(self):
+        return self.rxfreq
+
+    def set_rxfreq(self, rxfreq):
+        self.rxfreq = rxfreq
+        self.uhd_usrp_sink_0.set_center_freq(self.rxfreq, 0)
+
     def get_pilot_symbols(self):
         return self.pilot_symbols
 
     def set_pilot_symbols(self, pilot_symbols):
         self.pilot_symbols = pilot_symbols
-
-    def get_pilot_carriers(self):
-        return self.pilot_carriers
-
-    def set_pilot_carriers(self, pilot_carriers):
-        self.pilot_carriers = pilot_carriers
 
     def get_packet_length_tag_key(self):
         return self.packet_length_tag_key
@@ -260,20 +365,6 @@ class rx(gr.top_block, Qt.QWidget):
 
     def set_length_tag_key(self, length_tag_key):
         self.length_tag_key = length_tag_key
-
-    def get_freq(self):
-        return self.freq
-
-    def set_freq(self, freq):
-        self.freq = freq
-        self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
-        self.uhd_usrp_sink_0.set_center_freq(self.freq  + 4e6, 0)
-
-    def get_fft_len(self):
-        return self.fft_len
-
-    def set_fft_len(self, fft_len):
-        self.fft_len = fft_len
 
     def get_amplitude(self):
         return self.amplitude

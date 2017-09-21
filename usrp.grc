@@ -89,7 +89,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.05</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -97,7 +97,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 360)</value>
+      <value>(984, 360)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -297,53 +297,6 @@
     </param>
     <param>
       <key>value</key>
-      <value>4.4e9</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(864, 8)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"freq"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"usrp"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
-    </param>
-    <param>
-      <key>value</key>
       <value>"127.0.0.1"</value>
     </param>
     <param>
@@ -427,6 +380,53 @@
     </param>
   </block>
   <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4.4e9</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(888, 8)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>rxfreq</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"rxfreq"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
     <key>variable_qtgui_range</key>
     <param>
       <key>comment</key>
@@ -442,7 +442,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 480)</value>
+      <value>(984, 480)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -740,7 +740,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(992, 8)</value>
+      <value>(1016, 8)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -787,7 +787,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 8)</value>
+      <value>(480, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -815,6 +815,53 @@
     </param>
   </block>
   <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4.4e9</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(760, 8)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>txfreq</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"txfreq"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
     <key>variable_qtgui_range</key>
     <param>
       <key>comment</key>
@@ -830,7 +877,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 600)</value>
+      <value>(984, 600)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1085,7 +1132,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(288, 276)</value>
+      <value>(272, 276)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1113,6 +1160,61 @@
     </param>
   </block>
   <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(472, 164)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>Tx'd Packet</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>digital_burst_shaper_xx</key>
     <param>
       <key>alias</key>
@@ -1132,7 +1234,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 248)</value>
+      <value>(552, 248)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1211,7 +1313,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 156)</value>
+      <value>(216, 716)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1219,7 +1321,7 @@
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>grid</key>
@@ -1414,7 +1516,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>freq</value>
+      <value>txfreq</value>
     </param>
     <param>
       <key>norm_gain0</key>
@@ -2237,7 +2339,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>freq + 4e6</value>
+      <value>rxfreq</value>
     </param>
     <param>
       <key>dc_offs_enb0</key>
@@ -3662,6 +3764,61 @@
     <key>zeromq_push_sink</key>
     <param>
       <key>address</key>
+      <value>"tcp://" + ip + ":" + txoutport</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(808, 356)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>hwm</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zeromq_push_sink_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>pass_tags</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>timeout</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>zeromq_push_sink</key>
+    <param>
+      <key>address</key>
       <value>"tcp://" + ip + ":" + rxoutport</value>
     </param>
     <param>
@@ -3836,6 +3993,18 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>digital_burst_shaper_xx_0</source_block_id>
+    <sink_block_id>zeromq_push_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>uhd_usrp_source_0</source_block_id>
+    <sink_block_id>qtgui_waterfall_sink_x_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
     <sink_block_id>zeromq_push_sink_0_0</sink_block_id>
     <source_key>0</source_key>
@@ -3855,7 +4024,7 @@
   </connection>
   <connection>
     <source_block_id>zeromq_pull_source_0</source_block_id>
-    <sink_block_id>qtgui_waterfall_sink_x_1</sink_block_id>
+    <sink_block_id>blocks_tag_debug_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
