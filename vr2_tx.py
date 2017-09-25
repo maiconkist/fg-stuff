@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: VR2 TX all-in-one
-# Generated: Tue Sep 19 18:55:40 2017
+# Generated: Fri Sep 22 17:27:17 2017
 ##################################################
 
 from gnuradio import blocks
@@ -45,7 +45,7 @@ class vr2_tx(gr.top_block):
         self.samprate = samprate
         self.pilot_symbols = pilot_symbols = ((-1,1, 1, -1, -1, -1),)
         self.packet_len = packet_len = 100
-        self.occupied_carriers = occupied_carriers = (sorted(tuple(set([x for x in range(-26,27)]) - set(pilot_carriers[0]) - set([0,]))),)
+        self.occupied_carriers = occupied_carriers = (sorted(tuple(set([x for x in range(-127,127)]) - set(pilot_carriers[0]) - set([0,]))),)
         self.length_tag_key = length_tag_key = "packet_len"
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('default')
@@ -88,7 +88,7 @@ class vr2_tx(gr.top_block):
 
     def set_pilot_carriers(self, pilot_carriers):
         self.pilot_carriers = pilot_carriers
-        self.set_occupied_carriers((sorted(tuple(set([x for x in range(-26,27)]) - set(self.pilot_carriers[0]) - set([0,]))),))
+        self.set_occupied_carriers((sorted(tuple(set([x for x in range(-127,127)]) - set(self.pilot_carriers[0]) - set([0,]))),))
 
     def get_pattern2(self):
         return self.pattern2

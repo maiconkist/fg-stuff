@@ -1,4 +1,4 @@
-for i in 101 103 104; do
+for i in 101 102 103 104; do
 	echo "Copying file to 192.168.10.$i"
 	scp *.py *.grc default root@192.168.10.$i:~/fg-stuff/ > /dev/null
 done

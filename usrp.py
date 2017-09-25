@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp
 # Description: USRP
-# Generated: Mon Sep 18 09:57:41 2017
+# Generated: Mon Sep 25 15:54:45 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -79,7 +79,7 @@ class usrp(gr.top_block, Qt.QWidget):
         self.txgain = txgain = 1
         self._txfreq_config = ConfigParser.ConfigParser()
         self._txfreq_config.read('default')
-        try: txfreq = self._txfreq_config.getfloat("usrp", "txfreq")
+        try: txfreq = self._txfreq_config.getfloat("usrp", "txfreq1")
         except: txfreq = 4.4e9
         self.txfreq = txfreq
         self._timeout_config = ConfigParser.ConfigParser()
@@ -89,7 +89,7 @@ class usrp(gr.top_block, Qt.QWidget):
         self.timeout = timeout
         self._samprate_config = ConfigParser.ConfigParser()
         self._samprate_config.read('default')
-        try: samprate = self._samprate_config.getfloat("usrp", "samprate")
+        try: samprate = self._samprate_config.getfloat("usrp", "samprate1")
         except: samprate = 1e6
         self.samprate = samprate
         self.rxrate = rxrate = 0
@@ -111,7 +111,7 @@ class usrp(gr.top_block, Qt.QWidget):
         self.rxgain = rxgain = 0
         self._rxfreq_config = ConfigParser.ConfigParser()
         self._rxfreq_config.read('default')
-        try: rxfreq = self._rxfreq_config.getfloat("usrp", "rxfreq")
+        try: rxfreq = self._rxfreq_config.getfloat("usrp", "rxfreq1")
         except: rxfreq = 4.4e9
         self.rxfreq = rxfreq
         self._maxnoutput_config = ConfigParser.ConfigParser()

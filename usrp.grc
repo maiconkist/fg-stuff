@@ -411,7 +411,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"rxfreq"</value>
+      <value>"rxfreq1"</value>
     </param>
     <param>
       <key>section</key>
@@ -752,7 +752,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"samprate"</value>
+      <value>"samprate1"</value>
     </param>
     <param>
       <key>section</key>
@@ -846,7 +846,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"txfreq"</value>
+      <value>"txfreq1"</value>
     </param>
     <param>
       <key>section</key>
@@ -1183,7 +1183,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 164)</value>
+      <value>(256, 148)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1234,7 +1234,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 248)</value>
+      <value>(528, 248)</value>
     </param>
     <param>
       <key>_rotation</key>
