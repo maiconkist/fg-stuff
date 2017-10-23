@@ -116,7 +116,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -352,7 +352,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -453,7 +453,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -650,7 +650,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>samprate</value>
+      <value>1e6</value>
     </param>
     <param>
       <key>type</key>
@@ -709,7 +709,7 @@
     </param>
     <param>
       <key>log</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>maxoutbuf</key>

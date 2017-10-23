@@ -152,7 +152,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -262,7 +262,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -309,7 +309,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -356,7 +356,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -403,7 +403,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -450,7 +450,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -497,7 +497,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -607,7 +607,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -717,7 +717,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -764,7 +764,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -811,7 +811,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -921,7 +921,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -968,7 +968,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1015,7 +1015,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1105,7 +1105,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1152,7 +1152,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1199,7 +1199,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1246,7 +1246,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1356,7 +1356,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1407,7 +1407,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>function_args</key>
@@ -1450,7 +1450,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>function_args</key>
@@ -1489,7 +1489,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -1513,7 +1513,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>xmlrpcport</value>
+      <value>"xmlrpcport"</value>
     </param>
     <param>
       <key>section</key>
@@ -4783,7 +4783,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -4838,7 +4838,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
