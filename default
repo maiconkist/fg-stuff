@@ -16,12 +16,12 @@ port = 2300
 xmlrpcport = 8083
 
 [vr1_tx]
-ip = 192.168.10.101
+ip = 192.168.10.29
 port = 2300
 rxport = 2301
 
 [vr2_tx]
-ip = 192.168.10.103
+ip = 192.168.10.29
 port = 2300
 rxport = 2301
 
@@ -36,14 +36,14 @@ ip = 192.168.10.104
 txoutport = 2300
 rxoutport = 2301
 xmlrpcport = 8084
-txgain = 1
+txgain = 0.9
 rxgain = 0
-txfreq1 = 951e6
+txfreq1 = 948.5e6
 rxfreq1 = 954e6
 samprate1 = 1e6
 amplitude1 = 0.01
 # use the ip/port of the last split
-finalsplitip = 192.168.10.103
+finalsplitip = 192.168.10.29
 finalsplitport = 2300
 
 [usrp_hydra]
@@ -54,7 +54,7 @@ xmlrpcport = 8084
 txfreq = 950e6
 rxfreq = 954e6
 samprate = 4e6
-txgain = 1
+txgain = 0.9
 txamplitude = 0.05
 rxgain = 0
 # use the ip/port of the last split for each VR
@@ -64,14 +64,14 @@ finalsplitport1 = 2300
 txfreq1 = 948.5e6
 rxfreq1 = 955e6
 samprate1 = 1e6
-amplitude1 = 0.05
+amplitude1 =0.05
 # VR 2
-finalsplitip2 = 192.168.10.103
+finalsplitip2 = 192.168.10.29
 finalsplitport2 = 2300
-txfreq2 = 951.2e6
+txfreq2 = 948.5e6
 rxfreq2 = 955e6
 samprate2 = 500e3
-amplitude2 = 1.0
+amplitude2 =0.05
 
 [rx]
 ip = 192.168.10.105

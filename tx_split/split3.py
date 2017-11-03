@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 3
 # Description: Split3
-# Generated: Mon Sep 25 15:54:23 2017
+# Generated: Thu Nov  2 15:13:14 2017
 ##################################################
 
 from gnuradio import blocks
@@ -109,13 +109,15 @@ class split3(gr.top_block):
         self.fft_vxx_0 = fft.fft_vcc(fft_len, False, (()), True, 1)
         self.digital_ofdm_cyclic_prefixer_0 = digital.ofdm_cyclic_prefixer(fft_len, fft_len+16, rolloff, "packet_len")
         self.digital_ofdm_carrier_allocator_cvc_0 = digital.ofdm_carrier_allocator_cvc(fft_len, occupied_carriers, pilot_carriers, pilot_symbols, (sync_word1, sync_word2), "packet_len")
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, 1e6,True)
 
         ##################################################
         # Connections
         ##################################################
+        self.connect((self.blocks_throttle_0, 0), (self.zeromq_push_sink_0, 0))    
         self.connect((self.digital_ofdm_carrier_allocator_cvc_0, 0), (self.fft_vxx_0, 0))    
+        self.connect((self.digital_ofdm_cyclic_prefixer_0, 0), (self.blocks_throttle_0, 0))    
         self.connect((self.digital_ofdm_cyclic_prefixer_0, 0), (self.probe3, 0))    
-        self.connect((self.digital_ofdm_cyclic_prefixer_0, 0), (self.zeromq_push_sink_0, 0))    
         self.connect((self.fft_vxx_0, 0), (self.digital_ofdm_cyclic_prefixer_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_carrier_allocator_cvc_0, 0))    
 

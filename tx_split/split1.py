@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: Split 1
 # Description: Split1
-# Generated: Fri Sep 15 15:27:07 2017
+# Generated: Thu Nov  2 15:09:00 2017
 ##################################################
 
 from gnuradio import blocks
@@ -17,6 +17,7 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConfigParser
 import SimpleXMLRPCServer
+import numpy
 import threading
 import time
 
@@ -95,7 +96,6 @@ class split1(gr.top_block):
         self.probe1_0 = blocks.probe_rate(gr.sizeof_char*1, 500.0, 0.15)
         self.zeromq_push_sink_1 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + payloadport, timeout, True, -1)
         self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_char, 1, "tcp://" + ip + ":" + headerport, timeout, True, -1)
-        self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + usrpip + ":" + usrpport, 100, True, -1)
         self.xmlrpc_server_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
@@ -128,44 +128,26 @@ class split1(gr.top_block):
         _rate0_thread.start()
             
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
-        self.digital_ofdm_rx_0 = digital.ofdm_rx(
-        	  fft_len=fft_len, cp_len=16,
-        	  frame_length_tag_key='frame_'+"packet_len",
-        	  packet_length_tag_key="packet_len",
-        	  occupied_carriers=occupied_carriers,
-        	  pilot_carriers=pilot_carriers,
-        	  pilot_symbols=pilot_symbols,
-        	  sync_word1=sync_word1,
-        	  sync_word2=sync_word2,
-        	  bps_header=1,
-        	  bps_payload=1,
-        	  debug_log=False,
-        	  scramble_bits=False
-        	 )
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
-        self.blocks_tuntap_pdu_1 = blocks.tuntap_pdu('tap0', 10000, False)
-        self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, 'packet_len')
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, "Rx'd Packets", ""); self.blocks_tag_debug_0.set_display(True)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_char*1, 10e3,True)
+        self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 100, "packet_len")
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, payload_mod.bits_per_symbol(), "packet_len", False, gr.GR_LSB_FIRST)
-        self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, 'packet_len')
+        self.analog_random_source_x_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 2, 1000)), True)
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_tuntap_pdu_1, 'pdus'))    
-        self.msg_connect((self.blocks_tuntap_pdu_1, 'pdus'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
-        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.digital_crc32_bb_0, 0))    
+        self.connect((self.analog_random_source_x_0, 0), (self.blocks_throttle_0, 0))    
         self.connect((self.blocks_repack_bits_bb_0, 0), (self.probe1_1, 0))    
         self.connect((self.blocks_repack_bits_bb_0, 0), (self.zeromq_push_sink_1, 0))    
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.probe1_0, 0))    
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.zeromq_push_sink_0, 0))    
+        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_crc32_bb_0, 0))    
+        self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))    
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_repack_bits_bb_0, 0))    
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))    
-        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tag_debug_0, 0))    
-        self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_repack_bits_bb_0_0, 0))    
-        self.connect((self.zeromq_pull_source_0, 0), (self.digital_ofdm_rx_0, 0))    
 
     def get_pilot_carriers(self):
         return self.pilot_carriers

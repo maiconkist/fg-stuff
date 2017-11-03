@@ -206,7 +206,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>(sorted(tuple(set([x for x in range(-56,57)]) - set(pilot_carriers[0]) - set([0,]))),)</value>
+      <value>(sorted(tuple(set([x for x in range(-26,27)]) - set(pilot_carriers[0]) - set([0,]))),)</value>
     </param>
   </block>
   <block>

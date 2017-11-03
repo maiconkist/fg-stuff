@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: OFDM Single
 # Description: Single
-# Generated: Mon Sep 25 15:47:55 2017
+# Generated: Thu Nov  2 11:49:38 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -80,7 +80,7 @@ class vr1_rx(gr.top_block, Qt.QWidget):
         self.txgain = txgain = 1
         self._txfreq_config = ConfigParser.ConfigParser()
         self._txfreq_config.read('default')
-        try: txfreq = self._txfreq_config.getfloat("usrp", "txfreq1")
+        try: txfreq = self._txfreq_config.getfloat("usrp_hydra", "txfreq1")
         except: txfreq = 4.4e9
         self.txfreq = txfreq
         self._timeout_config = ConfigParser.ConfigParser()
@@ -92,13 +92,13 @@ class vr1_rx(gr.top_block, Qt.QWidget):
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0.,] + pattern1 * ((fft_len-12)/len(pattern1))  +[0., 0., 0., 0., 0., 0.,] 
         self._samprate_config = ConfigParser.ConfigParser()
         self._samprate_config.read('default')
-        try: samprate = self._samprate_config.getfloat("usrp", "samprate1")
+        try: samprate = self._samprate_config.getfloat("usrp_hydra", "samprate1")
         except: samprate = 4e6
         self.samprate = samprate
         self.rxgain = rxgain = 0
         self._rxfreq_config = ConfigParser.ConfigParser()
         self._rxfreq_config.read('default')
-        try: rxfreq = self._rxfreq_config.getfloat("usrp", "rxfreq1")
+        try: rxfreq = self._rxfreq_config.getfloat("usrp_hydra", "rxfreq1")
         except: rxfreq = 4.4e9
         self.rxfreq = rxfreq
         self.pilot_symbols = pilot_symbols = ((-1,1, 1, -1, -1, -1),)
@@ -148,8 +148,8 @@ class vr1_rx(gr.top_block, Qt.QWidget):
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_sink_0.set_bandwidth(samprate, 0)
         self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
-        	1024, #size
-        	firdes.WIN_BLACKMAN_hARRIS, #wintype
+        	64, #size
+        	firdes.WIN_RECTANGULAR, #wintype
         	0, #fc
         	100, #bw
         	"", #name

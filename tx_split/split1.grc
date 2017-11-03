@@ -903,11 +903,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 456)</value>
+      <value>(32, 304)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -962,11 +962,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 204)</value>
+      <value>(224, 204)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1127,11 +1127,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 468)</value>
+      <value>(416, 316)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1155,7 +1155,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>90</value>
+      <value>100</value>
     </param>
     <param>
       <key>type</key>
@@ -1186,7 +1186,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1237,7 +1237,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1284,15 +1284,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(656, 364)</value>
+      <value>(200, 324)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>id</key>
@@ -1312,7 +1312,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>50e3</value>
+      <value>10e3</value>
     </param>
     <param>
       <key>type</key>
@@ -1339,7 +1339,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>istunflag</key>
@@ -1347,7 +1347,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(40, 188)</value>
+      <value>(32, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1445,7 +1445,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>fft_len</key>
@@ -1735,7 +1735,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 316)</value>
+      <value>(16, 540)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1762,7 +1762,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 396)</value>
+      <value>(16, 620)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1832,7 +1832,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1899,7 +1899,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 300)</value>
+      <value>(216, 524)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1954,7 +1954,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 380)</value>
+      <value>(216, 604)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1987,7 +1987,7 @@
   </block>
   <connection>
     <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>blocks_stream_to_tagged_stream_0</sink_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2023,7 +2023,7 @@
   </connection>
   <connection>
     <source_block_id>blocks_stream_to_tagged_stream_0</source_block_id>
-    <sink_block_id>blocks_throttle_0</sink_block_id>
+    <sink_block_id>digital_crc32_bb_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2035,7 +2035,7 @@
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>digital_crc32_bb_0</sink_block_id>
+    <sink_block_id>blocks_stream_to_tagged_stream_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
