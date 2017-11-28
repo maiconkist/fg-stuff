@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp_hydra
 # Description: USRP with hydra
-# Generated: Thu Nov  2 15:59:13 2017
+# Generated: Tue Nov 28 18:50:23 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -94,6 +94,11 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: samprate = self._samprate_config.getfloat("usrp_hydra", "samprate")
         except: samprate = 1e6
         self.samprate = samprate
+        self._rxport1_config = ConfigParser.ConfigParser()
+        self._rxport1_config.read('./default')
+        try: rxport1 = self._rxport1_config.get("usrp_hydra", "rxport1")
+        except: rxport1 = "2300"
+        self.rxport1 = rxport1
         self._rxgain_config = ConfigParser.ConfigParser()
         self._rxgain_config.read('./default')
         try: rxgain = self._rxgain_config.getfloat("usrp", "rxgain")
@@ -107,7 +112,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self._ip_config = ConfigParser.ConfigParser()
         self._ip_config.read('./default')
         try: ip = self._ip_config.get("usrp_hydra", "ip")
-        except: ip = '1e6'
+        except: ip = '777.666.555.444'
         self.ip = ip
         self._freq2_config = ConfigParser.ConfigParser()
         self._freq2_config.read('./default')
@@ -156,6 +161,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self._amplitude1_range = Range(0, 1, 0.01, 0.05, 200)
         self._amplitude1_win = RangeWidget(self._amplitude1_range, self.set_amplitude1, 'VR1 amplitude', "counter_slider", float)
         self.top_layout.addWidget(self._amplitude1_win)
+        self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxport1, 100, True, -1)
         self.zeromq_pull_source_0_1 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip2 + ":" + finalsplitport2, timeout, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip1 + ":" + finalsplitport1, timeout, True, -1)
         self.xmlrpc_server_0_0 = SimpleXMLRPCServer.SimpleXMLRPCServer((ip, xmlrpcport), allow_none=True)
@@ -163,6 +169,18 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self.xmlrpc_server_0_0_thread = threading.Thread(target=self.xmlrpc_server_0_0.serve_forever)
         self.xmlrpc_server_0_0_thread.daemon = True
         self.xmlrpc_server_0_0_thread.start()
+        self.uhd_usrp_source_0 = uhd.usrp_source(
+        	",".join(("", "")),
+        	uhd.stream_args(
+        		cpu_format="fc32",
+        		channels=range(1),
+        	),
+        )
+        self.uhd_usrp_source_0.set_samp_rate(samprate1)
+        self.uhd_usrp_source_0.set_center_freq(freq1 + 4e6, 0)
+        self.uhd_usrp_source_0.set_normalized_gain(0, 0)
+        self.uhd_usrp_source_0.set_antenna('RX2', 0)
+        self.uhd_usrp_source_0.set_bandwidth(samprate1, 0)
         self.uhd_usrp_sink_1 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -174,7 +192,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self.uhd_usrp_sink_1.set_center_freq(freq, 0)
         self.uhd_usrp_sink_1.set_normalized_gain(1, 0)
         self.uhd_usrp_sink_1.set_antenna('TX/RX', 0)
-        self.hydra_hydra_sink_0 = hydra.hydra_sink(2, 1024, freq, samprate,
+        self.hydra_hydra_sink_0 = hydra.hydra_sink(2, 512, freq, samprate,
         	 ((freq1, samprate1), 
         	 (freq2, samprate2),
         	 ))
@@ -188,6 +206,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.hydra_hydra_sink_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.hydra_hydra_sink_0, 1))    
         self.connect((self.hydra_hydra_sink_0, 0), (self.uhd_usrp_sink_1, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.zeromq_pull_source_0_1, 0), (self.blocks_multiply_const_vxx_0_0, 0))    
 
@@ -225,6 +244,8 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_samprate1(self, samprate1):
         self.samprate1 = samprate1
+        self.uhd_usrp_source_0.set_samp_rate(self.samprate1)
+        self.uhd_usrp_source_0.set_bandwidth(self.samprate1, 0)
 
     def get_samprate(self):
         return self.samprate
@@ -232,6 +253,12 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
     def set_samprate(self, samprate):
         self.samprate = samprate
         self.uhd_usrp_sink_1.set_samp_rate(self.samprate)
+
+    def get_rxport1(self):
+        return self.rxport1
+
+    def set_rxport1(self, rxport1):
+        self.rxport1 = rxport1
 
     def get_rxgain(self):
         return self.rxgain
@@ -263,6 +290,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_freq1(self, freq1):
         self.freq1 = freq1
+        self.uhd_usrp_source_0.set_center_freq(self.freq1 + 4e6, 0)
         self.hydra_hydra_sink_0.set_central_frequency(0, self.freq1)
 
     def get_freq(self):
