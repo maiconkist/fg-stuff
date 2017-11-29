@@ -18,12 +18,10 @@ xmlrpcport = 8083
 [vr1_tx]
 ip = 192.168.10.101
 port = 2300
-rxport = 2301
 
 [vr2_tx]
 ip = 192.168.10.29
 port = 2300
-rxport = 2301
 
 [bs_single]
 ip = 192.168.10.110
@@ -62,16 +60,14 @@ rxgain = 0
 finalsplitip1 = 192.168.10.101
 finalsplitport1 = 2300
 rxport1 = 2301
-txfreq1 = 949.5e6
-rxfreq1 = 955e6
+freq1 = 949.5e6
 samprate1 = 500e3
 amplitude1 =0.1
 # VR 2
 finalsplitip2 = 192.168.10.29
 finalsplitport2 = 2300
 rxport2 = 2302
-txfreq2 = 950.5e6
-rxfreq2 = 955e6
+freq2 = 950.5e6
 samprate2 = 200e3
 amplitude2 =0.1
 

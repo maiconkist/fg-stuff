@@ -97,7 +97,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 1312)</value>
+      <value>(144, 1608)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -164,7 +164,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 1312)</value>
+      <value>(256, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -207,7 +207,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 1448)</value>
+      <value>(144, 1736)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -274,7 +274,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 1448)</value>
+      <value>(256, 1448)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -321,7 +321,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 1312)</value>
+      <value>(440, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -368,7 +368,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 1448)</value>
+      <value>(440, 1448)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -415,7 +415,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 1312)</value>
+      <value>(592, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -462,7 +462,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 1448)</value>
+      <value>(592, 1448)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -490,53 +490,6 @@
     </param>
   </block>
   <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>./default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>950e6</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(216, 1160)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"freq"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"usrp_hydra"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
     <key>variable_qtgui_range</key>
     <param>
       <key>comment</key>
@@ -552,7 +505,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 1312)</value>
+      <value>(0, 1608)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -631,7 +584,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"txfreq1"</value>
+      <value>"freq1"</value>
     </param>
     <param>
       <key>section</key>
@@ -662,7 +615,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 1448)</value>
+      <value>(0, 1736)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -741,7 +694,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"txfreq2"</value>
+      <value>"freq2"</value>
     </param>
     <param>
       <key>section</key>
@@ -917,7 +870,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1080, 1312)</value>
+      <value>(856, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -956,7 +909,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"2300"</value>
+      <value>"6666"</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -964,7 +917,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(952, 1312)</value>
+      <value>(728, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -977,6 +930,53 @@
     <param>
       <key>option</key>
       <value>"rxport1"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"7777"</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(728, 1448)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>rxport2</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"rxport2"</value>
     </param>
     <param>
       <key>section</key>
@@ -1015,7 +1015,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(800, 912)</value>
+      <value>(840, 944)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1054,54 +1054,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(344, 1160)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>samprate</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>"samprate"</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>"usrp_hydra"</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>None</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>./default</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1e6</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(264, 1312)</value>
+      <value>(128, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1148,7 +1101,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 1448)</value>
+      <value>(128, 1448)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1195,7 +1148,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 8)</value>
+      <value>(312, 1016)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1293,7 +1246,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(304, 280)</value>
+      <value>(248, 240)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1336,7 +1289,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(888, 280)</value>
+      <value>(840, 240)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1367,6 +1320,100 @@
     </param>
     <param>
       <key>value</key>
+      <value>950e6</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(144, 1160)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>usrp_f</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"freq"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1e6</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(272, 1160)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>usrp_s</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"samprate"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp_hydra"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
       <value>8081</value>
     </param>
     <param>
@@ -1375,7 +1422,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 1016)</value>
+      <value>(176, 1016)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1571,7 +1618,7 @@
     <key>hydra_hydra_sink</key>
     <param>
       <key>bandwidth</key>
-      <value>samprate</value>
+      <value>usrp_s</value>
     </param>
     <param>
       <key>alias</key>
@@ -1579,7 +1626,7 @@
     </param>
     <param>
       <key>central_frequency</key>
-      <value>freq</value>
+      <value>usrp_f</value>
     </param>
     <param>
       <key>comment</key>
@@ -1863,22 +1910,18 @@
     </param>
   </block>
   <block>
-    <key>qtgui_waterfall_sink_x</key>
+    <key>hydra_hydra_source</key>
     <param>
-      <key>axislabels</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>bw</key>
-      <value>samprate</value>
+      <key>bandwidth</key>
+      <value>usrp_s</value>
     </param>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
-      <key>fc</key>
-      <value>0</value>
+      <key>central_frequency</key>
+      <value>usrp_f + 4e6</value>
     </param>
     <param>
       <key>comment</key>
@@ -1890,163 +1933,143 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
-      <key>fftsize</key>
+      <key>fft_m_size</key>
       <value>512</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(784, 776)</value>
+      <key>center_freq1</key>
+      <value>freq1 + 4e6</value>
     </param>
     <param>
-      <key>gui_hint</key>
+      <key>center_freq10</key>
       <value></value>
+    </param>
+    <param>
+      <key>center_freq11</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq12</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq13</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq14</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq15</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq16</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq17</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq18</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq19</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq2</key>
+      <value>freq2 + 4e6</value>
+    </param>
+    <param>
+      <key>center_freq20</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq21</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq22</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq23</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq24</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq25</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq26</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq27</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq28</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq29</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq30</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(832, 744)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>180</value>
     </param>
     <param>
-      <key>grid</key>
-      <value>False</value>
-    </param>
-    <param>
       <key>id</key>
-      <value>qtgui_waterfall_sink_x_0_1</value>
-    </param>
-    <param>
-      <key>int_max</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>int_min</key>
-      <value>-140</value>
-    </param>
-    <param>
-      <key>legend</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>alpha1</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha10</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label10</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha2</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha3</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha4</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha5</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha6</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha7</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha8</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label8</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alpha9</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>color9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>label9</key>
-      <value></value>
+      <value>hydra_hydra_source_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -2057,32 +2080,128 @@
       <value>0</value>
     </param>
     <param>
-      <key>name</key>
-      <value>"RX IQ"</value>
+      <key>num_outputs</key>
+      <value>2</value>
     </param>
     <param>
-      <key>nconnections</key>
-      <value>1</value>
+      <key>samprate1</key>
+      <value>samprate1</value>
     </param>
     <param>
-      <key>showports</key>
-      <value>True</value>
+      <key>samprate10</key>
+      <value></value>
     </param>
     <param>
-      <key>freqhalf</key>
-      <value>True</value>
+      <key>samprate11</key>
+      <value></value>
     </param>
     <param>
-      <key>type</key>
-      <value>complex</value>
+      <key>samprate12</key>
+      <value></value>
     </param>
     <param>
-      <key>update_time</key>
-      <value>0.10</value>
+      <key>samprate13</key>
+      <value></value>
     </param>
     <param>
-      <key>wintype</key>
-      <value>firdes.WIN_BLACKMAN_hARRIS</value>
+      <key>samprate14</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate15</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate16</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate17</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate18</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate19</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate2</key>
+      <value>samprate2</value>
+    </param>
+    <param>
+      <key>samprate20</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate21</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate22</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate23</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate24</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate25</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate26</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate27</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate28</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate29</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate30</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>samprate9</key>
+      <value></value>
     </param>
   </block>
   <block>
@@ -2101,7 +2220,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>freq</value>
+      <value>usrp_f</value>
     </param>
     <param>
       <key>norm_gain0</key>
@@ -2877,7 +2996,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>samprate</value>
+      <value>usrp_s</value>
     </param>
     <param>
       <key>hide_cmd_port</key>
@@ -2920,11 +3039,11 @@
     </param>
     <param>
       <key>bw0</key>
-      <value>samprate1</value>
+      <value>0</value>
     </param>
     <param>
       <key>center_freq0</key>
-      <value>freq1 + 4e6</value>
+      <value>usrp_f + 4e6</value>
     </param>
     <param>
       <key>dc_offs_enb0</key>
@@ -4092,7 +4211,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1040, 760)</value>
+      <value>(1112, 760)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4220,7 +4339,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>samprate1</value>
+      <value>usrp_s</value>
     </param>
     <param>
       <key>hide_cmd_port</key>
@@ -4375,7 +4494,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 4)</value>
+      <value>(176, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4540,7 +4659,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(520, 780)</value>
+      <value>(88, 788)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4553,6 +4672,61 @@
     <param>
       <key>id</key>
       <value>zeromq_push_sink_0_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>pass_tags</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>timeout</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>zeromq_push_sink</key>
+    <param>
+      <key>address</key>
+      <value>"tcp://" + ip + ":" + rxport2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(88, 756)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>hwm</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zeromq_push_sink_0_0_0</value>
     </param>
     <param>
       <key>type</key>
@@ -4591,7 +4765,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 860)</value>
+      <value>(824, 892)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4646,7 +4820,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(280, 228)</value>
+      <value>(240, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4701,7 +4875,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 228)</value>
+      <value>(824, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4761,14 +4935,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>qtgui_waterfall_sink_x_0_1</sink_block_id>
+    <source_block_id>hydra_hydra_source_0</source_block_id>
+    <sink_block_id>zeromq_push_sink_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>hydra_hydra_source_0</source_block_id>
+    <sink_block_id>zeromq_push_sink_0_0_0</sink_block_id>
+    <source_key>1</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>zeromq_push_sink_0_0</sink_block_id>
+    <sink_block_id>hydra_hydra_source_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
