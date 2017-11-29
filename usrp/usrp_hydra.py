@@ -4,7 +4,7 @@
 # GNU Radio Python Flow Graph
 # Title: usrp_hydra
 # Description: USRP with hydra
-# Generated: Tue Nov 28 18:50:23 2017
+# Generated: Wed Nov 29 14:34:27 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -69,6 +69,16 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: xmlrpcport = self._xmlrpcport_config.getint("usrp", "xmlrpcport")
         except: xmlrpcport = 8081
         self.xmlrpcport = xmlrpcport
+        self._usrp_s_config = ConfigParser.ConfigParser()
+        self._usrp_s_config.read('./default')
+        try: usrp_s = self._usrp_s_config.getfloat("usrp_hydra", "samprate")
+        except: usrp_s = 1e6
+        self.usrp_s = usrp_s
+        self._usrp_f_config = ConfigParser.ConfigParser()
+        self._usrp_f_config.read('./default')
+        try: usrp_f = self._usrp_f_config.getfloat("usrp_hydra", "freq")
+        except: usrp_f = 950e6
+        self.usrp_f = usrp_f
         self._txgain_config = ConfigParser.ConfigParser()
         self._txgain_config.read('./default')
         try: txgain = self._txgain_config.getfloat("usrp", "txgain")
@@ -89,15 +99,15 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         try: samprate1 = self._samprate1_config.getfloat("usrp_hydra", "samprate1")
         except: samprate1 = 1e6
         self.samprate1 = samprate1
-        self._samprate_config = ConfigParser.ConfigParser()
-        self._samprate_config.read('./default')
-        try: samprate = self._samprate_config.getfloat("usrp_hydra", "samprate")
-        except: samprate = 1e6
-        self.samprate = samprate
+        self._rxport2_config = ConfigParser.ConfigParser()
+        self._rxport2_config.read('./default')
+        try: rxport2 = self._rxport2_config.get("usrp_hydra", "rxport2")
+        except: rxport2 = "7777"
+        self.rxport2 = rxport2
         self._rxport1_config = ConfigParser.ConfigParser()
         self._rxport1_config.read('./default')
         try: rxport1 = self._rxport1_config.get("usrp_hydra", "rxport1")
-        except: rxport1 = "2300"
+        except: rxport1 = "6666"
         self.rxport1 = rxport1
         self._rxgain_config = ConfigParser.ConfigParser()
         self._rxgain_config.read('./default')
@@ -116,19 +126,14 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self.ip = ip
         self._freq2_config = ConfigParser.ConfigParser()
         self._freq2_config.read('./default')
-        try: freq2 = self._freq2_config.getfloat("usrp_hydra", "txfreq2")
+        try: freq2 = self._freq2_config.getfloat("usrp_hydra", "freq2")
         except: freq2 = 950e6
         self.freq2 = freq2
         self._freq1_config = ConfigParser.ConfigParser()
         self._freq1_config.read('./default')
-        try: freq1 = self._freq1_config.getfloat("usrp_hydra", "txfreq1")
+        try: freq1 = self._freq1_config.getfloat("usrp_hydra", "freq1")
         except: freq1 = 950e6
         self.freq1 = freq1
-        self._freq_config = ConfigParser.ConfigParser()
-        self._freq_config.read('./default')
-        try: freq = self._freq_config.getfloat("usrp_hydra", "freq")
-        except: freq = 950e6
-        self.freq = freq
         self._finalsplitport2_config = ConfigParser.ConfigParser()
         self._finalsplitport2_config.read('./default')
         try: finalsplitport2 = self._finalsplitport2_config.get("usrp_hydra", "finalsplitport2")
@@ -161,6 +166,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self._amplitude1_range = Range(0, 1, 0.01, 0.05, 200)
         self._amplitude1_win = RangeWidget(self._amplitude1_range, self.set_amplitude1, 'VR1 amplitude', "counter_slider", float)
         self.top_layout.addWidget(self._amplitude1_win)
+        self.zeromq_push_sink_0_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxport2, 100, True, -1)
         self.zeromq_push_sink_0_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, "tcp://" + ip + ":" + rxport1, 100, True, -1)
         self.zeromq_pull_source_0_1 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip2 + ":" + finalsplitport2, timeout, True, -1)
         self.zeromq_pull_source_0 = zeromq.pull_source(gr.sizeof_gr_complex, 1, "tcp://" + finalsplitip1 + ":" + finalsplitport1, timeout, True, -1)
@@ -176,11 +182,10 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         		channels=range(1),
         	),
         )
-        self.uhd_usrp_source_0.set_samp_rate(samprate1)
-        self.uhd_usrp_source_0.set_center_freq(freq1 + 4e6, 0)
+        self.uhd_usrp_source_0.set_samp_rate(usrp_s)
+        self.uhd_usrp_source_0.set_center_freq(usrp_f + 4e6, 0)
         self.uhd_usrp_source_0.set_normalized_gain(0, 0)
         self.uhd_usrp_source_0.set_antenna('RX2', 0)
-        self.uhd_usrp_source_0.set_bandwidth(samprate1, 0)
         self.uhd_usrp_sink_1 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -188,11 +193,16 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         		channels=range(1),
         	),
         )
-        self.uhd_usrp_sink_1.set_samp_rate(samprate)
-        self.uhd_usrp_sink_1.set_center_freq(freq, 0)
+        self.uhd_usrp_sink_1.set_samp_rate(usrp_s)
+        self.uhd_usrp_sink_1.set_center_freq(usrp_f, 0)
         self.uhd_usrp_sink_1.set_normalized_gain(1, 0)
         self.uhd_usrp_sink_1.set_antenna('TX/RX', 0)
-        self.hydra_hydra_sink_0 = hydra.hydra_sink(2, 512, freq, samprate,
+        self.hydra_hydra_source_0 = hydra.hydra_source(2, 512, usrp_f + 4e6, usrp_s,
+        	 ((freq1 + 4e6, samprate1), 
+        	 (freq2 + 4e6, samprate2),
+        	 ))
+          
+        self.hydra_hydra_sink_0 = hydra.hydra_sink(2, 512, usrp_f, usrp_s,
         	 ((freq1, samprate1), 
         	 (freq2, samprate2),
         	 ))
@@ -206,7 +216,9 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.hydra_hydra_sink_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.hydra_hydra_sink_0, 1))    
         self.connect((self.hydra_hydra_sink_0, 0), (self.uhd_usrp_sink_1, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
+        self.connect((self.hydra_hydra_source_0, 0), (self.zeromq_push_sink_0_0, 0))    
+        self.connect((self.hydra_hydra_source_0, 1), (self.zeromq_push_sink_0_0_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.hydra_hydra_source_0, 0))    
         self.connect((self.zeromq_pull_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.zeromq_pull_source_0_1, 0), (self.blocks_multiply_const_vxx_0_0, 0))    
 
@@ -220,6 +232,22 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_xmlrpcport(self, xmlrpcport):
         self.xmlrpcport = xmlrpcport
+
+    def get_usrp_s(self):
+        return self.usrp_s
+
+    def set_usrp_s(self, usrp_s):
+        self.usrp_s = usrp_s
+        self.uhd_usrp_source_0.set_samp_rate(self.usrp_s)
+        self.uhd_usrp_sink_1.set_samp_rate(self.usrp_s)
+
+    def get_usrp_f(self):
+        return self.usrp_f
+
+    def set_usrp_f(self, usrp_f):
+        self.usrp_f = usrp_f
+        self.uhd_usrp_source_0.set_center_freq(self.usrp_f + 4e6, 0)
+        self.uhd_usrp_sink_1.set_center_freq(self.usrp_f, 0)
 
     def get_txgain(self):
         return self.txgain
@@ -244,15 +272,12 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_samprate1(self, samprate1):
         self.samprate1 = samprate1
-        self.uhd_usrp_source_0.set_samp_rate(self.samprate1)
-        self.uhd_usrp_source_0.set_bandwidth(self.samprate1, 0)
 
-    def get_samprate(self):
-        return self.samprate
+    def get_rxport2(self):
+        return self.rxport2
 
-    def set_samprate(self, samprate):
-        self.samprate = samprate
-        self.uhd_usrp_sink_1.set_samp_rate(self.samprate)
+    def set_rxport2(self, rxport2):
+        self.rxport2 = rxport2
 
     def get_rxport1(self):
         return self.rxport1
@@ -283,6 +308,7 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_freq2(self, freq2):
         self.freq2 = freq2
+        self.hydra_hydra_source_0.set_central_frequency(1, self.freq2 + 4e6)
         self.hydra_hydra_sink_0.set_central_frequency(1, self.freq2)
 
     def get_freq1(self):
@@ -290,15 +316,8 @@ class usrp_hydra(gr.top_block, Qt.QWidget):
 
     def set_freq1(self, freq1):
         self.freq1 = freq1
-        self.uhd_usrp_source_0.set_center_freq(self.freq1 + 4e6, 0)
+        self.hydra_hydra_source_0.set_central_frequency(0, self.freq1 + 4e6)
         self.hydra_hydra_sink_0.set_central_frequency(0, self.freq1)
-
-    def get_freq(self):
-        return self.freq
-
-    def set_freq(self, freq):
-        self.freq = freq
-        self.uhd_usrp_sink_1.set_center_freq(self.freq, 0)
 
     def get_finalsplitport2(self):
         return self.finalsplitport2
