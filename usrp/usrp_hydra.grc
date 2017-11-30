@@ -97,7 +97,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(144, 1608)</value>
+      <value>(144, 1760)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -164,7 +164,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 1312)</value>
+      <value>(256, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -207,7 +207,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(144, 1736)</value>
+      <value>(144, 1888)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -274,7 +274,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 1448)</value>
+      <value>(256, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -321,7 +321,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 1312)</value>
+      <value>(440, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -368,7 +368,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 1448)</value>
+      <value>(440, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -415,7 +415,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(592, 1312)</value>
+      <value>(592, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -462,7 +462,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(592, 1448)</value>
+      <value>(592, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -505,7 +505,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1608)</value>
+      <value>(0, 1760)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -572,7 +572,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1312)</value>
+      <value>(0, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -615,7 +615,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1736)</value>
+      <value>(0, 1888)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -682,7 +682,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1448)</value>
+      <value>(0, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -729,7 +729,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1016)</value>
+      <value>(0, 1168)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -776,7 +776,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 1160)</value>
+      <value>(0, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -870,7 +870,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 1312)</value>
+      <value>(856, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -917,7 +917,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 1312)</value>
+      <value>(728, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -964,7 +964,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 1448)</value>
+      <value>(728, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -992,49 +992,6 @@
     </param>
   </block>
   <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>block_id</key>
-      <value>zrxrate</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(840, 944)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>rxrate</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>poll_rate</key>
-      <value>10</value>
-    </param>
-  </block>
-  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -1054,7 +1011,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 1312)</value>
+      <value>(128, 1464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1101,7 +1058,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 1448)</value>
+      <value>(128, 1600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1148,7 +1105,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(312, 1016)</value>
+      <value>(312, 1168)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1223,92 +1180,6 @@
     </param>
   </block>
   <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>block_id</key>
-      <value>ztxrate</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(248, 240)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>txrate1</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>poll_rate</key>
-      <value>10</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>block_id</key>
-      <value>ztxrate</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(840, 240)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>txrate2</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>poll_rate</key>
-      <value>10</value>
-    </param>
-  </block>
-  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -1328,7 +1199,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(144, 1160)</value>
+      <value>(144, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1356,6 +1227,92 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate_1_0_0</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(864, 952)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>usrp_iq_rxrate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate_1_0</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(696, 576)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>usrp_iq_txrate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -1375,7 +1332,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 1160)</value>
+      <value>(272, 1312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1403,6 +1360,92 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(256, 248)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>vr1_iq_txrate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate_1</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(848, 240)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>vr2_iq_txrate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -1422,7 +1465,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 1016)</value>
+      <value>(176, 1168)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1571,7 +1614,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(584, 416)</value>
+      <value>(712, 416)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1766,7 +1809,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(352, 400)</value>
+      <value>(368, 400)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2061,7 +2104,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(832, 744)</value>
+      <value>(848, 744)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2876,7 +2919,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 392)</value>
+      <value>(984, 392)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4211,7 +4254,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 760)</value>
+      <value>(1096, 760)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4378,7 +4421,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 196)</value>
+      <value>(456, 156)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4405,7 +4448,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1040, 196)</value>
+      <value>(1040, 156)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4533,7 +4576,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 180)</value>
+      <value>(8, 140)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4596,7 +4639,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 180)</value>
+      <value>(600, 140)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4659,7 +4702,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(88, 788)</value>
+      <value>(0, 788)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4714,7 +4757,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(88, 756)</value>
+      <value>(0, 756)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4761,66 +4804,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(824, 892)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>zrxrate</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>mintime</key>
-      <value>2000</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.15</value>
-    </param>
-    <param>
-      <key>vlen</key>
       <value>1</value>
     </param>
-  </block>
-  <block>
-    <key>blocks_probe_rate</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
     <param>
       <key>_coordinate</key>
-      <value>(240, 188)</value>
+      <value>(240, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4871,11 +4859,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 188)</value>
+      <value>(832, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4884,6 +4872,116 @@
     <param>
       <key>id</key>
       <value>ztxrate_1</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(680, 524)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ztxrate_1_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(848, 900)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ztxrate_1_0_0</value>
     </param>
     <param>
       <key>type</key>
@@ -4935,6 +5033,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>hydra_hydra_sink_0</source_block_id>
+    <sink_block_id>ztxrate_1_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>hydra_hydra_source_0</source_block_id>
     <sink_block_id>zeromq_push_sink_0_0</sink_block_id>
     <source_key>0</source_key>
@@ -4954,7 +5058,7 @@
   </connection>
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>zrxrate</sink_block_id>
+    <sink_block_id>ztxrate_1_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

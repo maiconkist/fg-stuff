@@ -18,10 +18,12 @@ xmlrpcport = 8083
 [vr1_tx]
 ip = 192.168.10.101
 port = 2300
+xmlrpcport = 8081
 
 [vr2_tx]
 ip = 192.168.10.29
 port = 2300
+xmlrpcport = 8081
 
 [bs_single]
 ip = 192.168.10.110

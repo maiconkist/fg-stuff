@@ -93,7 +93,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 4)</value>
+      <value>(560, 76)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -167,7 +167,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 76)</value>
+      <value>(456, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,7 +194,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 4)</value>
+      <value>(456, 76)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -206,7 +206,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>100</value>
+      <value>1000</value>
     </param>
   </block>
   <block>
@@ -275,7 +275,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(760, 76)</value>
+      <value>(768, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -302,7 +302,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 76)</value>
+      <value>(616, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -315,6 +315,49 @@
     <param>
       <key>value</key>
       <value>((-1,1, 1, -1, -1, -1),)</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>zrxrate</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(616, 616)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>rx_goodput</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
     </param>
   </block>
   <block>
@@ -466,6 +509,49 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(480, 392)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>tx_goodput</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -560,18 +646,18 @@
     </param>
   </block>
   <block>
-    <key>analog_random_source_x</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
+    <key>variable_config</key>
     <param>
       <key>comment</key>
       <value></value>
     </param>
     <param>
-      <key>affinity</key>
-      <value></value>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>8081</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -579,7 +665,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(160, 256)</value>
+      <value>(24, 800)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -587,35 +673,23 @@
     </param>
     <param>
       <key>id</key>
-      <value>analog_random_source_x_0</value>
+      <value>xmlrpcport</value>
     </param>
     <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
+      <key>option</key>
+      <value>"xmlrpcport"</value>
     </param>
     <param>
-      <key>max</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>1000</value>
+      <key>section</key>
+      <value>"vr1_tx"</value>
     </param>
     <param>
       <key>type</key>
-      <value>byte</value>
+      <value>int</value>
     </param>
     <param>
-      <key>repeat</key>
-      <value>True</value>
+      <key>writeback</key>
+      <value>None</value>
     </param>
   </block>
   <block>
@@ -638,7 +712,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 268)</value>
+      <value>(232, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -697,7 +771,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(504, 460)</value>
+      <value>(664, 460)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -717,7 +791,62 @@
     </param>
     <param>
       <key>name</key>
+      <value>Rx'd Packet</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 260)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>Tx'd Packet</value>
     </param>
     <param>
       <key>num_inputs</key>
@@ -748,7 +877,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(896, 276)</value>
+      <value>(896, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -784,6 +913,65 @@
     </param>
   </block>
   <block>
+    <key>blocks_vector_source_x</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 204)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_vector_source_x_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>tags</key>
+      <value>[]</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vector</key>
+      <value>[x for x in range(10000)]</value>
+    </param>
+  </block>
+  <block>
     <key>digital_ofdm_rx</key>
     <param>
       <key>alias</key>
@@ -811,7 +999,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 404)</value>
+      <value>(832, 404)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -898,7 +1086,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 200)</value>
+      <value>(664, 144)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -959,6 +1147,41 @@
     <param>
       <key>sync_word2</key>
       <value>sync_word2</value>
+    </param>
+  </block>
+  <block>
+    <key>xmlrpc_server</key>
+    <param>
+      <key>addr</key>
+      <value>ip</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(176, 4)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>xmlrpc_server_0_0</value>
+    </param>
+    <param>
+      <key>port</key>
+      <value>xmlrpcport</value>
     </param>
   </block>
   <block>
@@ -1048,7 +1271,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1056, 260)</value>
+      <value>(1056, 204)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1079,9 +1302,119 @@
       <value>1</value>
     </param>
   </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(584, 564)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zrxrate</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 340)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ztxrate</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
   <connection>
-    <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>blocks_stream_to_tagged_stream_0</sink_block_id>
+    <source_block_id>blocks_stream_to_tagged_stream_0</source_block_id>
+    <sink_block_id>blocks_tag_debug_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1092,14 +1425,32 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_stream_to_tagged_stream_0</source_block_id>
+    <sink_block_id>ztxrate</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_throttle_0_0</source_block_id>
     <sink_block_id>zeromq_push_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_vector_source_x_0</source_block_id>
+    <sink_block_id>blocks_stream_to_tagged_stream_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>digital_ofdm_rx_0</source_block_id>
     <sink_block_id>blocks_tag_debug_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_ofdm_rx_0</source_block_id>
+    <sink_block_id>zrxrate</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

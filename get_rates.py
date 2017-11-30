@@ -21,21 +21,25 @@ class Split(object):
         return "{}:\tn_elems: {:8.2f},\trate: {:15.2f}".format(
                 self.name,
                 sum([k for k in self.rates.itervalues()]),
-                sum([self.rates[k]*v for k, v in self.rates.iteritems()]),
+                sum([self.rates[k]*v for k, v in self.params]),
                 )
 
 
 def main():
-   splits = [ Split('split1', '192.168.10.101', 8081, [('rate0', 8), ('rate1', 8)]),
-              Split('split2', '192.168.10.102', 8082, [('rate', 32), ]),
-              Split('split3', '192.168.10.103', 8083, [('rate', 32), ]),
-              Split('usrp',   '192.168.10.104', 8084, [('rate', 32), ]),
+   splits = [
+              #Split('split1', '192.168.10.101', 8081, [('rate0', 8), ('rate1', 8)]),
+              #Split('split2', '192.168.10.102', 8082, [('rate', 32), ]),
+              #Split('split3', '192.168.10.103', 8083, [('rate', 32), ]),
+              #Split('usrp',   '192.168.10.104', 8084, [('rate', 32), ]),
+              Split('vr_tx1',  '192.168.10.101',  8081, [('rx_goodput', 8), ]),
+              Split('vr_tx1',  '192.168.10.101',  8081, [('tx_goodput', 8), ]),
+              Split('vr_rx',  '192.168.10.30',  8081, [('rx_goodput', 8), ]),
+              Split('vr_rx',  '192.168.10.30',  8081, [('tx_goodput', 8), ]),
             ]
 
    while True:
       for s in splits:
           s.update()
-
           print s
 
       print("-------------------------------")
