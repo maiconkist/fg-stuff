@@ -93,7 +93,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 4)</value>
+      <value>(200, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -128,7 +128,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 568)</value>
+      <value>(0, 952)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,7 +194,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 4)</value>
+      <value>(336, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -318,6 +318,49 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>zrxrate</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(648, 872)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>rx_goodput</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -337,7 +380,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(152, 704)</value>
+      <value>(152, 1088)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -384,7 +427,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(280, 568)</value>
+      <value>(280, 952)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -466,6 +509,49 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>ztxrate</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(480, 552)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>tx_goodput</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -485,7 +571,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(152, 568)</value>
+      <value>(152, 952)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -532,7 +618,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 704)</value>
+      <value>(0, 1088)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -579,7 +665,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(32, 248)</value>
+      <value>(8, 248)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -638,7 +724,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(328, 260)</value>
+      <value>(208, 260)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -697,7 +783,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 452)</value>
+      <value>(680, 700)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -717,7 +803,62 @@
     </param>
     <param>
       <key>name</key>
+      <value>RX'd Packet</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 420)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>TX'd Packet</value>
     </param>
     <param>
       <key>num_inputs</key>
@@ -744,11 +885,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(880, 268)</value>
+      <value>(800, 268)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -756,7 +897,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_throttle_0_0</value>
+      <value>blocks_throttle_0</value>
     </param>
     <param>
       <key>ignoretag</key>
@@ -772,7 +913,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>500e3</value>
+      <value>samprate</value>
     </param>
     <param>
       <key>type</key>
@@ -811,7 +952,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 396)</value>
+      <value>(864, 644)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -898,7 +1039,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 192)</value>
+      <value>(448, 192)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -985,7 +1126,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1104, 452)</value>
+      <value>(1104, 700)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1079,9 +1220,125 @@
       <value>1</value>
     </param>
   </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(632, 820)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zrxrate</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_probe_rate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 500)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ztxrate</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mintime</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.15</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>blocks_stream_to_tagged_stream_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_stream_to_tagged_stream_0</source_block_id>
+    <sink_block_id>blocks_tag_debug_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1092,7 +1349,13 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_throttle_0_0</source_block_id>
+    <source_block_id>blocks_stream_to_tagged_stream_0</source_block_id>
+    <sink_block_id>ztxrate</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>zeromq_push_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1104,8 +1367,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>digital_ofdm_rx_0</source_block_id>
+    <sink_block_id>zrxrate</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>digital_ofdm_tx_0</source_block_id>
-    <sink_block_id>blocks_throttle_0_0</sink_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

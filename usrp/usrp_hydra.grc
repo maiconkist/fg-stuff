@@ -50,7 +50,7 @@
     </param>
     <param>
       <key>max_nouts</key>
-      <value>maxnoutput</value>
+      <value>0</value>
     </param>
     <param>
       <key>qt_qss_theme</key>
@@ -89,7 +89,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.05</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -199,7 +199,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.05</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1293,7 +1293,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(696, 576)</value>
+      <value>(656, 520)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1614,7 +1614,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(712, 416)</value>
+      <value>(888, 416)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2919,7 +2919,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(984, 392)</value>
+      <value>(1112, 392)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4918,7 +4918,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 524)</value>
+      <value>(640, 468)</value>
     </param>
     <param>
       <key>_rotation</key>
