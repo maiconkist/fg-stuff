@@ -1,1 +1,1 @@
-from manager import Manager
+from mngmt.manager import Manager
