@@ -23,7 +23,10 @@ class ContainerTest(unittest.TestCase):
 
         self.mng.create(bs)
 
-        bs.start()
+        #bs.start()
+        #bs.stop()
+
+        bs.migrate('vr1-split1', 'B')
 
 if __name__ == "__main__":
     unittest.main()

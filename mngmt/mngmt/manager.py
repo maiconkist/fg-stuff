@@ -53,4 +53,3 @@ class Manager():
 
     def create(self, bundle):
         bundle.create()
-

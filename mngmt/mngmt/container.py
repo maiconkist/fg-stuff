@@ -1,18 +1,21 @@
 from mngmt import Manager
 
-
 class Container(object):
 
     RUNNING = 'Running'
     STOPPED = 'Stopped'
 
-    def __init__(self, name, origin=None, host=None, start_cmd=None):
-        self._name = name
+    def __init__(self, name, origin=None, host=None,
+                 start_cmd=None, stop_cmd=None):
+        self.name = name
         self._origin = origin
         self._host = host
         self._start_cmd = start_cmd
+        self._stop_cmd = stop_cmd
 
-        self._pylxd_container = None
+    @property
+    def _pylxd_container(self):
+        return Manager().getHostClient(self._host).containers.get(self.name)
 
     @property
     def is_running(self):
@@ -23,56 +26,92 @@ class Container(object):
         client = mng.getHostClient(self._host)
 
         # If container already instantiated, just start it
-        cont_exists = mng.containerExists(self._host, self._name)
+        cont_exists = mng.containerExists(self._host, self.name)
         if cont_exists:
-            print("\tContainer " + self._name + "already in " + self._host)
+            print("\tContainer " + self.name + "already in " + self._host)
         # If container not instantiated, create it
         else:
-            img_exists = mng.imageExists(self._host, self._name)
+            img_exists = mng.imageExists(self._host, self.name)
             if img_exists:
                 print("\tBase Image " + self._origin +
                       " not in " + self._host)
                 return
 
-            print("Creating " + self._name)
+            print("Creating " + self.name)
             client.containers.create({
-                'name': self._name,
+                'name': self.name,
                 'source': {'type': 'image',
                            'alias': 'gnuradio'}
             }, wait=True)
 
-        self._pylxd_container = client.containers.get(self._name)
         print("\tDONE")
+
+    def execute(self, cmd):
+
+        cmd_ret = None
+        if self.is_running:
+            print(self.name + " executing command `" + cmd + "`")
+            cmd_l = [c for c in cmd.split(' ')]
+            cmd_ret = self._pylxd_container.execute(cmd_l)
+        else:
+            print(self.name + " is not running. Cannot execute command `" + cmd + "`")
+
+        return cmd_ret
 
     def start(self):
         if self.is_running:
-            print("Container " + self._name + " already running")
-        else:
+            print("Container " + self.name + " already running")
+            return
+        try:
             self._pylxd_container.start()
+            if self._start_cmd is not None:
+                return self.execute(self._start_cmd)
+        except Exception as e:
+            print(e)
 
-        cmd_ret = None
-        if self._start_cmd is not None:
-            cmd_l = [cmd for cmd in self._start_cmd.split(' ')]
-            cmd_ret = self._pylxd_container.execute(cmd_l)
+    def stop(self):
+        if not self.is_running:
+            print("Container " + self.name + " is already stopped")
+            return
 
-        return cmd_ret
+        try:
+            print("Stopping container " + self.name)
+            if self._stop_cmd is not None:
+                self.execute(self._stop_cmd)
+
+            self._pylxd_container.stop()
+        except Exception as e:
+            print("Error stopping container: " + str(e))
+
+    def destroy(self):
+        self.stop()
+        self._pylxd_container.destroy()
+
+    def migrate(self, host, new_name=None):
+        other_client = Manager().getHostClient(host)
+        self._pylxd_container.migrate(other_client)
+
 
 
 class ContainerBundle(object):
     def __init__(self, bundlename):
         self._name = bundlename
-        self._bundle = []
+        self._bundle = {}
 
-    def addContainer(self, name, origin, host, start_cmd=''):
+    def addContainer(self, name, origin, host, start_cmd='', stop_cmd=''):
         """
-        @param base  Base container name
-        @param container Container created from base
+        @param name Container name
+        @param origin  Base container name
+        @param host Host name
+        @param start_cmd
+        @param stop_cmd
         """
         c = Container(name=name,
                       origin=origin,
                       host=host,
-                      start_cmd=start_cmd)
-        self._bundle.append(c)
+                      start_cmd=start_cmd,
+                      stop_cmd=stop_cmd)
+        self._bundle[name] = c
 
     def __iter__(self):
         self._it = 0
@@ -93,10 +132,21 @@ class ContainerBundle(object):
 
     def start(self):
         try:
-            for container in self._bundle:
+            for name, container in self._bundle.items():
                 container.start()
-        except:
-            print("Error")
+        except Exception as e:
+            print("Error starting container:" + str(e))
+
+    def stop(self):
+        try:
+            for name, container in self._bundle.items():
+                container.stop()
+        except Exception as e:
+            print("Error stopping container: " + str(e))
+
+    def migrate(self, container_name, host_dst, new_name=None):
+        container = self._bundle[container_name]
+        container.migrate(host_dst, new_name)
 
 
 class VirtualRadioSplit(ContainerBundle):
@@ -113,7 +163,5 @@ class VirtualRadioSplit(ContainerBundle):
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
-                          start_cmd='bash /root/fg-stuff/start_container.sh split3')
-
-    def startCmdHandler(self, container, cmd_output):
-        print(cmd_output)
+                          start_cmd='bash /root/fg-stuff/start_container.sh split3',
+                          stop_cmd='killall python')
