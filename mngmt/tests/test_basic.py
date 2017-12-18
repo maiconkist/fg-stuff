@@ -1,7 +1,7 @@
 import unittest
 
 from mngmt import Manager
-from mngmt.container import VirtualRadioSplit
+from mngmt.container import VirtualRadioSplit, VirtualRadioSingle, USRP, USRPHydra
 
 
 class ContainerTest(unittest.TestCase):
@@ -9,24 +9,44 @@ class ContainerTest(unittest.TestCase):
 
     def setUp(self):
         self.mng = Manager()
-        self.mng.addHost(host_name="local",
-                         ip="localhost:8443",
+        self.mng.addHost(host_name="regional",
+                         ip="192.168.10.10:8443",
+                         cert=("./tests/lxd.crt", "./tests/lxd.key"))
+
+        self.mng.addHost(host_name="edge",
+                         ip="192.168.10.20:8443",
                          cert=("./tests/lxd.crt", "./tests/lxd.key"))
 
     def tearDown(self):
         pass
 
     def testBuildVR(self):
-        bs = VirtualRadioSplit(name='vr1', host_split1='local',
-                               host_split2='local',
-                               host_split3='local')
+        bs1 = VirtualRadioSingle(name='vr1tx',
+                                host='regional',
+                                mode='vr1tx')
 
-        self.mng.create(bs)
+        self.mng.create(bs1)
+        bs1.start()
 
-        #bs.start()
-        #bs.stop()
+        import time
+        while bs1.ipaddr is None:
+            print('waiting ip')
+            time.sleep(1)
 
-        bs.migrate('vr1-split1', 'B')
+
+        usrp = USRP(name='usrp', host='edge')
+        self.mng.create(usrp)
+        usrp.start()
+
+
+        time.sleep(30)
+
+        bs1.migrate('edge')
+        usrp.stop()
+        usrp.start()
+
+        time.sleep(30)
+        self.mng.stopAll()
 
 if __name__ == "__main__":
     unittest.main()

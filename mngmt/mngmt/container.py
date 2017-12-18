@@ -13,22 +13,35 @@ class Container(object):
         self._start_cmd = start_cmd
         self._stop_cmd = stop_cmd
 
+        Manager().registerContainer(self)
+
     @property
     def _pylxd_container(self):
-        return Manager().getHostClient(self._host).containers.get(self.name)
+        return Manager().getLXDHostClient(self._host).containers.get(self.name)
 
     @property
     def is_running(self):
         return self._pylxd_container.status == Container.RUNNING
 
+
+    @property
+    def ipaddr(self, iface = 'eth0'):
+        ip = None
+        try:
+            ip = self._pylxd_container.state().network[iface]['addresses'][0]['address']
+        except Exceptiona as e:
+            print("Error getting ip address: " + str(e))
+
+        return ip
+
     def create(self):
         mng = Manager()
-        client = mng.getHostClient(self._host)
+        client = mng.getLXDHostClient(self._host)
 
         # If container already instantiated, just start it
         cont_exists = mng.containerExists(self._host, self.name)
         if cont_exists:
-            print("\tContainer " + self.name + "already in " + self._host)
+            print("\tContainer " + self.name + " already in " + self._host)
         # If container not instantiated, create it
         else:
             img_exists = mng.imageExists(self._host, self.name)
@@ -46,12 +59,13 @@ class Container(object):
 
         print("\tDONE")
 
-    def execute(self, cmd):
 
+    def execute(self, cmd):
         cmd_ret = None
+        print("Executing command `" + self._start_cmd + "` in " + self.name + "@" + self._host)
         if self.is_running:
-            print(self.name + " executing command `" + cmd + "`")
             cmd_l = [c for c in cmd.split(' ')]
+            print cmd_l
             cmd_ret = self._pylxd_container.execute(cmd_l)
         else:
             print(self.name + " is not running. Cannot execute command `" + cmd + "`")
@@ -61,13 +75,17 @@ class Container(object):
     def start(self):
         if self.is_running:
             print("Container " + self.name + " already running")
-            return
-        try:
-            self._pylxd_container.start()
-            if self._start_cmd is not None:
-                return self.execute(self._start_cmd)
-        except Exception as e:
-            print(e)
+        else:
+            try:
+                self._pylxd_container.start(wait=True)
+            except Exception as e:
+                print(e)
+
+        while not self.is_running:
+            print("Waiting container to start")
+
+        if self._start_cmd is not None:
+            return self.execute(self._start_cmd)
 
     def stop(self):
         if not self.is_running:
@@ -78,19 +96,37 @@ class Container(object):
             print("Stopping container " + self.name)
             if self._stop_cmd is not None:
                 self.execute(self._stop_cmd)
-
-            self._pylxd_container.stop()
+            self._pylxd_container.stop(wait=True)
         except Exception as e:
             print("Error stopping container: " + str(e))
+
+        while self.is_running:
+            print("Waiting container to stop")
 
     def destroy(self):
         self.stop()
         self._pylxd_container.destroy()
 
     def migrate(self, host, new_name=None):
-        other_client = Manager().getHostClient(host)
-        self._pylxd_container.migrate(other_client)
+        print("Migrating container " + self.name)
+        other_client = Manager().getLXDHostClient(host)
 
+        running = self.is_running
+        self.stop()
+
+        try:
+            self._pylxd_container.migrate(other_client, wait=True)
+        except Exception as e:
+            print("Error migrating container " + self.name + ": " + str(e))
+
+        # update host 
+        print("Updating host")
+        Manager()._hosts[self.name] = other_client
+        self._host = host
+
+        # start in new host
+        if running:
+            self.start()
 
 
 class ContainerBundle(object):
@@ -125,10 +161,10 @@ class ContainerBundle(object):
 
     def create(self):
         try:
-            for container in self:
+            for name, container in self._bundle.items():
                 container.create()
-        except:
-            print("Error")
+        except Exception as e:
+            print("Error creating container: " + str(e))
 
     def start(self):
         try:
@@ -155,13 +191,46 @@ class VirtualRadioSplit(ContainerBundle):
 
         self.addContainer(name=name + '-split1', origin='gnuradio',
                           host=host_split1,
-                          start_cmd='bash /root/fg-stuff/start_container.sh split1')
+                          start_cmd='/root/fg-stuff/start_container.sh split1')
 
         self.addContainer(name=name + '-split2', origin='gnuradio',
                           host=host_split2,
-                          start_cmd='bash /root/fg-stuff/start_container.sh split2')
+                          start_cmd='/root/fg-stuff/start_container.sh split2')
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
-                          start_cmd='bash /root/fg-stuff/start_container.sh split3',
+                          start_cmd='/root/fg-stuff/start_container.sh split3',
+                          stop_cmd='killall python')
+
+
+class VirtualRadioSingle(Container):
+    def __init__(self, name, host, mode):
+        if mode not in ['vr1tx', 'vr2tx']:
+            raise ValueError("VirtualRadio mode needs to be either 'vr1tx' or 'vr2tx'")
+
+        Container.__init__(self,
+                           name,
+                           origin='gnuradio',
+                           host=host,
+                           start_cmd='/root/fg-stuff/start_container.sh ' + mode,
+                           stop_cmd='killall python')
+
+
+class USRP(ContainerBundle):
+    def __init__(self, name, host):
+        ContainerBundle.__init__(self, name)
+        self.addContainer(name=name,
+                          origin='gnuradio',
+                          host=host,
+                          start_cmd='/root/fg-stuff/start_container.sh usrp',
+                          stop_cmd='killall python')
+
+
+class USRPHydra(ContainerBundle):
+    def __init__(self, name, host):
+        ContainerBundle.__init__(self, name)
+        self.addContainer(name=name,
+                          origin='gnuradio',
+                          host=host,
+                          start_cmd='/root/fg-stuff/start_container.sh usrp_hydra',
                           stop_cmd='killall python')

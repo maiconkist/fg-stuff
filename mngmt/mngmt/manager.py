@@ -15,13 +15,18 @@ def singleton(class_):
 class Manager():
     def __init__(self):
         self._hosts = {}
+        self._container = []
 
     def addHost(self, host_name, ip, cert):
         self._hosts[host_name] = pylxd.Client(endpoint='https://' + ip,
                                               cert=cert,
                                               verify=False)
 
-    def getContainerList(self, host_name=None):
+
+    def registerContainer(self, container):
+        self._container.append(container)
+
+    def getLXDContainerList(self, host_name=None):
         if host_name is not None:
             return self._hosts[host_name].containers.all()
         else:
@@ -30,13 +35,13 @@ class Manager():
                 r.extend(client.containers.all())
             return r
 
-    def getContainerByName(self, host_name, container_name):
+    def getLXDContainerByName(self, host_name, container_name):
         if host_name is not None:
             return self._hosts[host_name].containers.get(container_name)
 
         return None
 
-    def getHostClient(self, host_name):
+    def getLXDHostClient(self, host_name):
         return self._hosts[host_name]
 
     def containerExists(self, host_name, container_name):
@@ -53,3 +58,8 @@ class Manager():
 
     def create(self, bundle):
         bundle.create()
+
+
+    def stopAll(self):
+        for l in self._container:
+            l.stop()
