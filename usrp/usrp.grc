@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>qt_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>prompt</value>
+      <value>run</value>
     </param>
     <param>
       <key>run</key>
@@ -93,7 +93,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -145,6 +145,69 @@
     </param>
   </block>
   <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(808, 408)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>amplitude</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>amplitude</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
     <key>variable_config</key>
     <param>
       <key>comment</key>
@@ -152,7 +215,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -164,7 +227,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1152, 400)</value>
+      <value>(1144, 400)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -203,7 +266,54 @@
     </param>
     <param>
       <key>value</key>
-      <value>"127.0.0.1"</value>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(688, 656)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>amplitude</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"amplitude1"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"192.168.10.23"</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -211,7 +321,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 816)</value>
+      <value>(576, 816)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -258,7 +368,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 816)</value>
+      <value>(792, 816)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -297,7 +407,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"127.0.0.1"</value>
+      <value>"192.168.10.104"</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -352,7 +462,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(416, 816)</value>
+      <value>(448, 816)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -399,7 +509,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(888, 8)</value>
+      <value>(152, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -438,7 +548,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -497,7 +607,7 @@
     </param>
     <param>
       <key>config_file</key>
-      <value>default</value>
+      <value>./default</value>
     </param>
     <param>
       <key>value</key>
@@ -505,11 +615,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1152, 264)</value>
+      <value>(952, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -603,7 +713,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(288, 816)</value>
+      <value>(320, 816)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -732,7 +842,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1e6</value>
+      <value>500e3</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -740,7 +850,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1016, 8)</value>
+      <value>(280, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -826,7 +936,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>4.4e9</value>
+      <value>949.45e6</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -834,7 +944,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(760, 8)</value>
+      <value>(0, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -873,7 +983,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -925,14 +1035,10 @@
     </param>
   </block>
   <block>
-    <key>variable_config</key>
+    <key>variable_qtgui_range</key>
     <param>
       <key>comment</key>
       <value></value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>default</value>
     </param>
     <param>
       <key>value</key>
@@ -944,7 +1050,121 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1152, 128)</value>
+      <value>(936, 408)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>txgain</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>txtain</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.9</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1144, 128)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>txgain</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>"txgain"</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>"usrp"</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>./default</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.9</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(816, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -991,7 +1211,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(152, 816)</value>
+      <value>(176, 816)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1183,7 +1403,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 148)</value>
+      <value>(264, 148)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1230,11 +1450,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>2</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 248)</value>
+      <value>(448, 248)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1305,7 +1525,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>fftsize</key>
@@ -2395,7 +2615,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 216)</value>
+      <value>(696, 216)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3905,7 +4125,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 4)</value>
+      <value>(208, 4)</value>
     </param>
     <param>
       <key>_rotation</key>

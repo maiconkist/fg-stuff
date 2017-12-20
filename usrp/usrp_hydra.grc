@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>qt_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -93,7 +93,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -160,7 +160,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -203,7 +203,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -270,7 +270,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -584,7 +584,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"freq1"</value>
+      <value>"txfreq1"</value>
     </param>
     <param>
       <key>section</key>
@@ -694,7 +694,7 @@
     </param>
     <param>
       <key>option</key>
-      <value>"freq2"</value>
+      <value>"txfreq2"</value>
     </param>
     <param>
       <key>section</key>
@@ -1809,7 +1809,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 400)</value>
+      <value>(376, 400)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2104,7 +2104,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 744)</value>
+      <value>(800, 744)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4537,7 +4537,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 4)</value>
+      <value>(200, 4)</value>
     </param>
     <param>
       <key>_rotation</key>

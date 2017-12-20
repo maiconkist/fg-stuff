@@ -5,8 +5,11 @@ class Container(object):
     RUNNING = 'Running'
     STOPPED = 'Stopped'
 
-    def __init__(self, name, origin=None, host=None,
-                 start_cmd=None, stop_cmd=None):
+    def __init__(self, name,
+                 origin=None,
+                 host=None,
+                 start_cmd=None,
+                 stop_cmd=None):
         self.name = name
         self._origin = origin
         self._host = host
@@ -23,16 +26,25 @@ class Container(object):
     def is_running(self):
         return self._pylxd_container.status == Container.RUNNING
 
-
     @property
-    def ipaddr(self, iface = 'eth0'):
+    def has_ipaddr(self, iface = 'eth0'):
+
         ip = None
         try:
             ip = self._pylxd_container.state().network[iface]['addresses'][0]['address']
         except Exceptiona as e:
             print("Error getting ip address: " + str(e))
 
-        return ip
+        try:
+            parts = ip.split('.')
+            if len(parts) == 4 and all(0 <= int(part) < 256 for part in parts):
+                return True
+        except (ValueError, AttributeError, TypeError):
+            # ValueError: one of the 'parts' not convertible to integer
+            # AttributeError or TypeError :`ip` isn't even a string
+            return False
+
+        return False
 
     def create(self):
         mng = Manager()
@@ -81,8 +93,10 @@ class Container(object):
             except Exception as e:
                 print(e)
 
+        print("Waiting container to start")
         while not self.is_running:
             print("Waiting container to start")
+        print("Container " + self.name + " is running.")
 
         if self._start_cmd is not None:
             return self.execute(self._start_cmd)
@@ -159,6 +173,16 @@ class ContainerBundle(object):
         self._it += 1
         return self._bundle[self._it - 1]
 
+    @property
+    def has_ipaddr(self):
+        # if at least one container have not gotten an IP address yet, return False
+        for name, container in self._bundle.items():
+            # if at least one container have not gotten an IP address yet, return False
+            if container.has_ipaddr is False:
+                return False
+
+        return True
+
     def create(self):
         try:
             for name, container in self._bundle.items():
@@ -215,22 +239,21 @@ class VirtualRadioSingle(Container):
                            start_cmd='/root/fg-stuff/start_container.sh ' + mode,
                            stop_cmd='killall python')
 
-
-class USRP(ContainerBundle):
+class USRP(Container):
     def __init__(self, name, host):
-        ContainerBundle.__init__(self, name)
-        self.addContainer(name=name,
-                          origin='gnuradio',
-                          host=host,
-                          start_cmd='/root/fg-stuff/start_container.sh usrp',
-                          stop_cmd='killall python')
+        Container.__init__(self,
+                           name=name,
+                           origin='gnuradio',
+                           host=host,
+                           start_cmd='/root/fg-stuff/start_container.sh usrp',
+                           stop_cmd='killall python')
 
 
-class USRPHydra(ContainerBundle):
+class USRPHydra(Container):
     def __init__(self, name, host):
-        ContainerBundle.__init__(self, name)
-        self.addContainer(name=name,
-                          origin='gnuradio',
-                          host=host,
-                          start_cmd='/root/fg-stuff/start_container.sh usrp_hydra',
-                          stop_cmd='killall python')
+        Container.__init__(self,
+                           name=name,
+                           origin='gnuradio',
+                           host=host,
+                           start_cmd='/root/fg-stuff/start_container.sh usrphydra',
+                           stop_cmd='killall python')

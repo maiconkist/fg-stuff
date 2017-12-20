@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>prompt</value>
+      <value>run</value>
     </param>
     <param>
       <key>run</key>
@@ -206,7 +206,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>100</value>
     </param>
   </block>
   <block>
@@ -329,7 +329,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>function_args</key>
@@ -826,7 +826,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -991,7 +991,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>fft_len</key>
@@ -1086,7 +1086,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 144)</value>
+      <value>(632, 144)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1204,7 +1204,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1318,7 +1318,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
