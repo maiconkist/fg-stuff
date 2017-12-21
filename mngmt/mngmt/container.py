@@ -71,7 +71,6 @@ class Container(object):
 
         print("\tDONE")
 
-
     def execute(self, cmd):
         cmd_ret = None
         print("Executing command `" + self._start_cmd + "` in " + self.name + "@" + self._host)
@@ -215,15 +214,17 @@ class VirtualRadioSplit(ContainerBundle):
 
         self.addContainer(name=name + '-split1', origin='gnuradio',
                           host=host_split1,
-                          start_cmd='/root/fg-stuff/start_container.sh split1')
+                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split1',
+                          stop_cmd='killall python')
 
         self.addContainer(name=name + '-split2', origin='gnuradio',
                           host=host_split2,
-                          start_cmd='/root/fg-stuff/start_container.sh split2')
+                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split2',
+                          stop_cmd='killall python')
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
-                          start_cmd='/root/fg-stuff/start_container.sh split3',
+                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split3',
                           stop_cmd='killall python')
 
 
@@ -238,6 +239,7 @@ class VirtualRadioSingle(Container):
                            host=host,
                            start_cmd='/root/fg-stuff/start_container.sh ' + mode,
                            stop_cmd='killall python')
+
 
 class USRP(Container):
     def __init__(self, name, host):
