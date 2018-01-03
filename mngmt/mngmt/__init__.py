@@ -1,1 +1,2 @@
-from mngmt.manager import Manager
+from mngmt.manager import *
+from mngmt.container import *

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>815</width>
+    <height>559</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>791</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabWidgetPage1" native="true">
+     <attribute name="title">
+      <string>Virtual Radio 1</string>
+     </attribute>
+     <widget class="QRadioButton" name="radioButton">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>50</y>
+        <width>61</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split1Group</string>
+      </attribute>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_2">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>50</y>
+        <width>98</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Regional</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split1Group</string>
+      </attribute>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>58</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Split 1:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>80</y>
+        <width>58</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Split 2:</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_3">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>80</y>
+        <width>61</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split2Group</string>
+      </attribute>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_4">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>80</y>
+        <width>98</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Regional</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split2Group</string>
+      </attribute>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>110</y>
+        <width>58</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Split 3:</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_5">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>110</y>
+        <width>61</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split3Group</string>
+      </attribute>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_6">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>110</y>
+        <width>98</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Regional</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">vr1Split3Group</string>
+      </attribute>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>271</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Split location</string>
+      </property>
+      <zorder>label</zorder>
+     </widget>
+     <zorder>groupBox</zorder>
+     <zorder>radioButton</zorder>
+     <zorder>radioButton_2</zorder>
+     <zorder>label</zorder>
+     <zorder>label_2</zorder>
+     <zorder>radioButton_3</zorder>
+     <zorder>radioButton_4</zorder>
+     <zorder>label_3</zorder>
+     <zorder>radioButton_5</zorder>
+     <zorder>radioButton_6</zorder>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Virtual Radio 2</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>271</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Split location</string>
+      </property>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>50</y>
+         <width>58</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Split 1:</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_8">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>50</y>
+         <width>81</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Regional</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">vr2Group</string>
+       </attribute>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_7">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>50</y>
+         <width>61</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Edge</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">vr2Group</string>
+       </attribute>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>vr1Split2Group</sender>
+   <signal>buttonPressed(QAbstractButton*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>migrateVr1Split2(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>vr1Split1Group</sender>
+   <signal>buttonPressed(QAbstractButton*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>migrateVr1Split1(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>vr1Split3Group</sender>
+   <signal>buttonPressed(QAbstractButton*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>migrateVr1Split3(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>407</x>
+     <y>279</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>vr2Group</sender>
+   <signal>buttonPressed(QAbstractButton*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>migrateVr2Split(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>407</x>
+     <y>279</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>migrateVr1Split1(QAbstractButton*)</slot>
+  <slot>migrateVr1Split2(QAbstractButton*)</slot>
+  <slot>migrateVr1Split3(QAbstractButton*)</slot>
+  <slot>migrateVr2Split(QAbstractButton*)</slot>
+ </slots>
+ <buttongroups>
+  <buttongroup name="vr1Split1Group"/>
+  <buttongroup name="vr1Split2Group"/>
+  <buttongroup name="vr1Split3Group"/>
+  <buttongroup name="vr2Group"/>
+ </buttongroups>
+</ui>

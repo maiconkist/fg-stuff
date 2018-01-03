@@ -12,7 +12,7 @@ class Container(object):
                  stop_cmd=None):
         self.name = name
         self._origin = origin
-        self._host = host
+        self._host_name = host
         self._start_cmd = start_cmd
         self._stop_cmd = stop_cmd
 
@@ -20,7 +20,7 @@ class Container(object):
 
     @property
     def _pylxd_container(self):
-        return Manager().getLXDHostClient(self._host).containers.get(self.name)
+        return Manager().getLXDHostClient(self._host_name).containers.get(self.name)
 
     @property
     def is_running(self):
@@ -48,18 +48,18 @@ class Container(object):
 
     def create(self):
         mng = Manager()
-        client = mng.getLXDHostClient(self._host)
+        client = mng.getLXDHostClient(self._host_name)
 
         # If container already instantiated, just start it
-        cont_exists = mng.containerExists(self._host, self.name)
+        cont_exists = mng.containerExists(self._host_name, self.name)
         if cont_exists:
-            print("\tContainer " + self.name + " already in " + self._host)
+            print("\tContainer " + self.name + " already in " + self._host_name)
         # If container not instantiated, create it
         else:
-            img_exists = mng.imageExists(self._host, self.name)
+            img_exists = mng.imageExists(self._host_name, self.name)
             if img_exists:
                 print("\tBase Image " + self._origin +
-                      " not in " + self._host)
+                      " not in " + self._host_name)
                 return
 
             print("Creating " + self.name)
@@ -73,10 +73,10 @@ class Container(object):
 
     def execute(self, cmd):
         cmd_ret = None
-        print("Executing command `" + self._start_cmd + "` in " + self.name + "@" + self._host)
+        print("Executing command `" + self._start_cmd + "` in " + self.name + "@" + self._host_name)
         if self.is_running:
             cmd_l = [c for c in cmd.split(' ')]
-            print cmd_l
+            print(cmd_l)
             cmd_ret = self._pylxd_container.execute(cmd_l)
         else:
             print(self.name + " is not running. Cannot execute command `" + cmd + "`")
@@ -120,9 +120,9 @@ class Container(object):
         self.stop()
         self._pylxd_container.destroy()
 
-    def migrate(self, host, new_name=None):
+    def migrate(self, host_name, new_name=None):
         print("Migrating container " + self.name)
-        other_client = Manager().getLXDHostClient(host)
+        other_client = Manager().getLXDHostClient(host_name)
 
         running = self.is_running
         self.stop()
@@ -134,8 +134,7 @@ class Container(object):
 
         # update host 
         print("Updating host")
-        Manager()._hosts[self.name] = other_client
-        self._host = host
+        self._host_name = host_name
 
         # start in new host
         if running:
@@ -237,7 +236,7 @@ class VirtualRadioSingle(Container):
                            name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='/root/fg-stuff/start_container.sh ' + mode,
+                           start_cmd='nohup /root/fg-stuff/start_container.sh ' + mode,
                            stop_cmd='killall python')
 
 
@@ -247,7 +246,7 @@ class USRP(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='/root/fg-stuff/start_container.sh usrp',
+                           start_cmd='nohup /root/fg-stuff/start_container.sh usrp',
                            stop_cmd='killall python')
 
 
@@ -257,5 +256,5 @@ class USRPHydra(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='/root/fg-stuff/start_container.sh usrphydra',
+                           start_cmd='nohup /root/fg-stuff/start_container.sh usrphydra',
                            stop_cmd='killall python')
