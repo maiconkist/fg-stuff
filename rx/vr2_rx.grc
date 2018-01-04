@@ -968,7 +968,7 @@
     </param>
     <param>
       <key>section</key>
-      <value>"vr2_tx"</value>
+      <value>"rx"</value>
     </param>
     <param>
       <key>type</key>

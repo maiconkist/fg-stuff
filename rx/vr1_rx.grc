@@ -1031,7 +1031,7 @@
     </param>
     <param>
       <key>section</key>
-      <value>"vr1_tx"</value>
+      <value>"rx"</value>
     </param>
     <param>
       <key>type</key>
@@ -1211,7 +1211,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1126, 319)</value>
+      <value>(1184, 320)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1423,7 +1423,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(998, 211)</value>
+      <value>(1040, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4266,12 +4266,6 @@
   <connection>
     <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
     <sink_block_id>blocks_tuntap_pdu_0</sink_block_id>
-    <source_key>pdus</source_key>
-    <sink_key>pdus</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_tuntap_pdu_0</source_block_id>
-    <sink_block_id>blocks_pdu_to_tagged_stream_0</sink_block_id>
     <source_key>pdus</source_key>
     <sink_key>pdus</sink_key>
   </connection>

@@ -13,10 +13,15 @@ class Split(object):
 
 
     def update(self):
-        #print("Requesting data to " + str(self.server))
         for k in self.rates.iterkeys():
-            self.rates[k] = float(getattr(self.server, "get_" + k)())
+            try:
+                self.rates[k] = float(getattr(self.server, "get_" + k)())
+            except:
+                self.rates[k] = 0.0
 
+    def getValue(self):
+        self.update()
+        return next(iter(self.rates))
 
     def __str__(self):
         return "{}:\tn_elems: {:8.2f},\t{}: {:15.2f}".format(
@@ -26,7 +31,6 @@ class Split(object):
                 sum([self.rates[k]*v for k, v in self.params]),
                 )
 
-
 def main():
    splits = [
               Split('split1', '192.168.10.101', 8081, [('rate0', 8), ('rate1', 8)]),
@@ -35,8 +39,8 @@ def main():
               Split('usrp',   '192.168.10.104', 8084, [('vr1_iq_txrate', 32), ]),
               Split('usrp',   '192.168.10.104', 8084, [('vr2_iq_txrate', 32), ]),
               Split('usrp',   '192.168.10.104', 8084, [('usrp_iq_txrate', 32), ]),
-              Split('vr_tx2', '192.168.10.29',  8081, [('rx_goodput', 8), ]),
-              Split('vr_tx2', '192.168.10.29',  8081, [('tx_goodput', 8), ]),
+              Split('vr_tx2', '192.168.10.113', 8081, [('rx_goodput', 8), ]),
+              Split('vr_tx2', '192.168.10.113', 8081, [('tx_goodput', 8), ]),
               Split('vr_rx',  '192.168.10.30',  8085, [('rx_goodput', 8), ]),
               Split('vr_rx',  '192.168.10.30',  8085, [('tx_goodput', 8), ]),
             ]

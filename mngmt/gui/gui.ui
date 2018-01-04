@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>815</width>
-    <height>559</height>
+    <height>851</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,14 +19,14 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>791</width>
-      <height>521</height>
+      <width>781</width>
+      <height>821</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
-    <widget class="QWidget" name="tabWidgetPage1" native="true">
+    <widget class="QWidget" name="tabWidgetPage1">
      <attribute name="title">
       <string>Virtual Radio 1</string>
      </attribute>
@@ -195,7 +195,36 @@
       <property name="title">
        <string>Split location</string>
       </property>
-      <zorder>label</zorder>
+     </widget>
+     <widget class="PlotWidget" name="vr1Split1Plot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="vr1Split2Plot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="vr1Split3Plot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>590</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
      </widget>
      <zorder>groupBox</zorder>
      <zorder>radioButton</zorder>
@@ -207,6 +236,9 @@
      <zorder>label_3</zorder>
      <zorder>radioButton_5</zorder>
      <zorder>radioButton_6</zorder>
+     <zorder>vr1Split1Plot</zorder>
+     <zorder>vr1Split2Plot</zorder>
+     <zorder>vr1Split3Plot</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -273,11 +305,63 @@
        </attribute>
       </widget>
      </widget>
+     <widget class="PlotWidget" name="vr2Split1Plot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>USRP</string>
+     </attribute>
+     <widget class="PlotWidget" name="usrpTxPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>440</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="usrpVr1TxPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="usrpVr2TxPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>761</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -319,8 +403,8 @@
    <slot>migrateVr1Split3(QAbstractButton*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>152</x>
-     <y>91</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>407</x>
@@ -352,9 +436,9 @@
   <slot>migrateVr2Split(QAbstractButton*)</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="vr1Split1Group"/>
+  <buttongroup name="vr2Group"/>
   <buttongroup name="vr1Split2Group"/>
   <buttongroup name="vr1Split3Group"/>
-  <buttongroup name="vr2Group"/>
+  <buttongroup name="vr1Split1Group"/>
  </buttongroups>
 </ui>

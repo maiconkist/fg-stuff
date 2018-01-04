@@ -1,7 +1,7 @@
 import unittest
 
 from mngmt import Manager
-from mngmt.container import VirtualRadioSplit, VirtualRadioSingle, USRP, USRPHydra
+from mngmt import VirtualRadioSplit, VirtualRadioSingle, USRP, USRPHydra
 
 class ContainerTest(unittest.TestCase):
     """A test case for basic container management"""
@@ -52,7 +52,7 @@ class ContainerTest(unittest.TestCase):
         self.mng.stopAll()
 
     def testUSRPHyDRA(self):
-        usrp = USRPHydra(name='usrp', host='edge')
+        #usrp = USRPHydra(name='usrp', host='edge')
         #bs1 = VirtualRadioSingle(name='vr1tx',
         #                        host='regional',
         #                        mode='vr1tx')
@@ -67,11 +67,11 @@ class ContainerTest(unittest.TestCase):
                                  mode='vr2tx')
 
         import time
-        self.mng.create(usrp)
-        usrp.start()
-        while usrp.has_ipaddr is False:
-            print('waiting ip')
-            time.sleep(1)
+        #self.mng.create(usrp)
+        #usrp.start()
+        #while usrp.has_ipaddr is False:
+            #print('waiting ip')
+            #time.sleep(1)
 
         self.mng.create(bs1)
         bs1.start()
@@ -85,9 +85,8 @@ class ContainerTest(unittest.TestCase):
             print('waiting ip')
             time.sleep(1)
 
-
-        time.sleep(10)
-        bs1.migrate('vr1tx-split3', 'edge')
+        #time.sleep(10)
+        #bs1.migrate('vr1tx-split3', 'edge')
 
 
 if __name__ == "__main__":

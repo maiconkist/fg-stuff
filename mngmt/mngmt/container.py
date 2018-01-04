@@ -213,17 +213,17 @@ class VirtualRadioSplit(ContainerBundle):
 
         self.addContainer(name=name + '-split1', origin='gnuradio',
                           host=host_split1,
-                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split1',
+                          start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split1',
                           stop_cmd='killall python')
 
         self.addContainer(name=name + '-split2', origin='gnuradio',
                           host=host_split2,
-                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split2',
+                          start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split2',
                           stop_cmd='killall python')
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
-                          start_cmd='nohup /root/fg-stuff/start_container.sh ' + name + '-split3',
+                          start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split3',
                           stop_cmd='killall python')
 
 
@@ -236,7 +236,7 @@ class VirtualRadioSingle(Container):
                            name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='nohup /root/fg-stuff/start_container.sh ' + mode,
+                           start_cmd='bash /root/fg-stuff/start_container.sh ' + mode,
                            stop_cmd='killall python')
 
 
@@ -246,7 +246,7 @@ class USRP(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='nohup /root/fg-stuff/start_container.sh usrp',
+                           start_cmd='bash /root/fg-stuff/start_container.sh usrp',
                            stop_cmd='killall python')
 
 
@@ -256,5 +256,5 @@ class USRPHydra(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='nohup /root/fg-stuff/start_container.sh usrphydra',
+                           start_cmd='bash /root/fg-stuff/start_container.sh usrphydra',
                            stop_cmd='killall python')
