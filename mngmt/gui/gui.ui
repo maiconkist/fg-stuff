@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
-    <height>851</height>
+    <width>1045</width>
+    <height>1061</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>781</width>
-      <height>821</height>
+      <y>0</y>
+      <width>1021</width>
+      <height>1031</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage1">
      <attribute name="title">
@@ -201,8 +201,8 @@
        <rect>
         <x>10</x>
         <y>170</y>
-        <width>761</width>
-        <height>201</height>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -210,9 +210,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>380</y>
-        <width>761</width>
-        <height>201</height>
+        <y>450</y>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -220,9 +220,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>590</y>
-        <width>761</width>
-        <height>201</height>
+        <y>730</y>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -239,6 +239,21 @@
      <zorder>vr1Split1Plot</zorder>
      <zorder>vr1Split2Plot</zorder>
      <zorder>vr1Split3Plot</zorder>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+     <widget class="PlotWidget" name="vr1DownlinkPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>991</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -310,8 +325,8 @@
        <rect>
         <x>10</x>
         <y>170</y>
-        <width>761</width>
-        <height>201</height>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -324,9 +339,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>440</y>
-        <width>761</width>
-        <height>201</height>
+        <y>590</y>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -334,9 +349,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>761</width>
-        <height>201</height>
+        <y>30</y>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -344,9 +359,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>230</y>
-        <width>761</width>
-        <height>201</height>
+        <y>310</y>
+        <width>991</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>

@@ -26,7 +26,6 @@ bs2 = VirtualRadioSingle(name='vr2tx',
                             host='Regional',
                             mode='vr2tx')
 
-
 qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
 
@@ -34,75 +33,59 @@ class Monitor(threading.Thread):
     def __init__(self, name, stopflag, ip, port, params):
         threading.Thread.__init__(self)
         self.name = name
-        self.params = params
         self.stopflag = stopflag
+        self._params = params
 
         import xmlrpclib
         self.server = xmlrpclib.ServerProxy("http://%s:%d" % (ip, port))
-
-        self.rates = {k[0]:0 for k in self.params}
-
+        self.rates = {k: [] for k in self._params}
 
     def run(self):
         import signal
         print("Starting thread to monitor " + self.name)
         while not self.stopflag.wait(1):
             self.update()
-
         print ("Closing thread " + self.name)
 
     def update(self):
-        for k in self.rates.iterkeys():
+        for k in self.rates:
             try:
-                self.rates[k] = float(getattr(self.server, "get_" + k)())
+                s = [float(getattr(self.server, "get_" + param[0])()) * param[1] for param in self._params[k]]
+                self.rates[k].append(sum(s))
             except Exception as e:
-                print(e)
-                self.rates[k] = 0.0
+                self.rates[k].append(0.0)
 
-    def getValue(self):
-        x = sum([self.rates[k]*v for k, v in self.params])
-        print(self.name + ': ' + str(x))
-        return x
+        print self.rates
 
-    def __str__(self):
-        return "{}:\tn_elems: {:8.2f},\t{}: {:15.2f}".format(
-                self.name,
-                sum([k for k in self.rates.itervalues()]),
-                self.params[0][0].rjust(15),
-                sum([self.rates[k]*v for k, v in self.params]),
-                )
-
+    def getData(self):
+        """
+        \return dict in the form {'name': val, 'name2', val}
+        """
+        return self.rates
 
 class Plotter():
     MAX_ITEMS = 30
 
     def __init__(self, plot, title, monitor):
         self._plot = plot
+
         self._monitor = monitor
 
         plot.setTitle(title)
         plot.setLabel('bottom', 'Time (s)')
         plot.setLabel('left', 'Throughput (Mbps)')
 
-        self._x = [0, ]
-        self._y = [0, ]
+        plot.addLegend()
+
+        self._lines = {}
+        for t, pcolor in zip(monitor.getData(), ['r', 'b', 'g']):
+            self._lines[t] = plot.plot(pen=pcolor, name=t)
 
         monitor.start()
 
-    def _getData(self):
-        import random
-        import numpy as np
-
-        self._x.append(self._x[-1] + 1)
-        self._y.append(self._monitor.getValue())
-
-        while len(self._x) > Plotter.MAX_ITEMS:
-            del self._x[0]
-            del self._y[0]
-
     def update(self):
-        self._getData()
-        self._plot.plot(self._x, self._y, clear = True)
+        for l in self._lines:
+            self._lines[l].setData(self._monitor.getData()[l], clear = True)
 
 
 class MyWindow(QtGui.QMainWindow):
@@ -121,7 +104,8 @@ class MyWindow(QtGui.QMainWindow):
                                     stopflag=ste,
                                     ip='192.168.10.101',
                                     port=8081,
-                                    params=[('rate0', 8), ('rate1', 8)])
+                                    params={'Downlink': [('rate0', 8), ('rate1', 8)],
+                                            'Uplink': [('rateRx', 8), ]})
             ))
 
         self._plotters.append(
@@ -131,7 +115,7 @@ class MyWindow(QtGui.QMainWindow):
                                     stopflag=ste,
                                     ip='192.168.10.102',
                                     port=8082,
-                                    params=[('rate', 32), ]),
+                                    params={'Downlink': [('rate', 32), ]},)
             ))
         self._plotters.append(
             Plotter(plot=self.ui.vr1Split3Plot,
@@ -140,7 +124,7 @@ class MyWindow(QtGui.QMainWindow):
                                     stopflag=ste,
                                     ip='192.168.10.103',
                                     port=8083,
-                                    params=[('rate', 32), ]),
+                                    params={'Downlink': [('rate', 32), ]},)
             ))
         self._plotters.append(
             Plotter(plot=self.ui.vr2Split1Plot,
@@ -149,7 +133,25 @@ class MyWindow(QtGui.QMainWindow):
                                     stopflag=ste,
                                     ip='192.168.10.113',
                                     port=8081,
-                                    params=[('tx_goodput', 8), ]),
+                                    params={'Downlink': [('tx_goodput', 8), ]},)
+            ))
+        self._plotters.append(
+            Plotter(plot=self.ui.usrpVr1TxPlot,
+                    title='VR1 IQ Downlink',
+                    monitor=Monitor(name='usrpvr1',
+                                    stopflag=ste,
+                                    ip='192.168.10.104',
+                                    port=8084,
+                                    params={'Downlink': [('vr1_iq_txrate', 32), ]},)
+            ))
+        self._plotters.append(
+            Plotter(plot=self.ui.usrpVr2TxPlot,
+                    title='VR2 IQ Downlink',
+                    monitor=Monitor(name='usrpvr2',
+                                    stopflag=ste,
+                                    ip='192.168.10.104',
+                                    port=8084,
+                                    params={'Downlink': [('vr2_iq_txrate', 32), ]},)
             ))
         self._plotters.append(
             Plotter(plot=self.ui.usrpTxPlot,
@@ -158,9 +160,19 @@ class MyWindow(QtGui.QMainWindow):
                                     stopflag=ste,
                                     ip='192.168.10.104',
                                     port=8084,
-                                    params=[('usrp_iq_txrate', 32), ]),
+                                    params={'Downlink': [('usrp_iq_txrate', 32), ]},)
             ))
 
+
+        self._plotters.append(
+            Plotter(plot=self.ui.vr1DownlinkPlot,
+                    title='Container-USRP',
+                    monitor=Monitor(name='usrp',
+                                    stopflag=ste,
+                                    ip='192.168.10.104',
+                                    port=8084,
+                                    params={'Downlink': [('usrp_iq_txrate', 32), ]},)
+            ))
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
         self._timer.start(1000)
