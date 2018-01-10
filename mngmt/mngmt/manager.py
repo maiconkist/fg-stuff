@@ -1,6 +1,5 @@
 import pylxd
 
-
 def singleton(class_):
     instances = {}
 
@@ -22,9 +21,19 @@ class Manager():
                                               cert=cert,
                                               verify=False)
 
-
     def registerContainer(self, container):
         self._container.append(container)
+
+    def getContainer(self, container_name):
+
+        for c in self._container:
+            if c.name == container_name:
+                return c
+        return None
+
+    def getContainerList(self):
+        return self._container
+
 
     def getLXDContainerList(self, host_name=None):
         if host_name is not None:

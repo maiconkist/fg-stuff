@@ -9,12 +9,14 @@ class Container(object):
                  origin=None,
                  host=None,
                  start_cmd=None,
-                 stop_cmd=None):
+                 stop_cmd=None,
+                 manageable=True):
         self.name = name
         self._origin = origin
         self._host_name = host
         self._start_cmd = start_cmd
         self._stop_cmd = stop_cmd
+        self._manageable = manageable
 
         Manager().registerContainer(self)
 
@@ -84,6 +86,9 @@ class Container(object):
         return cmd_ret
 
     def start(self):
+        if self._manageable is False:
+            return
+
         if self.is_running:
             print("Container " + self.name + " already running")
         else:
@@ -101,6 +106,9 @@ class Container(object):
             return self.execute(self._start_cmd)
 
     def stop(self):
+        if self._manageable is False:
+            return
+
         if not self.is_running:
             print("Container " + self.name + " is already stopped")
             return

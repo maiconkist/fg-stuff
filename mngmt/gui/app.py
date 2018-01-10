@@ -5,9 +5,8 @@ from PyQt4 import QtGui, QtCore
 import pyqtgraph as qtg
 
 from gui import Ui_MainWindow
-from mngmt import Manager
+from mngmt import Manager, Container
 from mngmt.container import VirtualRadioSplit, VirtualRadioSingle, USRP, USRPHydra
-
 
 manager = Manager()
 manager.addHost(host_name="Regional",
@@ -16,6 +15,9 @@ manager.addHost(host_name="Regional",
 manager.addHost(host_name="Edge",
                 ip="192.168.10.20:8443",
                 cert=("./tests/lxd.crt", "./tests/lxd.key"))
+
+
+Container(name='usrp', origin='gnuradio', host='Edge', manageable=False)
 
 bs1 = VirtualRadioSplit(name='vr1tx',
                         host_split1='Regional',
@@ -30,7 +32,6 @@ qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
 
 class Monitor(threading.Thread):
-
     MAX_ITEMS = 50
 
     def __init__(self, name, stopflag, ip, port, params):
@@ -83,11 +84,6 @@ class MonitorList(object):
         for e in self._monitors:
             e.start()
 
-    def udpate(self):
-        for e in self._monitors:
-            e.update()
-
-
 class Plotter():
     MAX_ITEMS = 30
 
@@ -103,7 +99,6 @@ class Plotter():
         plot.addLegend()
 
         self._lines = {}
-        print(monitor.getData())
         for t, pcolor in zip(monitor.getData(), ['r', 'b', 'g', 'c', 'm', 'y', 'k', 'w']):
             self._lines[t] = plot.plot(pen=pcolor, name=t)
 
@@ -114,7 +109,52 @@ class Plotter():
             self._lines[l].setData(self._monitor.getData()[l], clear = True)
 
 
-class MyWindow(QtGui.QMainWindow):
+class ERMonitor(object):
+    def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors):
+        self.name      = name
+        self._manager  = manager
+        self._rname = regional_name
+        self._ename = edge_name
+        self._monitors = monitors
+        self._rates     = []
+
+
+        self.links = [
+            ('vr1tx-split1', 'vr1tx-split2'),
+            ('vr1tx-split2', 'vr1tx-split3'),
+            ('vr1tx-split3', 'usrp'),
+            ('vr2tx',  'usrp')
+        ]
+
+    def getData(self):
+
+        val = 0
+        for p1, p2 in self.links:
+            c1 = self._manager.getContainer(p1)
+            c2 = self._manager.getContainer(p2)
+            if c1.is_running and c2.is_running:
+                if c1._host_name != c2._host_name:
+                    print('Adding: ' + c1.name)
+                    tmp = self._monitors[p1].getData()
+                    if len(tmp['Downlink']) > 0:
+                        val += tmp['Downlink'][-1]
+            else:
+                print(c1.name + ' is not running') if c1.is_running == False else None
+                print(c2.name + ' is not running') if c2.is_running == False else None
+
+        self._rates.append(val)
+
+        while len(self._rates) > Monitor.MAX_ITEMS:
+            self._rates.pop(0)
+
+        return {'Downlink': self._rates}
+
+    def start(self):
+        for m in self._monitors.itervalues():
+            m.start()
+
+
+class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QDialog.__init__(self)
 
@@ -281,6 +321,41 @@ class MyWindow(QtGui.QMainWindow):
             )
         )
 
+
+        vr1Split1Monitor = Monitor(name='vr1split1',
+                                stopflag=ste,
+                                ip='192.168.10.101',
+                                port=8081,
+                                params={'Downlink': [('rate0', 8), ('rate1', 8)]},)
+        vr1Split2Monitor = Monitor(name='vr1split2',
+                                stopflag=ste,
+                                ip='192.168.10.102',
+                                port=8082,
+                                params={'Downlink': [('rate', 32), ]},)
+        vr1Split3Monitor = Monitor(name='vr1split3',
+                                stopflag=ste,
+                                ip='192.168.10.103',
+                                port=8083,
+                                params={'Downlink': [('rate', 32)]},)
+        vr2TxMonitor = Monitor(name='vr2',
+                                stopflag=ste,
+                                ip='192.168.10.113',
+                                port=8081,
+                                params={'Downlink': [('tx_goodput', 8)]},)
+
+        self._plotters.append(
+            Plotter(plot=self.ui.ERDownlinkPlot,
+                    title='Down',
+                    monitor= ERMonitor(name='erDownlink',
+                                       stopflag=ste,
+                                       manager=manager,
+                                       regional_name='Regional',
+                                       edge_name='Edge',
+                                       monitors = {'vr1tx-split1': vr1Split1Monitor, 'vr1tx-split2': vr1Split2Monitor, 'vr1tx-split3': vr1Split3Monitor, 'vr2tx': vr2TxMonitor}
+                    ),
+            )
+        )
+
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
         self._timer.start(1000)
@@ -303,7 +378,7 @@ class MyWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         self._stop_event.set()
-        manager.stopAll()
+        #manager.stopAll()
 
     def _updatePlot(self):
         for p in self._plotters:
@@ -324,9 +399,9 @@ def init():
         time.sleep(1)
 
 if __name__ == '__main__':
-    init()
+    #init()
 
     app = QtGui.QApplication(sys.argv)
-    w = MyWindow()
+    w = MainWindow()
     w.show()
     sys.exit(app.exec_())
