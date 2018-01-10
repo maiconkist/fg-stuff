@@ -206,7 +206,6 @@ class ContainerBundle(object):
         container = self._bundle[container_name]
         container.migrate(host_dst, new_name)
 
-
 class VirtualRadioSplit(ContainerBundle):
     def __init__(self, name, host_split1, host_split2, host_split3):
         ContainerBundle.__init__(self, name)
@@ -225,7 +224,6 @@ class VirtualRadioSplit(ContainerBundle):
                           host=host_split3,
                           start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split3',
                           stop_cmd='killall python')
-
 
 class VirtualRadioSingle(Container):
     def __init__(self, name, host, mode):

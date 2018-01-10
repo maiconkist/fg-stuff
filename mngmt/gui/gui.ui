@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1045</width>
-    <height>1061</height>
+    <width>1734</width>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>1021</width>
-      <height>1031</height>
+      <width>841</width>
+      <height>761</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -196,32 +196,22 @@
        <string>Split location</string>
       </property>
      </widget>
-     <widget class="PlotWidget" name="vr1Split1Plot">
+     <widget class="PlotWidget" name="vr1DownlinkPlot">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
-        <width>991</width>
+        <y>180</y>
+        <width>811</width>
         <height>261</height>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="vr1Split2Plot">
+     <widget class="PlotWidget" name="vr1UplinkPlot">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>450</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="PlotWidget" name="vr1Split3Plot">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>730</y>
-        <width>991</width>
+        <width>811</width>
         <height>261</height>
        </rect>
       </property>
@@ -236,24 +226,8 @@
      <zorder>label_3</zorder>
      <zorder>radioButton_5</zorder>
      <zorder>radioButton_6</zorder>
-     <zorder>vr1Split1Plot</zorder>
-     <zorder>vr1Split2Plot</zorder>
-     <zorder>vr1Split3Plot</zorder>
-    </widget>
-    <widget class="QWidget" name="tab_3">
-     <attribute name="title">
-      <string>Page</string>
-     </attribute>
-     <widget class="PlotWidget" name="vr1DownlinkPlot">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
+     <zorder>vr1DownlinkPlot</zorder>
+     <zorder>vr1UplinkPlot</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -320,12 +294,22 @@
        </attribute>
       </widget>
      </widget>
-     <widget class="PlotWidget" name="vr2Split1Plot">
+     <widget class="PlotWidget" name="vr2DownlinkPlot">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
-        <width>991</width>
+        <y>180</y>
+        <width>811</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="vr2UplinkPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>450</y>
+        <width>811</width>
         <height>261</height>
        </rect>
       </property>
@@ -335,17 +319,7 @@
      <attribute name="title">
       <string>USRP</string>
      </attribute>
-     <widget class="PlotWidget" name="usrpTxPlot">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>590</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="PlotWidget" name="usrpVr1TxPlot">
+     <widget class="PlotWidget" name="usrpDownlinkPlot">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -355,7 +329,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="usrpVr2TxPlot">
+     <widget class="PlotWidget" name="usrpUplinkPlot">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -365,6 +339,89 @@
        </rect>
       </property>
      </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Old Panels VR1</string>
+     </attribute>
+     <widget class="PlotWidget" name="vr1Split1Plot">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>991</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="vr1Split2Plot">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>310</y>
+        <width>991</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="vr1Split3Plot">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>590</y>
+        <width>991</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Old Panels VR2</string>
+     </attribute>
+     <widget class="PlotWidget" name="vr2Split1Plot">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>991</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>10</y>
+      <width>841</width>
+      <height>751</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Edge-Regional</string>
+    </property>
+    <widget class="PlotWidget" name="ERDownlinkPlot">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>190</y>
+       <width>811</width>
+       <height>261</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="PlotWidget" name="ERUplinkPlot">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>460</y>
+       <width>811</width>
+       <height>261</height>
+      </rect>
+     </property>
     </widget>
    </widget>
   </widget>
