@@ -129,6 +129,49 @@
     </param>
   </block>
   <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>block_id</key>
+      <value>zcpu</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>cpu_percent</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1096, 1184)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>cpu_percent</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -469,7 +512,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(143, 974)</value>
+      <value>(192, 976)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -716,7 +759,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(7, 982)</value>
+      <value>(32, 976)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -977,6 +1020,64 @@
     <param>
       <key>writeback</key>
       <value>None</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(920, 1204)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>zcpu</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>psutil</value>
+    </param>
+  </block>
+  <block>
+    <key>import</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1000, 1156)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>acpu</value>
+    </param>
+    <param>
+      <key>import</key>
+      <value>import psutil</value>
     </param>
   </block>
   <block>

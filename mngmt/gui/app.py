@@ -84,6 +84,7 @@ class MonitorList(object):
         for e in self._monitors:
             e.start()
 
+
 class Plotter():
     MAX_ITEMS = 30
 
@@ -127,7 +128,6 @@ class ERMonitor(object):
         ]
 
     def getData(self):
-
         val = 0
         for p1, p2 in self.links:
             c1 = self._manager.getContainer(p1)
@@ -282,7 +282,7 @@ class MainWindow(QtGui.QMainWindow):
                                      stopflag=ste,
                                      ip='192.168.10.113',
                                      port=8081,
-                                     params={'VR2': [('tx_goodput', 8), ]},),
+                                     params={'VR2': [('tx_iq_rate', 32), ]},),
             )
         )
         self._plotters.append(
@@ -341,17 +341,29 @@ class MainWindow(QtGui.QMainWindow):
                                 stopflag=ste,
                                 ip='192.168.10.113',
                                 port=8081,
-                                params={'Downlink': [('tx_goodput', 8)]},)
+                                params={'Downlink': [('tx_iq_rate', 32)]},)
 
         self._plotters.append(
             Plotter(plot=self.ui.ERDownlinkPlot,
-                    title='Down',
+                    title='Downlink',
                     monitor= ERMonitor(name='erDownlink',
                                        stopflag=ste,
                                        manager=manager,
                                        regional_name='Regional',
                                        edge_name='Edge',
                                        monitors = {'vr1tx-split1': vr1Split1Monitor, 'vr1tx-split2': vr1Split2Monitor, 'vr1tx-split3': vr1Split3Monitor, 'vr2tx': vr2TxMonitor}
+                    ),
+            )
+        )
+
+        self._plotters.append(
+            Plotter(plot=self.ui.edgeCPUPlot,
+                    title='',
+                    monitor= Monitor(name='usrp',
+                                     stopflag=ste,
+                                     ip='192.168.10.104',
+                                     port=8084,
+                                     params={'CPU': [('cpu_percent', 1.0), ]},
                     ),
             )
         )
