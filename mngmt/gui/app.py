@@ -42,7 +42,7 @@ class Monitor(threading.Thread):
 
         import xmlrpclib
         self.server = xmlrpclib.ServerProxy("http://%s:%d" % (ip, port))
-        self.rates = {k: [] for k in self._params}
+        self.rates = {k: [0, ] for k in self._params}
 
     def run(self):
         import signal
@@ -74,8 +74,12 @@ class MonitorList(object):
     def __init__(self, monitors):
         self._monitors = monitors
 
+    def is_alive(self):
+        return True if True in [x.is_alive() for x in self._monitors] else False
+
     def getData(self):
         d = {}
+        print self._monitors
         for e in self._monitors:
             d.update(e.getData())
         return d
@@ -84,30 +88,8 @@ class MonitorList(object):
         for e in self._monitors:
             e.start()
 
-
-class Plotter():
-    MAX_ITEMS = 30
-
-    def __init__(self, plot, title, monitor):
-        self._plot = plot
-
-        self._monitor = monitor
-
-        plot.setTitle(title)
-        plot.setLabel('bottom', 'Time (s)')
-        plot.setLabel('left', 'Throughput (Mbps)')
-
-        plot.addLegend()
-
-        self._lines = {}
-        for t, pcolor in zip(monitor.getData(), ['r', 'b', 'g', 'c', 'm', 'y', 'k', 'w']):
-            self._lines[t] = plot.plot(pen=pcolor, name=t)
-
-        monitor.start()
-
-    def update(self):
-        for l in self._lines:
-            self._lines[l].setData(self._monitor.getData()[l], clear = True)
+    def is_alive(self):
+        return True if True in [x.is_alive() for x in self._monitors] else False
 
 
 class ERMonitor(object):
@@ -134,10 +116,11 @@ class ERMonitor(object):
             c2 = self._manager.getContainer(p2)
             if c1.is_running and c2.is_running:
                 if c1._host_name != c2._host_name:
-                    print('Adding: ' + c1.name)
                     tmp = self._monitors[p1].getData()
-                    if len(tmp['Downlink']) > 0:
-                        val += tmp['Downlink'][-1]
+                    if len(tmp.keys()) > 1:
+                        raise Exception("More than 1 key in hashtable")
+                    if len(tmp[tmp.keys()[0]]) > 0:
+                        val += tmp[tmp.keys()[0]][-1]
             else:
                 print(c1.name + ' is not running') if c1.is_running == False else None
                 print(c2.name + ' is not running') if c2.is_running == False else None
@@ -153,6 +136,51 @@ class ERMonitor(object):
         for m in self._monitors.itervalues():
             m.start()
 
+    def is_alive(self):
+        return True if True in [x.is_alive() for x in self._monitors.itervalues()] else False
+
+
+class Plotter():
+    MAX_ITEMS = 30
+
+    def __init__(self, plot, title, monitor, xrange=None, yrange=None):
+        self._plot = plot
+
+        self._monitor = monitor
+
+        plot.setTitle(title)
+        plot.setLabel('bottom', 'Time (s)')
+        plot.setLabel('left', 'Throughput (Mbps)')
+
+        if xrange is not None:
+            plot.setXRange(xrange[0], xrange[1])
+        if yrange is not None:
+            plot.setYRange(yrange[0], yrange[1])
+
+        plot.addLegend()
+
+        self._lines = {}
+        for t, pcolor in zip(monitor.getData(), ['r', 'b', 'g', 'c', 'm', 'y', 'k', 'w']):
+            self._lines[t] = plot.plot(pen=pcolor, name=t)
+
+        if not monitor.is_alive():
+            monitor.start()
+
+    def update(self):
+        for l in self._lines:
+            self._lines[l].setData(self._monitor.getData()[l], clear = True)
+
+class LCDNumber():
+    def __init__(self, plot, monitor, div):
+        self._plot = plot
+        self._monitor = monitor
+        self._div = div
+
+    def update(self):
+        d = self._monitor.getData().values()[0][-1]
+        d /= self._div
+        self._plot.display(d)
+
 
 class MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -161,188 +189,201 @@ class MainWindow(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # Display LCD color
+        palette = self.ui.vr1Split1DownlinkLCD.palette()
+        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
+        palette.setColor(palette.Background, QtGui.QColor(0, 255, 0))
+        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
+        self.ui.vr1Split1DownlinkLCD.setPalette(palette)
+
+        palette = self.ui.vr1Split2DownlinkLCD.palette()
+        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
+        palette.setColor(palette.Background, QtGui.QColor(255, 0, 0))
+        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
+        self.ui.vr1Split2DownlinkLCD.setPalette(palette)
+
+        palette = self.ui.vr1Split3DownlinkLCD.palette()
+        palette.setColor(palette.WindowText, QtGui.QColor(255, 255, 255))
+        palette.setColor(palette.Background, QtGui.QColor(0, 0, 255))
+        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
+        self.ui.vr1Split3DownlinkLCD.setPalette(palette)
+
+        palette = self.ui.vr1Split1UplinkLCD.palette()
+        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
+        palette.setColor(palette.Background, QtGui.QColor(0, 255, 0))
+        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
+        self.ui.vr1Split1UplinkLCD.setPalette(palette)
+
         self._plotters = []
         self._stop_event = ste = threading.Event()
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.vr1Split1Plot,
-        #            title='Split 1',
-        #            monitor=Monitor(name='vr1-split1',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.101',
-        #                            port=8081,
-        #                            params={'Downlink': [('rate0', 8), ('rate1', 8)],
-        #                                    'Uplink': [('rateRx', 8), ]})
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.vr1Split2Plot,
-        #            title='Split 2',
-        #            monitor=Monitor(name='vr1-split2',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.102',
-        #                            port=8082,
-        #                            params={'Downlink': [('rate', 32), ]},)
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.vr1Split3Plot,
-        #            title='Split 3',
-        #            monitor=Monitor(name='vr1-split3',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.103',
-        #                            port=8083,
-        #                            params={'Downlink': [('rate', 32), ]},)
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.vr2Split1Plot,
-        #            title='VR 2',
-        #            monitor=Monitor(name='vr2tx',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.113',
-        #                            port=8081,
-        #                            params={'Downlink': [('tx_goodput', 8), ]},)
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.usrpVr1TxPlot,
-        #            title='VR1 IQ Downlink',
-        #            monitor=Monitor(name='usrpvr1',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.104',
-        #                            port=8084,
-        #                            params={'Downlink': [('vr1_iq_txrate', 32), ]},)
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.usrpVr2TxPlot,
-        #            title='VR2 IQ Downlink',
-        #            monitor=Monitor(name='usrpvr2',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.104',
-        #                            port=8084,
-        #                            params={'Downlink': [('vr2_iq_txrate', 32), ]},)
-        #    )
-        #)
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.usrpTxPlot,
-        #            title='Container-USRP',
-        #            monitor=Monitor(name='usrp',
-        #                            stopflag=ste,
-        #                            ip='192.168.10.104',
-        #                            port=8084,
-        #                            params={'Downlink': [('usrp_iq_txrate', 32), ]},)
-        #    )
-        #)
 
+        # Downlink monitors
+        self._vr1Split1DownlinkMon = Monitor(name='split1',
+                                             stopflag=ste,
+                                             ip='192.168.10.101',
+                                             port=8081,
+                                             params={'VR1 Split 1': [('rate0', 8), ('rate1', 8)]},)
+        self._vr1Split2DownlinkMon = Monitor(name='split2',
+                                             stopflag=ste,
+                                             ip='192.168.10.102',
+                                             port=8082,
+                                             params={'VR1 Split 2': [('rate', 32), ]},)
+        self._vr1Split3DownlinkMon = Monitor(name='split3',
+                                             stopflag=ste,
+                                             ip='192.168.10.103',
+                                             port=8083,
+                                             params={'VR1 Split 3': [('rate', 32), ]},)
+        self._vr2Split1DownlinkMon= Monitor(name='vr2',
+                                      stopflag=ste,
+                                      ip='192.168.10.113',
+                                      port=8081,
+                                      params={'VR2': [('tx_iq_rate', 32), ]},)
+        self._usrpDownlinkMon = Monitor(name='usrp',
+                                        stopflag=ste,
+                                        ip='192.168.10.104',
+                                        port=8084,
+                                        params={'VR1 IQ': [('vr1_iq_txrate', 32), ],
+                                                'VR2 IQ': [('vr2_iq_txrate', 32), ]},)
+
+        # Uplink monitors
+        self._vr1Split1UplinkMon = Monitor(name='split1',
+                                           stopflag=ste,
+                                           ip='192.168.10.101',
+                                           port=8081,
+                                           params={'Split 1': [('iq_rxrate', 32), ]},)
+        self._vr2Split1UplinkMon = Monitor(name='vr2',
+                                     stopflag=ste,
+                                     ip='192.168.10.104',
+                                     port=8081,
+                                     params={'VR 2': [('iq_rxrate', 32), ]},)
+        self._usrpUplinkMon = Monitor(name='usrp',
+                                      stopflag=ste,
+                                      ip='192.168.10.104',
+                                      port=8084,
+                                      params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],
+                                              'VR2 IQ': [('vr2_iq_rxrate', 32), ]},)
+
+
+        # CPU Monitors
+        self._edgeCPUMon = Monitor(name='edge-cpu',
+                                     stopflag=ste,
+                                     ip='192.168.10.104',
+                                     port=8084,
+                                     params={'CPU': [('cpu_percent', 1.0), ]},)
+
+        self._regionalCPUMon = Monitor(name='regional-cpu',
+                                       stopflag=ste,
+                                       ip='192.168.10.101',
+                                       port=8081,
+                                       params={'CPU': [('cpu_percent', 1.0), ]},)
+
+
+
+
+        # plots downlink
         self._plotters.append(
             Plotter(plot=self.ui.vr1DownlinkPlot,
                     title='Downlink VR 1',
                     monitor= MonitorList([
-                        #Monitor(name='usrp',
-                                #stopflag=ste,
-                                #ip='192.168.10.104',
-                                #port=8084,
-                                #params={'Container-USRP': [('usrp_iq_txrate', 32), ]},),
-                        Monitor(name='split1',
-                                stopflag=ste,
-                                ip='192.168.10.101',
-                                port=8081,
-                                params={'VR1 Split 1': [('rate0', 8), ('rate1', 8)]},),
-                        Monitor(name='split2',
-                                stopflag=ste,
-                                ip='192.168.10.102',
-                                port=8082,
-                                params={'VR1 Split 2': [('rate', 32), ]},),
-                        Monitor(name='split3',
-                                stopflag=ste,
-                                ip='192.168.10.103',
-                                port=8083,
-                                params={'VR1 Split 3': [('rate', 32), ]},),
+                        self._vr1Split1DownlinkMon,
+                        self._vr1Split2DownlinkMon,
+                        self._vr1Split3DownlinkMon,
                     ])
             )
         )
-        self._plotters.append(
-            Plotter(plot=self.ui.vr1UplinkPlot,
-                    title='Uplink VR 1',
-                    monitor= MonitorList([
-                        Monitor(name='split1',
-                                stopflag=ste,
-                                ip='192.168.10.101',
-                                port=8081,
-                                params={'Split 1': [('rateRx', 8)]},),
-                    ])
-            )
-        )
-
         self._plotters.append(
             Plotter(plot=self.ui.vr2DownlinkPlot,
                     title='Downlink VR 2',
-                    monitor= Monitor(name='vr2',
-                                     stopflag=ste,
-                                     ip='192.168.10.113',
-                                     port=8081,
-                                     params={'VR2': [('tx_iq_rate', 32), ]},),
+                    monitor= self._vr2Split1DownlinkMon,
+            )
+        )
+        self._plotters.append(
+            Plotter(plot=self.ui.usrpDownlinkPlot,
+                    title='Downlink',
+                    monitor= self._usrpDownlinkMon,
+            )
+        )
+
+
+        # LCD downlinks
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split1DownlinkLCD,
+                      monitor=self._vr1Split1DownlinkMon,
+                      div = 10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split2DownlinkLCD,
+                      monitor=self._vr1Split2DownlinkMon,
+                      div=10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split3DownlinkLCD,
+                      monitor=self._vr1Split3DownlinkMon,
+                      div=10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr2Split1DownlinkLCD,
+                      monitor=self._vr2Split1DownlinkMon,
+                      div=10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpDownlinkLCD,
+                      monitor=self._usrpDownlinkMon,
+                      div=10**6
+            )
+        )
+
+        # plots uplink
+        self._plotters.append(
+            Plotter(plot=self.ui.vr1UplinkPlot,
+                    title='Uplink VR 1',
+                    monitor=self._vr1Split1UplinkMon
             )
         )
         self._plotters.append(
             Plotter(plot=self.ui.vr2UplinkPlot,
                     title='Uplink VR2',
-                    monitor= Monitor(name='vr2',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8084,
-                                     params={'VR2': [('rx_goodput', 8), ]},),
-            )
-        )
-
-        self._plotters.append(
-            Plotter(plot=self.ui.usrpDownlinkPlot,
-                    title='Downlink',
-                    monitor= Monitor(name='usrp',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8084,
-                                     params={'VR1 IQ': [('vr1_iq_txrate', 32), ],
-                                             'VR2 IQ': [('vr2_iq_txrate', 32), ]},
-                    ),
+                    monitor= self._vr2Split1UplinkMon,
             )
         )
         self._plotters.append(
             Plotter(plot=self.ui.usrpUplinkPlot,
                     title='Uplink',
-                    monitor= Monitor(name='usrp',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8084,
-                                     params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],
-                                             'VR2 IQ': [('vr2_iq_rxrate', 32), ]},
-                    ),
+                    monitor= self._usrpUplinkMon,
             )
         )
 
 
-        vr1Split1Monitor = Monitor(name='vr1split1',
-                                stopflag=ste,
-                                ip='192.168.10.101',
-                                port=8081,
-                                params={'Downlink': [('rate0', 8), ('rate1', 8)]},)
-        vr1Split2Monitor = Monitor(name='vr1split2',
-                                stopflag=ste,
-                                ip='192.168.10.102',
-                                port=8082,
-                                params={'Downlink': [('rate', 32), ]},)
-        vr1Split3Monitor = Monitor(name='vr1split3',
-                                stopflag=ste,
-                                ip='192.168.10.103',
-                                port=8083,
-                                params={'Downlink': [('rate', 32)]},)
-        vr2TxMonitor = Monitor(name='vr2',
-                                stopflag=ste,
-                                ip='192.168.10.113',
-                                port=8081,
-                                params={'Downlink': [('tx_iq_rate', 32)]},)
+        # LCD uplink
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split1UplinkLCD,
+                      monitor=self._vr1Split1UplinkMon,
+                      div=10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr2Split1UplinkLCD,
+                      monitor=self._vr2Split1UplinkMon,
+                      div=10**6
+            )
+        )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpUplinkLCD,
+                      monitor=self._usrpUplinkMon,
+                      div=10**6
+            )
+        )
 
+
+        # ER Downlink
         self._plotters.append(
             Plotter(plot=self.ui.ERDownlinkPlot,
                     title='Downlink',
@@ -351,22 +392,59 @@ class MainWindow(QtGui.QMainWindow):
                                        manager=manager,
                                        regional_name='Regional',
                                        edge_name='Edge',
-                                       monitors = {'vr1tx-split1': vr1Split1Monitor, 'vr1tx-split2': vr1Split2Monitor, 'vr1tx-split3': vr1Split3Monitor, 'vr2tx': vr2TxMonitor}
+                                       monitors = {
+                                           'vr1tx-split1': self._vr1Split1DownlinkMon,
+                                           'vr1tx-split2': self._vr1Split2DownlinkMon,
+                                           'vr1tx-split3': self._vr1Split3DownlinkMon,
+                                           'vr2tx': self._vr2Split1DownlinkMon}
                     ),
+            )
+        )
+        #self._plotters.append(
+        #    Plotter(plot=self.ui.ERUplinkPlot,
+        #            title='Uplink',
+        #            monitor= ERMonitor(name='erUplink',
+        #                               stopflag=ste,
+        #                               manager=manager,
+        #                               regional_name='Regional',
+        #                               edge_name='Edge',
+        #                               monitors = {'vr1tx-split1': self._vr1Split1UplinkMon, , 'vr2tx': self._vr2UplinkMon}
+        #            ),
+        #    )
+        #)
+
+
+
+        # CPU Plots
+        self._plotters.append(
+            Plotter(plot=self.ui.edgeCPUPlot,
+                    title='Edge CPU usage [%]',
+                    monitor= self._edgeCPUMon,
+                    yrange=(0,100),
+            )
+        )
+        self._plotters.append(
+            Plotter(plot=self.ui.regionalCPUPlot,
+                    title='Regional CPU usage [%]',
+                    monitor=  self._regionalCPUMon,
+                    yrange=(0,100),
             )
         )
 
+        # CPU LCD
         self._plotters.append(
-            Plotter(plot=self.ui.edgeCPUPlot,
-                    title='',
-                    monitor= Monitor(name='usrp',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8084,
-                                     params={'CPU': [('cpu_percent', 1.0), ]},
-                    ),
+            LCDNumber(plot=self.ui.edgeCPULCD,
+                      monitor=self._edgeCPUMon,
+                      div = 1.0
             )
         )
+        self._plotters.append(
+            LCDNumber(plot=self.ui.regionalCPULCD,
+                      monitor=self._regionalCPUMon,
+                      div = 1.0
+            )
+        )
+
 
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
@@ -390,7 +468,7 @@ class MainWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         self._stop_event.set()
-        #manager.stopAll()
+        manager.stopAll()
 
     def _updatePlot(self):
         for p in self._plotters:
@@ -411,7 +489,7 @@ def init():
         time.sleep(1)
 
 if __name__ == '__main__':
-    #init()
+    init()
 
     app = QtGui.QApplication(sys.argv)
     w = MainWindow()
