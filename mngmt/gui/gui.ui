@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage1">
      <attribute name="title">
@@ -322,6 +322,164 @@
        <enum>QLCDNumber::Flat</enum>
       </property>
      </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>193</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>460</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="vr1Split1DownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="vr1Split2DownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>false</bool>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="vr1Split3DownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>730</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>false</bool>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_21">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>220</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="vr1Split1UplinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>490</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_22">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>490</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
      <zorder>groupBox</zorder>
      <zorder>radioButton</zorder>
      <zorder>radioButton_2</zorder>
@@ -338,6 +496,14 @@
      <zorder>vr1Split2DownlinkLCD</zorder>
      <zorder>vr1Split3DownlinkLCD</zorder>
      <zorder>vr1Split1UplinkLCD</zorder>
+     <zorder>label_5</zorder>
+     <zorder>label_12</zorder>
+     <zorder>vr1Split1DownlinkAvgLCD</zorder>
+     <zorder>vr1Split2DownlinkAvgLCD</zorder>
+     <zorder>vr1Split3DownlinkAvgLCD</zorder>
+     <zorder>label_21</zorder>
+     <zorder>vr1Split1UplinkAvgLCD</zorder>
+     <zorder>label_22</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -480,36 +646,37 @@
        <enum>QLCDNumber::Flat</enum>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>USRP</string>
-     </attribute>
-     <widget class="PlotWidget" name="usrpDownlinkPlot">
+     <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>811</width>
-        <height>261</height>
+        <x>520</x>
+        <y>190</y>
+        <width>58</width>
+        <height>21</height>
        </rect>
       </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
      </widget>
-     <widget class="PlotWidget" name="usrpUplinkPlot">
+     <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>310</y>
-        <width>811</width>
-        <height>261</height>
+        <x>520</x>
+        <y>460</y>
+        <width>58</width>
+        <height>21</height>
        </rect>
       </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
      </widget>
-     <widget class="QLCDNumber" name="usrpDownlinkLCD">
+     <widget class="QLCDNumber" name="vr2Split1DownlinkAvgLCD">
       <property name="geometry">
        <rect>
         <x>580</x>
-        <y>40</y>
+        <y>220</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -533,11 +700,338 @@
        <enum>QLCDNumber::Flat</enum>
       </property>
      </widget>
-     <widget class="QLCDNumber" name="usrpUplinkLCD">
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>220</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="vr2Split1UplinkAvgLCD">
       <property name="geometry">
        <rect>
         <x>580</x>
-        <y>320</y>
+        <y>490</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_20">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>490</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>USRP</string>
+     </attribute>
+     <widget class="PlotWidget" name="usrpDownlinkPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>811</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="usrpUplinkPlot">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>450</y>
+        <width>811</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr1DownlinkLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>190</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr1UplinkLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>460</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>190</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>460</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr1DownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr1UplinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>490</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_23">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>220</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_24">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>490</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr2DownlinkLCD">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>190</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr2DownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr2UplinkLCD">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>460</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="usrpVr2UplinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>490</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -623,9 +1117,9 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="tabWidget_3Page1" native="true">
+    <widget class="QWidget" name="tabWidget_3Page1">
      <attribute name="title">
       <string>Edge-Regional Network</string>
      </attribute>
@@ -703,6 +1197,114 @@
       </property>
       <property name="segmentStyle">
        <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>190</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>460</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="ERDownlinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>220</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="ERUplinkAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>490</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>490</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
       </property>
      </widget>
     </widget>
@@ -784,6 +1386,114 @@
       </property>
       <property name="segmentStyle">
        <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="regionalCPUAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>220</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="edgeCPUAvgLCD">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>490</y>
+        <width>64</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
+      <property name="numDigits">
+       <number>4</number>
+      </property>
+      <property name="digitCount">
+       <number>4</number>
+      </property>
+      <property name="mode">
+       <enum>QLCDNumber::Dec</enum>
+      </property>
+      <property name="segmentStyle">
+       <enum>QLCDNumber::Flat</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>190</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>220</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>490</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>460</y>
+        <width>58</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current:</string>
       </property>
      </widget>
     </widget>

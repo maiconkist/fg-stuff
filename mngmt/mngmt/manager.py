@@ -34,7 +34,6 @@ class Manager():
     def getContainerList(self):
         return self._container
 
-
     def getLXDContainerList(self, host_name=None):
         if host_name is not None:
             return self._hosts[host_name].containers.all()

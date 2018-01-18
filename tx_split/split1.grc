@@ -323,7 +323,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1144, 976)</value>
+      <value>(1144, 832)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -622,7 +622,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1128, 312)</value>
+      <value>(1224, 312)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -665,7 +665,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(960, 496)</value>
+      <value>(864, 512)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1118,7 +1118,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 412)</value>
+      <value>(600, 412)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1177,7 +1177,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(904, 196)</value>
+      <value>(1000, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1224,7 +1224,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 244)</value>
+      <value>(160, 244)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1338,7 +1338,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 316)</value>
+      <value>(400, 340)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1370,61 +1370,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_tag_debug</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>display</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1032, 828)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_tag_debug_0_1</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>filter</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>RX'd IQ</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_throttle</key>
     <param>
       <key>alias</key>
@@ -1444,7 +1389,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1176, 420)</value>
+      <value>(848, 420)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1499,7 +1444,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1184, 204)</value>
+      <value>(832, 204)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1554,7 +1499,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 236)</value>
+      <value>(368, 236)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1696,7 +1641,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 196)</value>
+      <value>(600, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1739,7 +1684,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 260)</value>
+      <value>(1208, 260)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1794,7 +1739,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(944, 444)</value>
+      <value>(848, 468)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2061,7 +2006,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1392, 404)</value>
+      <value>(1096, 404)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2112,7 +2057,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1268, 936)</value>
+      <value>(1268, 792)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2167,13 +2112,13 @@
   </connection>
   <connection>
     <source_block_id>blocks_repack_bits_bb_0_0</source_block_id>
-    <sink_block_id>blocks_throttle_0_0</sink_block_id>
+    <sink_block_id>probe1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_repack_bits_bb_0_0</source_block_id>
-    <sink_block_id>probe1_0</sink_block_id>
+    <sink_block_id>zeromq_push_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2197,7 +2142,7 @@
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0_0</source_block_id>
-    <sink_block_id>zeromq_push_sink_0</sink_block_id>
+    <sink_block_id>blocks_repack_bits_bb_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2227,13 +2172,7 @@
   </connection>
   <connection>
     <source_block_id>digital_protocol_formatter_bb_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>zeromq_pull_source_0</source_block_id>
-    <sink_block_id>blocks_tag_debug_0_1</sink_block_id>
+    <sink_block_id>blocks_throttle_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

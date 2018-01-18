@@ -16,7 +16,6 @@ manager.addHost(host_name="Edge",
                 ip="192.168.10.20:8443",
                 cert=("./tests/lxd.crt", "./tests/lxd.key"))
 
-
 Container(name='usrp', origin='gnuradio', host='Edge', manageable=False)
 
 bs1 = VirtualRadioSplit(name='vr1tx',
@@ -61,6 +60,7 @@ class Monitor(threading.Thread):
                     self.rates[k].pop(0)
 
             except Exception as e:
+                print(e)
                 self.rates[k].append(0.0)
 
     def getData(self):
@@ -79,7 +79,6 @@ class MonitorList(object):
 
     def getData(self):
         d = {}
-        print self._monitors
         for e in self._monitors:
             d.update(e.getData())
         return d
@@ -93,25 +92,20 @@ class MonitorList(object):
 
 
 class ERMonitor(object):
-    def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors):
+    def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors, links):
         self.name      = name
         self._manager  = manager
         self._rname = regional_name
         self._ename = edge_name
         self._monitors = monitors
         self._rates     = []
-
-
-        self.links = [
-            ('vr1tx-split1', 'vr1tx-split2'),
-            ('vr1tx-split2', 'vr1tx-split3'),
-            ('vr1tx-split3', 'usrp'),
-            ('vr2tx',  'usrp')
-        ]
+        self.links = links
 
     def getData(self):
         val = 0
         for p1, p2 in self.links:
+            if p1 not in self._monitors.keys() or p2 not in self._monitors.keys():
+                continue
             c1 = self._manager.getContainer(p1)
             c2 = self._manager.getContainer(p2)
             if c1.is_running and c2.is_running:
@@ -130,7 +124,7 @@ class ERMonitor(object):
         while len(self._rates) > Monitor.MAX_ITEMS:
             self._rates.pop(0)
 
-        return {'Downlink': self._rates}
+        return {self.name: self._rates}
 
     def start(self):
         for m in self._monitors.itervalues():
@@ -171,15 +165,22 @@ class Plotter():
             self._lines[l].setData(self._monitor.getData()[l], clear = True)
 
 class LCDNumber():
-    def __init__(self, plot, monitor, div):
+    def __init__(self, plot, monitor, div, avg=False):
         self._plot = plot
         self._monitor = monitor
         self._div = div
+        self._avg = avg
 
     def update(self):
-        d = self._monitor.getData().values()[0][-1]
-        d /= self._div
-        self._plot.display(d)
+        if self._avg == False:
+            d = self._monitor.getData().values()[0][-1]
+            d /= self._div
+            self._plot.display(d)
+        else:
+            vals = self._monitor.getData().values()[0]
+            d = sum(vals)/len(vals)
+            d /= self._div
+            self._plot.display(d)
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -189,34 +190,24 @@ class MainWindow(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # Display LCD color
-        palette = self.ui.vr1Split1DownlinkLCD.palette()
-        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
-        palette.setColor(palette.Background, QtGui.QColor(0, 255, 0))
-        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
-        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
-        self.ui.vr1Split1DownlinkLCD.setPalette(palette)
 
-        palette = self.ui.vr1Split2DownlinkLCD.palette()
-        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
-        palette.setColor(palette.Background, QtGui.QColor(255, 0, 0))
-        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
-        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
-        self.ui.vr1Split2DownlinkLCD.setPalette(palette)
+        def make_it_red(pallete):
+            palette.setColor(palette.WindowText, QtGui.QColor(255, 255, 255))
+            palette.setColor(palette.Background, QtGui.QColor(255, 0, 0))
+            palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+            palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
 
-        palette = self.ui.vr1Split3DownlinkLCD.palette()
-        palette.setColor(palette.WindowText, QtGui.QColor(255, 255, 255))
-        palette.setColor(palette.Background, QtGui.QColor(0, 0, 255))
-        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
-        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
-        self.ui.vr1Split3DownlinkLCD.setPalette(palette)
+        def make_it_blue(pallete):
+            palette.setColor(palette.WindowText, QtGui.QColor(255, 255, 255))
+            palette.setColor(palette.Background, QtGui.QColor(0, 0, 255))
+            palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+            palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
 
-        palette = self.ui.vr1Split1UplinkLCD.palette()
-        palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
-        palette.setColor(palette.Background, QtGui.QColor(0, 255, 0))
-        palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
-        palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
-        self.ui.vr1Split1UplinkLCD.setPalette(palette)
+        def make_it_green(palette):
+            palette.setColor(palette.WindowText, QtGui.QColor(0, 0, 0))
+            palette.setColor(palette.Background, QtGui.QColor(0, 255, 0))
+            palette.setColor(palette.Light, QtGui.QColor(232, 232, 232))
+            palette.setColor(palette.Dark, QtGui.QColor(232, 232, 232))
 
         self._plotters = []
         self._stop_event = ste = threading.Event()
@@ -242,12 +233,39 @@ class MainWindow(QtGui.QMainWindow):
                                       ip='192.168.10.113',
                                       port=8081,
                                       params={'VR2': [('tx_iq_rate', 32), ]},)
-        self._usrpDownlinkMon = Monitor(name='usrp',
+        #self._usrpDownlinkMon = Monitor(name='usrp',
+        #                                stopflag=ste,
+        #                                ip='192.168.10.104',
+        #                                port=8084,
+        #                                params={'VR1 IQ': [('vr1_iq_txrate', 32), ],
+        #                                        'VR2 IQ': [('vr2_iq_txrate', 32), ]},)
+        self._usrpVr1DownlinkMon = Monitor(name='usrp',
+                                           stopflag=ste,
+                                           ip='192.168.10.104',
+                                           port=8084,
+                                           params={'VR1 IQ': [('vr1_iq_txrate', 32), ],})
+        self._usrpVr2DownlinkMon = Monitor(name='usrp',
+                                           stopflag=ste,
+                                           ip='192.168.10.104',
+                                           port=8084,
+                                           params={'VR2 IQ': [('vr2_iq_txrate', 32), ],})
+        self._erDownlinkMon = ERMonitor(name='Downlink',
                                         stopflag=ste,
-                                        ip='192.168.10.104',
-                                        port=8084,
-                                        params={'VR1 IQ': [('vr1_iq_txrate', 32), ],
-                                                'VR2 IQ': [('vr2_iq_txrate', 32), ]},)
+                                        manager=manager,
+                                        regional_name='Regional',
+                                        edge_name='Edge',
+                                        monitors = {
+                                            'vr1tx-split1': self._vr1Split1DownlinkMon,
+                                            'vr1tx-split2': self._vr1Split2DownlinkMon,
+                                            'vr1tx-split3': self._vr1Split3DownlinkMon,
+                                            'vr2tx': self._vr2Split1DownlinkMon,
+                                            'usrp': self._usrpVr1DownlinkMon,},
+                                        links = [('vr1tx-split1', 'vr1tx-split2'),
+                                                 ('vr1tx-split2', 'vr1tx-split3'),
+                                                 ('vr1tx-split3', 'usrp'),
+                                                 ('vr2tx',  'usrp')],
+        )
+
 
         # Uplink monitors
         self._vr1Split1UplinkMon = Monitor(name='split1',
@@ -256,17 +274,35 @@ class MainWindow(QtGui.QMainWindow):
                                            port=8081,
                                            params={'Split 1': [('iq_rxrate', 32), ]},)
         self._vr2Split1UplinkMon = Monitor(name='vr2',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8081,
-                                     params={'VR 2': [('iq_rxrate', 32), ]},)
-        self._usrpUplinkMon = Monitor(name='usrp',
-                                      stopflag=ste,
-                                      ip='192.168.10.104',
-                                      port=8084,
-                                      params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],
-                                              'VR2 IQ': [('vr2_iq_rxrate', 32), ]},)
+                                           stopflag=ste,
+                                           ip='192.168.10.113',
+                                           port=8081,
+                                           params={'VR 2': [('iq_rxrate', 32), ]},)
+        self._usrpVr1UplinkMon = Monitor(name='usrp',
+                                         stopflag=ste,
+                                         ip='192.168.10.104',
+                                         port=8084,
+                                         params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],},)
+        self._usrpVr2UplinkMon = Monitor(name='usrp',
+                                         stopflag=ste,
+                                         ip='192.168.10.104',
+                                         port=8084,
+                                         params={'VR2 IQ': [('vr2_iq_rxrate', 32), ],},)
 
+        self._erUplinkMon = ERMonitor(name='Uplink',
+                                      stopflag=ste,
+                                      manager=manager,
+                                      regional_name='Regional',
+                                      edge_name='Edge',
+                                      monitors = {
+                                          'vr1tx-split1': self._usrpVr1UplinkMon,
+                                          'vr2tx': self._usrpVr2UplinkMon,
+                                          'usrp': self._usrpVr1UplinkMon},
+                                      links = [
+                                          ('vr2tx', 'usrp'),
+                                          ('vr1tx-split1', 'usrp'),
+                                      ],
+        )
 
         # CPU Monitors
         self._edgeCPUMon = Monitor(name='edge-cpu',
@@ -291,128 +327,309 @@ class MainWindow(QtGui.QMainWindow):
                     monitor= MonitorList([
                         self._vr1Split1DownlinkMon,
                         self._vr1Split2DownlinkMon,
-                        self._vr1Split3DownlinkMon,
-                    ])
+                        self._vr1Split3DownlinkMon,]),
+                    yrange=(0,31*10**6)
             )
         )
         self._plotters.append(
             Plotter(plot=self.ui.vr2DownlinkPlot,
                     title='Downlink VR 2',
                     monitor= self._vr2Split1DownlinkMon,
+                    yrange=(0,31*10**6)
             )
         )
+
+
         self._plotters.append(
             Plotter(plot=self.ui.usrpDownlinkPlot,
                     title='Downlink',
-                    monitor= self._usrpDownlinkMon,
+                    monitor= MonitorList([self._usrpVr1DownlinkMon, self._usrpVr2DownlinkMon]),
+                    yrange=(0,31*10**6)
             )
         )
 
 
         # LCD downlinks
+        palette = self.ui.vr1Split1DownlinkLCD.palette()
+        make_it_green(palette)
+        self.ui.vr1Split1DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split1DownlinkLCD,
                       monitor=self._vr1Split1DownlinkMon,
                       div = 10**6
             )
         )
+        palette = self.ui.vr1Split1DownlinkAvgLCD.palette()
+        make_it_green(palette)
+        self.ui.vr1Split1DownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split1DownlinkAvgLCD,
+                      monitor=self._vr1Split1DownlinkMon,
+                      div = 10**6,
+                      avg=True
+            )
+        )
+
+        palette = self.ui.vr1Split2DownlinkLCD.palette()
+        make_it_red(palette)
+        self.ui.vr1Split2DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split2DownlinkLCD,
                       monitor=self._vr1Split2DownlinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.vr1Split2DownlinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.vr1Split2DownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split2DownlinkAvgLCD,
+                      monitor=self._vr1Split2DownlinkMon,
+                      div = 10**6,
+                      avg=True
+            )
+        )
+
+        palette = self.ui.vr1Split3DownlinkLCD.palette()
+        make_it_blue(palette)
+        self.ui.vr1Split3DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split3DownlinkLCD,
                       monitor=self._vr1Split3DownlinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.vr1Split3DownlinkAvgLCD.palette()
+        make_it_blue(palette)
+        self.ui.vr1Split3DownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split3DownlinkAvgLCD,
+                      monitor=self._vr1Split3DownlinkMon,
+                      div = 10**6,
+                      avg=True
+            )
+        )
+
+        palette = self.ui.vr2Split1DownlinkLCD.palette()
+        make_it_red(palette)
+        self.ui.vr2Split1DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr2Split1DownlinkLCD,
                       monitor=self._vr2Split1DownlinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.vr2Split1DownlinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.vr2Split1DownlinkAvgLCD.setPalette(palette)
         self._plotters.append(
-            LCDNumber(plot=self.ui.usrpDownlinkLCD,
-                      monitor=self._usrpDownlinkMon,
+            LCDNumber(plot=self.ui.vr2Split1DownlinkAvgLCD,
+                      monitor=self._vr2Split1DownlinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
+
+        palette = self.ui.usrpVr1DownlinkLCD.palette()
+        make_it_blue(palette)
+        self.ui.usrpVr1DownlinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr1DownlinkLCD,
+                      monitor=self._usrpVr1DownlinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.usrpVr1DownlinkAvgLCD.palette()
+        make_it_blue(palette)
+        self.ui.usrpVr1DownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr1DownlinkAvgLCD,
+                      monitor=self._usrpVr1DownlinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
+        palette = self.ui.usrpVr2DownlinkLCD.palette()
+        make_it_red(palette)
+        self.ui.usrpVr2DownlinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr2DownlinkLCD,
+                      monitor=self._usrpVr2DownlinkMon,
+                      div=10**6
+            )
+        )
+        palette = self.ui.usrpVr2DownlinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.usrpVr2DownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr2DownlinkAvgLCD,
+                      monitor=self._usrpVr2DownlinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
+
 
         # plots uplink
         self._plotters.append(
             Plotter(plot=self.ui.vr1UplinkPlot,
                     title='Uplink VR 1',
-                    monitor=self._vr1Split1UplinkMon
+                    monitor=self._vr1Split1UplinkMon,
+                    yrange=(0,31*10**6)
             )
         )
         self._plotters.append(
             Plotter(plot=self.ui.vr2UplinkPlot,
                     title='Uplink VR2',
                     monitor= self._vr2Split1UplinkMon,
+                    yrange=(0,31*10**6)
             )
         )
         self._plotters.append(
             Plotter(plot=self.ui.usrpUplinkPlot,
                     title='Uplink',
-                    monitor= self._usrpUplinkMon,
+                    monitor= MonitorList([self._usrpVr1UplinkMon, self._usrpVr2UplinkMon]),
+                    yrange=(0,31*10**6)
             )
         )
 
 
         # LCD uplink
+        palette = self.ui.vr1Split1UplinkLCD.palette()
+        make_it_red(palette)
+        self.ui.vr1Split1UplinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split1UplinkLCD,
                       monitor=self._vr1Split1UplinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.vr1Split1UplinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.vr1Split1UplinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.vr1Split1UplinkAvgLCD,
+                      monitor=self._vr1Split1UplinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
+
+        palette = self.ui.vr2Split1UplinkLCD.palette()
+        make_it_red(palette)
+        self.ui.vr2Split1UplinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr2Split1UplinkLCD,
                       monitor=self._vr2Split1UplinkMon,
                       div=10**6
             )
         )
+        palette = self.ui.vr2Split1UplinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.vr2Split1UplinkAvgLCD.setPalette(palette)
         self._plotters.append(
-            LCDNumber(plot=self.ui.usrpUplinkLCD,
-                      monitor=self._usrpUplinkMon,
-                      div=10**6
+            LCDNumber(plot=self.ui.vr2Split1UplinkAvgLCD,
+                      monitor=self._vr2Split1UplinkMon,
+                      div=10**6,
+                      avg=True
             )
         )
 
+        palette = self.ui.usrpVr1UplinkLCD.palette()
+        make_it_blue(palette)
+        self.ui.usrpVr1UplinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr1UplinkLCD,
+                      monitor=self._usrpVr1UplinkMon,
+                      div=10**6
+            )
+        )
+        palette = self.ui.usrpVr1UplinkAvgLCD.palette()
+        make_it_blue(palette)
+        self.ui.usrpVr1UplinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr1UplinkAvgLCD,
+                      monitor=self._usrpVr1UplinkMon,
+                      div=10**6,
+                      avg=True,
+            )
+        )
+
+        palette = self.ui.usrpVr2UplinkLCD.palette()
+        make_it_red(palette)
+        self.ui.usrpVr2UplinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr2UplinkLCD,
+                      monitor=self._usrpVr2UplinkMon,
+                      div=10**6
+            )
+        )
+        palette = self.ui.usrpVr2UplinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.usrpVr2UplinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.usrpVr2UplinkAvgLCD,
+                      monitor=self._usrpVr2UplinkMon,
+                      div=10**6,
+                      avg=True,
+            )
+        )
 
         # ER Downlink
         self._plotters.append(
             Plotter(plot=self.ui.ERDownlinkPlot,
                     title='Downlink',
-                    monitor= ERMonitor(name='erDownlink',
-                                       stopflag=ste,
-                                       manager=manager,
-                                       regional_name='Regional',
-                                       edge_name='Edge',
-                                       monitors = {
-                                           'vr1tx-split1': self._vr1Split1DownlinkMon,
-                                           'vr1tx-split2': self._vr1Split2DownlinkMon,
-                                           'vr1tx-split3': self._vr1Split3DownlinkMon,
-                                           'vr2tx': self._vr2Split1DownlinkMon}
-                    ),
+                    monitor= self._erDownlinkMon,
+                    yrange=(0,31*10**6)
             )
         )
-        #self._plotters.append(
-        #    Plotter(plot=self.ui.ERUplinkPlot,
-        #            title='Uplink',
-        #            monitor= ERMonitor(name='erUplink',
-        #                               stopflag=ste,
-        #                               manager=manager,
-        #                               regional_name='Regional',
-        #                               edge_name='Edge',
-        #                               monitors = {'vr1tx-split1': self._vr1Split1UplinkMon, , 'vr2tx': self._vr2UplinkMon}
-        #            ),
-        #    )
-        #)
+        palette = self.ui.ERDownlinkLCD.palette()
+        make_it_red(palette)
+        self.ui.ERDownlinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.ERDownlinkLCD,
+                      monitor=self._erDownlinkMon,
+                      div=10**6
+            )
+        )
+        palette = self.ui.ERDownlinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.ERDownlinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.ERDownlinkAvgLCD,
+                      monitor=self._erDownlinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
+        # ER Uplink
+        self._plotters.append(
+            Plotter(plot=self.ui.ERUplinkPlot,
+                    title='Uplink',
+                    monitor= self._erUplinkMon,
+                    yrange=(0,31*10**6)
+            )
+        )
 
+        palette = self.ui.ERUplinkLCD.palette()
+        make_it_red(palette)
+        self.ui.ERUplinkLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.ERUplinkLCD,
+                      monitor=self._erUplinkMon,
+                      div=10**6
+            )
+        )
+        palette = self.ui.ERUplinkAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.ERUplinkAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.ERUplinkAvgLCD,
+                      monitor=self._erUplinkMon,
+                      div=10**6,
+                      avg=True
+            )
+        )
 
 
         # CPU Plots
@@ -432,19 +649,46 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         # CPU LCD
+        palette = self.ui.edgeCPULCD.palette()
+        make_it_red(palette)
+        self.ui.edgeCPULCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.edgeCPULCD,
                       monitor=self._edgeCPUMon,
                       div = 1.0
             )
         )
+        palette = self.ui.edgeCPUAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.edgeCPUAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.edgeCPUAvgLCD,
+                      monitor=self._edgeCPUMon,
+                      div = 1.0,
+                      avg = True
+            )
+        )
+
+
+        palette = self.ui.regionalCPULCD.palette()
+        make_it_red(palette)
+        self.ui.regionalCPULCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.regionalCPULCD,
                       monitor=self._regionalCPUMon,
                       div = 1.0
             )
         )
-
+        palette = self.ui.regionalCPUAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.regionalCPUAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.regionalCPUAvgLCD,
+                      monitor=self._regionalCPUMon,
+                      div = 1.0,
+                      avg = True
+            )
+        )
 
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
@@ -473,7 +717,6 @@ class MainWindow(QtGui.QMainWindow):
     def _updatePlot(self):
         for p in self._plotters:
             p.update()
-
 
 def init():
     manager.create(bs1)
