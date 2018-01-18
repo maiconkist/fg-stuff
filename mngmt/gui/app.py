@@ -1,4 +1,4 @@
-import os, sys, time, threading
+import os, sys, time, threading, psutil
 sys.path.insert(0, os.getcwd())
 
 from PyQt4 import QtGui, QtCore
@@ -44,7 +44,6 @@ class Monitor(threading.Thread):
         self.rates = {k: [0, ] for k in self._params}
 
     def run(self):
-        import signal
         print("Starting thread to monitor " + self.name)
         while not self.stopflag.wait(1):
             self.update()
@@ -59,6 +58,41 @@ class Monitor(threading.Thread):
                 while len(self.rates[k]) > Monitor.MAX_ITEMS:
                     self.rates[k].pop(0)
 
+            except Exception as e:
+                print(e)
+                self.rates[k].append(0.0)
+
+    def getData(self):
+        """
+        \return dict in the form {'name': val, 'name2', val}
+        """
+        return self.rates
+
+
+class CPUMonLocal(threading.Thread):
+    MAX_ITEMS = 50
+
+    def __init__(self, name, stopflag):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.stopflag = stopflag
+
+        self.rates = {"CPU": [psutil.cpu_percent(), ] }
+
+    def run(self):
+        import signal
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
+
+    def update(self):
+        for k in self.rates:
+            try:
+                self.rates[k].append(psutil.cpu_percent())
+
+                while len(self.rates[k]) > Monitor.MAX_ITEMS:
+                    self.rates[k].pop(0)
             except Exception as e:
                 print(e)
                 self.rates[k].append(0.0)
@@ -92,17 +126,20 @@ class MonitorList(object):
 
 
 class ERMonitor(object):
-    def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors, links):
+    def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors, links, label):
         self.name      = name
         self._manager  = manager
         self._rname = regional_name
         self._ename = edge_name
         self._monitors = monitors
         self._rates     = []
+        self._label = label
         self.links = links
 
     def getData(self):
         val = 0
+        txt = ""
+
         for p1, p2 in self.links:
             if p1 not in self._monitors.keys() or p2 not in self._monitors.keys():
                 continue
@@ -115,11 +152,13 @@ class ERMonitor(object):
                         raise Exception("More than 1 key in hashtable")
                     if len(tmp[tmp.keys()[0]]) > 0:
                         val += tmp[tmp.keys()[0]][-1]
+                        txt += p1 + ", "
             else:
                 print(c1.name + ' is not running') if c1.is_running == False else None
                 print(c2.name + ' is not running') if c2.is_running == False else None
 
         self._rates.append(val)
+        self._label.setText(txt)
 
         while len(self._rates) > Monitor.MAX_ITEMS:
             self._rates.pop(0)
@@ -161,6 +200,9 @@ class Plotter():
             monitor.start()
 
     def update(self):
+        if not self._plot.isVisible():
+            return
+
         for l in self._lines:
             self._lines[l].setData(self._monitor.getData()[l], clear = True)
 
@@ -172,6 +214,9 @@ class LCDNumber():
         self._avg = avg
 
     def update(self):
+        if not self._plot.isVisible():
+            return
+
         if self._avg == False:
             d = self._monitor.getData().values()[0][-1]
             d /= self._div
@@ -254,6 +299,7 @@ class MainWindow(QtGui.QMainWindow):
                                         manager=manager,
                                         regional_name='Regional',
                                         edge_name='Edge',
+                                        label = self.ui.ERDownlinkLabel,
                                         monitors = {
                                             'vr1tx-split1': self._vr1Split1DownlinkMon,
                                             'vr1tx-split2': self._vr1Split2DownlinkMon,
@@ -294,6 +340,7 @@ class MainWindow(QtGui.QMainWindow):
                                       manager=manager,
                                       regional_name='Regional',
                                       edge_name='Edge',
+                                      label = self.ui.ERUplinkLabel,
                                       monitors = {
                                           'vr1tx-split1': self._usrpVr1UplinkMon,
                                           'vr2tx': self._usrpVr2UplinkMon,
@@ -311,13 +358,7 @@ class MainWindow(QtGui.QMainWindow):
                                      port=8084,
                                      params={'CPU': [('cpu_percent', 1.0), ]},)
 
-        self._regionalCPUMon = Monitor(name='regional-cpu',
-                                       stopflag=ste,
-                                       ip='192.168.10.101',
-                                       port=8081,
-                                       params={'CPU': [('cpu_percent', 1.0), ]},)
-
-
+        self._regionalCPUMon = CPUMonLocal(name='regional-cpu', stopflag=ste)
 
 
         # plots downlink
@@ -733,7 +774,6 @@ def init():
 
 if __name__ == '__main__':
     init()
-
     app = QtGui.QApplication(sys.argv)
     w = MainWindow()
     w.show()

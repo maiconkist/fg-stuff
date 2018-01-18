@@ -219,8 +219,8 @@
      <widget class="QLCDNumber" name="vr1Split1DownlinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>190</y>
+        <x>600</x>
+        <y>200</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -247,8 +247,8 @@
      <widget class="QLCDNumber" name="vr1Split2DownlinkLCD">
       <property name="geometry">
        <rect>
-        <x>650</x>
-        <y>190</y>
+        <x>670</x>
+        <y>200</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -272,8 +272,8 @@
      <widget class="QLCDNumber" name="vr1Split3DownlinkLCD">
       <property name="geometry">
        <rect>
-        <x>730</x>
-        <y>190</y>
+        <x>750</x>
+        <y>200</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -297,8 +297,8 @@
      <widget class="QLCDNumber" name="vr1Split1UplinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>460</y>
+        <x>750</x>
+        <y>470</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -325,8 +325,8 @@
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>193</y>
+        <x>540</x>
+        <y>203</y>
         <width>58</width>
         <height>21</height>
        </rect>
@@ -338,8 +338,8 @@
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>460</y>
+        <x>690</x>
+        <y>470</y>
         <width>58</width>
         <height>21</height>
        </rect>
@@ -351,8 +351,8 @@
      <widget class="QLCDNumber" name="vr1Split1DownlinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>220</y>
+        <x>600</x>
+        <y>230</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -379,8 +379,8 @@
      <widget class="QLCDNumber" name="vr1Split2DownlinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>650</x>
-        <y>220</y>
+        <x>670</x>
+        <y>230</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -404,8 +404,8 @@
      <widget class="QLCDNumber" name="vr1Split3DownlinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>730</x>
-        <y>220</y>
+        <x>750</x>
+        <y>230</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -429,8 +429,8 @@
      <widget class="QLabel" name="label_21">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>220</y>
+        <x>560</x>
+        <y>230</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -442,8 +442,8 @@
      <widget class="QLCDNumber" name="vr1Split1UplinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>490</y>
+        <x>750</x>
+        <y>500</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -470,8 +470,8 @@
      <widget class="QLabel" name="label_22">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>490</y>
+        <x>710</x>
+        <y>500</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -593,7 +593,7 @@
      <widget class="QLCDNumber" name="vr2Split1DownlinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>750</x>
         <y>190</y>
         <width>64</width>
         <height>23</height>
@@ -621,7 +621,7 @@
      <widget class="QLCDNumber" name="vr2Split1UplinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>750</x>
         <y>460</y>
         <width>64</width>
         <height>23</height>
@@ -649,7 +649,7 @@
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>520</x>
+        <x>690</x>
         <y>190</y>
         <width>58</width>
         <height>21</height>
@@ -662,7 +662,7 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>520</x>
+        <x>690</x>
         <y>460</y>
         <width>58</width>
         <height>21</height>
@@ -675,7 +675,7 @@
      <widget class="QLCDNumber" name="vr2Split1DownlinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>750</x>
         <y>220</y>
         <width>64</width>
         <height>23</height>
@@ -703,7 +703,7 @@
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>710</x>
         <y>220</y>
         <width>31</width>
         <height>21</height>
@@ -716,7 +716,7 @@
      <widget class="QLCDNumber" name="vr2Split1UplinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>750</x>
         <y>490</y>
         <width>64</width>
         <height>23</height>
@@ -744,7 +744,7 @@
      <widget class="QLabel" name="label_20">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>710</x>
         <y>490</y>
         <width>31</width>
         <height>21</height>
@@ -1056,56 +1056,6 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Old Panels VR1</string>
-     </attribute>
-     <widget class="PlotWidget" name="vr1Split1Plot">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>30</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="PlotWidget" name="vr1Split2Plot">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>310</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="PlotWidget" name="vr1Split3Plot">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>590</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_5">
-     <attribute name="title">
-      <string>Old Panels VR2</string>
-     </attribute>
-     <widget class="PlotWidget" name="vr2Split1Plot">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>991</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
    </widget>
    <widget class="QTabWidget" name="tabWidget_3">
     <property name="geometry">
@@ -1146,8 +1096,8 @@
      <widget class="QLCDNumber" name="ERDownlinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>190</y>
+        <x>750</x>
+        <y>200</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1174,8 +1124,8 @@
      <widget class="QLCDNumber" name="ERUplinkLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>460</y>
+        <x>750</x>
+        <y>470</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1202,8 +1152,8 @@
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>190</y>
+        <x>690</x>
+        <y>200</y>
         <width>58</width>
         <height>21</height>
        </rect>
@@ -1215,8 +1165,8 @@
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>460</y>
+        <x>690</x>
+        <y>470</y>
         <width>58</width>
         <height>21</height>
        </rect>
@@ -1228,8 +1178,8 @@
      <widget class="QLCDNumber" name="ERDownlinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>220</y>
+        <x>750</x>
+        <y>230</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1256,8 +1206,8 @@
      <widget class="QLabel" name="label_17">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>220</y>
+        <x>710</x>
+        <y>230</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -1269,8 +1219,8 @@
      <widget class="QLCDNumber" name="ERUplinkAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>490</y>
+        <x>750</x>
+        <y>500</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1297,14 +1247,66 @@
      <widget class="QLabel" name="label_18">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>490</y>
+        <x>710</x>
+        <y>500</y>
         <width>31</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
        <string>Avg:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="ERDownlinkLabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="ERUplinkLabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>60</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_25">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>131</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Downlink traffic from:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_26">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>60</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Uplink traffic from: </string>
       </property>
      </widget>
     </widget>
@@ -1335,8 +1337,8 @@
      <widget class="QLCDNumber" name="regionalCPULCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>190</y>
+        <x>750</x>
+        <y>200</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1363,8 +1365,8 @@
      <widget class="QLCDNumber" name="edgeCPULCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>460</y>
+        <x>750</x>
+        <y>470</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1391,8 +1393,8 @@
      <widget class="QLCDNumber" name="regionalCPUAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>220</y>
+        <x>750</x>
+        <y>230</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1419,8 +1421,8 @@
      <widget class="QLCDNumber" name="edgeCPUAvgLCD">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>490</y>
+        <x>750</x>
+        <y>500</y>
         <width>64</width>
         <height>23</height>
        </rect>
@@ -1447,8 +1449,8 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>190</y>
+        <x>690</x>
+        <y>200</y>
         <width>58</width>
         <height>21</height>
        </rect>
@@ -1460,8 +1462,8 @@
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>220</y>
+        <x>710</x>
+        <y>230</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -1473,8 +1475,8 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>490</y>
+        <x>710</x>
+        <y>500</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -1486,8 +1488,8 @@
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>460</y>
+        <x>690</x>
+        <y>470</y>
         <width>58</width>
         <height>21</height>
        </rect>
