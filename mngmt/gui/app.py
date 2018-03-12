@@ -66,7 +66,15 @@ class Monitor(threading.Thread):
         """
         \return dict in the form {'name': val, 'name2', val}
         """
-        return self.rates
+        avgs = {}
+        for k in self.rates:
+            avgs[k] = []
+            for i in range(0, len(self.rates[k])):
+                try:
+                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
+                except:
+                    avgs[k].append(self.rates[k][i])
+        return avgs
 
 
 class CPUMonLocal(threading.Thread):
@@ -101,7 +109,15 @@ class CPUMonLocal(threading.Thread):
         """
         \return dict in the form {'name': val, 'name2', val}
         """
-        return self.rates
+        avgs = {}
+        for k in self.rates:
+            avgs[k] = []
+            for i in range(0, len(self.rates[k])):
+                try:
+                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
+                except:
+                    avgs[k].append(self.rates[k][i])
+        return avgs
 
 
 class MonitorList(object):
@@ -262,22 +278,22 @@ class MainWindow(QtGui.QMainWindow):
                                              stopflag=ste,
                                              ip='192.168.10.101',
                                              port=8081,
-                                             params={'VR1 Split 1': [('rate0', 8), ('rate1', 8)]},)
+                                             params={'VR1 Split 1-2': [('rate0', 8), ('rate1', 8)]},)
         self._vr1Split2DownlinkMon = Monitor(name='split2',
                                              stopflag=ste,
                                              ip='192.168.10.102',
                                              port=8082,
-                                             params={'VR1 Split 2': [('rate', 32), ]},)
+                                             params={'VR1 Split 2-3': [('rate', 32), ]},)
         self._vr1Split3DownlinkMon = Monitor(name='split3',
                                              stopflag=ste,
                                              ip='192.168.10.103',
                                              port=8083,
-                                             params={'VR1 Split 3': [('rate', 32), ]},)
+                                             params={'VR1 Split 3-USRP': [('rate', 32), ]},)
         self._vr2Split1DownlinkMon= Monitor(name='vr2',
                                       stopflag=ste,
                                       ip='192.168.10.113',
                                       port=8081,
-                                      params={'VR2': [('tx_iq_rate', 32), ]},)
+                                      params={'VR 2 - USRP': [('tx_iq_rate', 32), ]},)
         #self._usrpDownlinkMon = Monitor(name='usrp',
         #                                stopflag=ste,
         #                                ip='192.168.10.104',
@@ -751,7 +767,8 @@ class MainWindow(QtGui.QMainWindow):
         split_loc = str(button.text())
         bs2.migrate(split_loc)
 
-    def closeEvent(self, event):
+    def closeEvent(self, event
+    ):
         self._stop_event.set()
         manager.stopAll()
 
