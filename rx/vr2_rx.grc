@@ -4291,7 +4291,7 @@
     <key>xmlrpc_server</key>
     <param>
       <key>addr</key>
-      <value>192.168.10.30</value>
+      <value>ip</value>
     </param>
     <param>
       <key>alias</key>
