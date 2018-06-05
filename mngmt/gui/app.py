@@ -1,4 +1,4 @@
-import os, sys, time, threading, psutil
+import os, sys, time, threading, psutil, subprocess
 sys.path.insert(0, os.getcwd())
 
 from PyQt4 import QtGui, QtCore
@@ -98,6 +98,102 @@ class CPUMonLocal(threading.Thread):
         for k in self.rates:
             try:
                 self.rates[k].append(psutil.cpu_percent())
+
+                while len(self.rates[k]) > Monitor.MAX_ITEMS:
+                    self.rates[k].pop(0)
+            except Exception as e:
+                print(e)
+                self.rates[k].append(0.0)
+
+    def getData(self):
+        """
+        \return dict in the form {'name': val, 'name2', val}
+        """
+        avgs = {}
+        for k in self.rates:
+            avgs[k] = []
+            for i in range(0, len(self.rates[k])):
+                try:
+                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
+                except:
+                    avgs[k].append(self.rates[k][i])
+        return avgs
+
+
+
+class RAMMonLocal(threading.Thread):
+    MAX_ITEMS = 50
+
+    def __init__(self, name, stopflag):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.stopflag = stopflag
+
+        self.rates = {"RAM": [psutil.virtual_memory().percent, ] }
+
+    def run(self):
+        import signal
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
+
+    def update(self):
+        for k in self.rates:
+            try:
+                self.rates[k].append(psutil.virtual_memory().percent)
+
+                while len(self.rates[k]) > Monitor.MAX_ITEMS:
+                    self.rates[k].pop(0)
+            except Exception as e:
+                print(e)
+                self.rates[k].append(0.0)
+
+    def getData(self):
+        """
+        \return dict in the form {'name': val, 'name2', val}
+        """
+        avgs = {}
+        for k in self.rates:
+            avgs[k] = []
+            for i in range(0, len(self.rates[k])):
+                try:
+                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
+                except:
+                    avgs[k].append(self.rates[k][i])
+        return avgs
+
+
+class RAMMonRemote(threading.Thread):
+    MAX_ITEMS = 50
+
+    def __init__(self, name, stopflag):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.stopflag = stopflag
+
+        self.cmd = 'ssh connect@192.168.10.20 "python -c \'import psutil; print(psutil.virtual_memory().percent)\'"'
+
+        def getRAM():
+            def xxx():
+                return subprocess.check_output(self.cmd, stdin=None, stderr=subprocess.STDOUT, shell=True)
+            return xxx
+
+        self.getRAM = getRAM()
+
+        self.rates = {"RAM": [float(self.getRAM()) ] }
+
+    def run(self):
+        import signal
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
+
+    def update(self):
+        for k in self.rates:
+            try:
+                self.rates[k].append(float(self.getRAM()))
 
                 while len(self.rates[k]) > Monitor.MAX_ITEMS:
                     self.rates[k].pop(0)
@@ -375,6 +471,10 @@ class MainWindow(QtGui.QMainWindow):
                                      params={'CPU': [('cpu_percent', 1.0), ]},)
 
         self._regionalCPUMon = CPUMonLocal(name='regional-cpu', stopflag=ste)
+
+        # RAM Monitors
+        self._regionalRAMMon = RAMMonLocal(name='regional-ram', stopflag=ste)
+        self._edgeRAMMon = RAMMonRemote(name='edge-ram', stopflag=ste)
 
 
         # plots downlink
@@ -742,6 +842,66 @@ class MainWindow(QtGui.QMainWindow):
         self._plotters.append(
             LCDNumber(plot=self.ui.regionalCPUAvgLCD,
                       monitor=self._regionalCPUMon,
+                      div = 1.0,
+                      avg = True
+            )
+        )
+
+
+        # RAM PLOTS
+        self._plotters.append(
+            Plotter(plot=self.ui.regionalRAMPlot,
+                    title='Regional RAM usage [%]',
+                    monitor=  self._regionalRAMMon,
+                    yrange=(0,100),
+            )
+        )
+        
+        self._plotters.append(
+            Plotter(plot=self.ui.edgeRAMPlot,
+                    title='Regional RAM usage [%]',
+                    monitor=  self._edgeRAMMon,
+                    yrange=(0,100),
+            )
+        )
+
+
+        # RAM LCDs
+        palette = self.ui.regionalRAMLCD.palette()
+        make_it_red(palette)
+        self.ui.regionalRAMLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.regionalRAMLCD,
+                      monitor=self._regionalRAMMon,
+                      div = 1.0
+            )
+        )
+        palette = self.ui.regionalRAMAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.regionalRAMAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.regionalRAMAvgLCD,
+                      monitor=self._regionalRAMMon,
+                      div = 1.0,
+                      avg = True
+            )
+        )
+
+        palette = self.ui.edgeRAMLCD.palette()
+        make_it_red(palette)
+        self.ui.edgeRAMLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.edgeRAMLCD,
+                      monitor=self._edgeRAMMon,
+                      div = 1.0
+            )
+        )
+        palette = self.ui.edgeRAMAvgLCD.palette()
+        make_it_red(palette)
+        self.ui.edgeRAMAvgLCD.setPalette(palette)
+        self._plotters.append(
+            LCDNumber(plot=self.ui.edgeRAMAvgLCD,
+                      monitor=self._edgeRAMMon,
                       div = 1.0,
                       avg = True
             )
