@@ -84,7 +84,7 @@ agent.set_agent_info(name=name, info="Example tutorial Agent", iface=agent_PC_in
 #we specify interface and the name of the nodes group
 
 agent.add_module(moduleName="discovery", pyModule="wishful_module_discovery_pyre",
-                 className="PyreDiscoveryAgentModule", kwargs={"iface":agent_PC_interface, "groupName":"wishful_1234"})
+                 className="PyreDiscoveryAgentModule", kwargs={"iface":agent_PC_interface, "groupName":"tcd"})
 
 #add the net_linux module,
 agent.add_module(moduleName="gnuradio", pyModule="wishful_module_gnuradio",
