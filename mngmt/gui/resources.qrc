@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="images">
+    <file>images/vr1_split_a.jpg</file>
+    <file>images/vr1_split_b.jpg</file>
+    <file>images/vr1_split_c.jpg</file>
+    <file>images/vr1_split_d.jpg</file>
+    <file>images/vr2_split_a.jpg</file>
+    <file>images/vr2_split_b.jpg</file>
+  </qresource>
+</RCC>

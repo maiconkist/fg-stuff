@@ -123,7 +123,6 @@ def main():
         return values['usrp']['vr2_iq_rxrate']*32
 
     server = xmlserver.SimpleXMLRPCServer(("127.0.0.1", 44444), allow_none=True)
-
     server.register_function(get_vr1tx_split1_downlink)
     server.register_function(get_vr1tx_split2_downlink)
     server.register_function(get_vr1tx_split3_downlink)
@@ -134,18 +133,27 @@ def main():
     server.register_function(get_vr2tx_uplink)
     server.register_function(get_usrp_vr1_uplink)
     server.register_function(get_usrp_vr2_uplink)
-
     server_thread = threading.Thread(target = server.serve_forever)
     server_thread.daemon = True
     server_thread.start()
 
 
+    # We expect two agents (tx and rx).
+    # Observation: we dont check if the agents connectict are in fact the ones that we want.
+    while len(nodes) < len(valid_nodes):
+        print('-- Nodes connected: {}/{}'.format(len(nodes), len(valid_nodes)))
+        gevent.sleep(2)
+
     while True:
         for node in nodes.values():
             values[node.name] = controller.node(node).radio.get_parameters(getters[node.name])
-
-        gevent.sleep(2)
+            print(node.name + ':  ' + str(values[node.name]))
+        gevent.sleep(1)
 
 if __name__ == '__main__':
     controller.start()
-    main()
+    try: 
+        main()
+    except Exception as e:
+        for node in nodes:
+            controller.node(node).radio.deactivate_radio_program(node.name)

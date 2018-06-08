@@ -75,7 +75,7 @@ class Container(object):
 
     def execute(self, cmd):
         cmd_ret = None
-        print("Executing command `" + self._start_cmd + "` in " + self.name + "@" + self._host_name)
+        print("Executing command `" + str(cmd) + "` in " + str(self.name) + "@" + str(self._host_name))
         if self.is_running:
             cmd_l = [c for c in cmd.split(' ')]
             print(cmd_l)
@@ -97,9 +97,9 @@ class Container(object):
             except Exception as e:
                 print(e)
 
-        print("Waiting container to start")
+        print("Waiting container" + self.name + " to start")
         while not self.is_running:
-            print("Waiting container to start")
+            print("Waiting container" + self.name + " to start")
         print("Container " + self.name + " is running.")
 
         if self._start_cmd is not None:
@@ -113,16 +113,15 @@ class Container(object):
             print("Container " + self.name + " is already stopped")
             return
 
-        try:
-            print("Stopping container " + self.name)
-            if self._stop_cmd is not None:
-                self.execute(self._stop_cmd)
-            self._pylxd_container.stop(wait=True)
-        except Exception as e:
-            print("Error stopping container: " + str(e))
+        if self._stop_cmd is not None:
+            self.execute(self._stop_cmd)
 
+        print("Stopping container " + self.name)
         while self.is_running:
-            print("Waiting container to stop")
+            try:
+                self._pylxd_container.stop(wait=True)
+            except Exception as e:
+                print("Error stopping container 1: " + str(e))
 
     def destroy(self):
         self.stop()
@@ -154,7 +153,7 @@ class ContainerBundle(object):
         self._name = bundlename
         self._bundle = {}
 
-    def addContainer(self, name, origin, host, start_cmd='', stop_cmd=''):
+    def addContainer(self, name, origin, host, start_cmd=None, stop_cmd=None):
         """
         @param name Container name
         @param origin  Base container name
@@ -208,7 +207,7 @@ class ContainerBundle(object):
             for name, container in self._bundle.items():
                 container.stop()
         except Exception as e:
-            print("Error stopping container: " + str(e))
+            print("Error stopping container 2: " + str(e))
 
     def migrate(self, container_name, host_dst, new_name=None):
         container = self._bundle[container_name]
@@ -221,17 +220,17 @@ class VirtualRadioSplit(ContainerBundle):
         self.addContainer(name=name + '-split1', origin='gnuradio',
                           host=host_split1,
                           #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split1',
-                          stop_cmd='killall python')
+                          stop_cmd='killall python3')
 
         self.addContainer(name=name + '-split2', origin='gnuradio',
                           host=host_split2,
                           #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split2',
-                          stop_cmd='killall python')
+                          stop_cmd='killall python3')
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
                           #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split3',
-                          stop_cmd='killall python')
+                          stop_cmd='killall python3')
 
 class VirtualRadioSingle(Container):
     def __init__(self, name, host, mode):
@@ -242,8 +241,8 @@ class VirtualRadioSingle(Container):
                            name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='bash /root/fg-stuff/start_container.sh ' + mode,
-                           stop_cmd='killall python')
+                           #start_cmd='bash /root/fg-stuff/start_container.sh ' + mode,
+                           stop_cmd='killall python3')
 
 class USRP(Container):
     def __init__(self, name, host):
@@ -251,8 +250,8 @@ class USRP(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='bash /root/fg-stuff/start_container.sh usrp',
-                           stop_cmd='killall python')
+                           #start_cmd='bash /root/fg-stuff/start_container.sh usrp',
+                           stop_cmd='killall python3')
 
 class USRPHydra(Container):
     def __init__(self, name, host):
@@ -260,5 +259,5 @@ class USRPHydra(Container):
                            name=name,
                            origin='gnuradio',
                            host=host,
-                           start_cmd='bash /root/fg-stuff/start_container.sh usrphydra',
-                           stop_cmd='killall python')
+                           #start_cmd='bash /root/fg-stuff/start_container.sh usrphydra',
+                           stop_cmd='killall python3')

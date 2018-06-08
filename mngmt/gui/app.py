@@ -3,10 +3,17 @@ sys.path.insert(0, os.getcwd())
 
 from PyQt4 import QtGui, QtCore
 import pyqtgraph as qtg
+from collections import OrderedDict
 
 from gui import Ui_MainWindow
 from mngmt import Manager, Container
 from mngmt.container import VirtualRadioSplit, VirtualRadioSingle, USRP, USRPHydra
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
 
 manager = Manager()
 manager.addHost(host_name="Regional",
@@ -22,13 +29,53 @@ bs1 = VirtualRadioSplit(name='vr1tx',
                         host_split1='Regional',
                         host_split2='Regional',
                         host_split3='Regional')
-
 bs2 = VirtualRadioSingle(name='vr2tx',
-                            host='Regional',
+                            host='Edge',
                             mode='vr2tx')
 
 qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
+
+class WiSHFULMonitor(threading.Thread):
+    MAX_ITEMS = 50
+
+    def __init__(self, name, stopflag, control_addr, func):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.stopflag = stopflag
+        self._func = func
+        self.rates = []
+
+        import xmlrpc.client
+        self.server = xmlrpc.client.ServerProxy("http://%s:%d" % control_addr)
+
+    def run(self):
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
+
+    def update(self):
+        try:
+            s = float(getattr(self.server, "get_" + self._func)())
+            self.rates.append(s)
+
+            while len(self.rates) > WiSHFULMonitor.MAX_ITEMS:
+                self.rates.pop(0)
+
+        except Exception as e:
+            print(e)
+            self.rates.append(0.0)
+
+    def getData(self):
+        avgs = []
+        for i in range(0, len(self.rates)):
+            try:
+                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+            except:
+                avgs.append(self.rates[i])
+        return {self.name : avgs}
+
 
 class Monitor(threading.Thread):
     MAX_ITEMS = 50
@@ -39,8 +86,8 @@ class Monitor(threading.Thread):
         self.stopflag = stopflag
         self._params = params
 
-        import xmlrpclib
-        self.server = xmlrpclib.ServerProxy("http://%s:%d" % (ip, port))
+        import xmlrpc.client
+        self.server = xmlrpc.client.ServerProxy("http://%s:%d" % (ip, port))
         self.rates = {k: [0, ] for k in self._params}
 
     def run(self):
@@ -57,131 +104,38 @@ class Monitor(threading.Thread):
 
                 while len(self.rates[k]) > Monitor.MAX_ITEMS:
                     self.rates[k].pop(0)
-
             except Exception as e:
                 print(e)
                 self.rates[k].append(0.0)
 
     def getData(self):
-        """
-        \return dict in the form {'name': val, 'name2', val}
-        """
-        avgs = {}
-        for k in self.rates:
-            avgs[k] = []
-            for i in range(0, len(self.rates[k])):
-                try:
-                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
-                except:
-                    avgs[k].append(self.rates[k][i])
-        return avgs
-
-
-class CPUMonLocal(threading.Thread):
-    MAX_ITEMS = 50
-
-    def __init__(self, name, stopflag):
-        threading.Thread.__init__(self)
-        self.name = name
-        self.stopflag = stopflag
-
-        self.rates = {"CPU": [psutil.cpu_percent(), ] }
-
-    def run(self):
-        import signal
-        print("Starting thread to monitor " + self.name)
-        while not self.stopflag.wait(1):
-            self.update()
-        print ("Closing thread " + self.name)
-
-    def update(self):
-        for k in self.rates:
+        avgs = []
+        for i in range(0, len(self.rates)):
             try:
-                self.rates[k].append(psutil.cpu_percent())
-
-                while len(self.rates[k]) > Monitor.MAX_ITEMS:
-                    self.rates[k].pop(0)
-            except Exception as e:
-                print(e)
-                self.rates[k].append(0.0)
-
-    def getData(self):
-        """
-        \return dict in the form {'name': val, 'name2', val}
-        """
-        avgs = {}
-        for k in self.rates:
-            avgs[k] = []
-            for i in range(0, len(self.rates[k])):
-                try:
-                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
-                except:
-                    avgs[k].append(self.rates[k][i])
-        return avgs
+                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+            except:
+                avgs.append(self.rates[i])
+        return {self.name : avgs}
 
 
-
-class RAMMonLocal(threading.Thread):
+class RAMMonitor(threading.Thread):
     MAX_ITEMS = 50
 
-    def __init__(self, name, stopflag):
+    def __init__(self, name, addr, stopflag):
         threading.Thread.__init__(self)
         self.name = name
         self.stopflag = stopflag
 
-        self.rates = {"RAM": [psutil.virtual_memory().percent, ] }
+        self.cmd = 'ssh connect@' + addr + ' "python -c \'import psutil; print(psutil.virtual_memory().percent)\'"'
 
-    def run(self):
-        import signal
-        print("Starting thread to monitor " + self.name)
-        while not self.stopflag.wait(1):
-            self.update()
-        print ("Closing thread " + self.name)
-
-    def update(self):
-        for k in self.rates:
-            try:
-                self.rates[k].append(psutil.virtual_memory().percent)
-
-                while len(self.rates[k]) > Monitor.MAX_ITEMS:
-                    self.rates[k].pop(0)
-            except Exception as e:
-                print(e)
-                self.rates[k].append(0.0)
-
-    def getData(self):
-        """
-        \return dict in the form {'name': val, 'name2', val}
-        """
-        avgs = {}
-        for k in self.rates:
-            avgs[k] = []
-            for i in range(0, len(self.rates[k])):
-                try:
-                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
-                except:
-                    avgs[k].append(self.rates[k][i])
-        return avgs
-
-
-class RAMMonRemote(threading.Thread):
-    MAX_ITEMS = 50
-
-    def __init__(self, name, stopflag):
-        threading.Thread.__init__(self)
-        self.name = name
-        self.stopflag = stopflag
-
-        self.cmd = 'ssh connect@192.168.10.20 "python -c \'import psutil; print(psutil.virtual_memory().percent)\'"'
-
-        def getRAM():
+        def getxxx():
             def xxx():
                 return subprocess.check_output(self.cmd, stdin=None, stderr=subprocess.STDOUT, shell=True)
             return xxx
 
-        self.getRAM = getRAM()
+        self.getter = getxxx()
 
-        self.rates = {"RAM": [float(self.getRAM()) ] }
+        self.rates = [float(self.getter()), ]
 
     def run(self):
         import signal
@@ -191,29 +145,59 @@ class RAMMonRemote(threading.Thread):
         print ("Closing thread " + self.name)
 
     def update(self):
-        for k in self.rates:
-            try:
-                self.rates[k].append(float(self.getRAM()))
+        self.rates.append(float(self.getter()))
 
-                while len(self.rates[k]) > Monitor.MAX_ITEMS:
-                    self.rates[k].pop(0)
-            except Exception as e:
-                print(e)
-                self.rates[k].append(0.0)
+        while len(self.rates) > Monitor.MAX_ITEMS:
+            self.rates.pop(0)
 
     def getData(self):
-        """
-        \return dict in the form {'name': val, 'name2', val}
-        """
-        avgs = {}
-        for k in self.rates:
-            avgs[k] = []
-            for i in range(0, len(self.rates[k])):
-                try:
-                    avgs[k].append(sum(self.rates[k][max(i-10, 0):i]) / len(self.rates[k][max(0, i-10):i]))
-                except:
-                    avgs[k].append(self.rates[k][i])
-        return avgs
+        avgs = []
+        for i in range(0, len(self.rates)):
+            try:
+                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+            except:
+                avgs.append(self.rates[i])
+        return {self.name : avgs}
+
+
+class CPUMonitor(threading.Thread):
+    MAX_ITEMS = 50
+
+    def __init__(self, name, addr, stopflag):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.stopflag = stopflag
+
+        self.cmd = 'ssh connect@' + addr + ' "python -c \'import psutil; print(psutil.cpu_percent())\'"'
+
+        def getxxx():
+            def xxx():
+                return subprocess.check_output(self.cmd, stdin=None, stderr=subprocess.STDOUT, shell=True)
+            return xxx
+
+        self.getter = getxxx()
+        self.rates = [float(self.getter()), ]
+
+    def run(self):
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
+
+    def update(self):
+        self.rates.append(float(self.getter()))
+
+        while len(self.rates) > Monitor.MAX_ITEMS:
+            self.rates.pop(0)
+
+    def getData(self):
+        avgs = []
+        for i in range(0, len(self.rates)):
+            try:
+                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+            except:
+                avgs.append(self.rates[i])
+        return {self.name : avgs}
 
 
 class MonitorList(object):
@@ -227,14 +211,12 @@ class MonitorList(object):
         d = {}
         for e in self._monitors:
             d.update(e.getData())
-        return d
+
+        return OrderedDict(sorted(d.items()))
 
     def start(self):
         for e in self._monitors:
             e.start()
-
-    def is_alive(self):
-        return True if True in [x.is_alive() for x in self._monitors] else False
 
 
 class ERMonitor(object):
@@ -259,11 +241,11 @@ class ERMonitor(object):
             c2 = self._manager.getContainer(p2)
             if c1.is_running and c2.is_running:
                 if c1._host_name != c2._host_name:
-                    tmp = self._monitors[p1].getData()
+                    tmp = OrderedDict(self._monitors[p1].getData())
                     if len(tmp.keys()) > 1:
                         raise Exception("More than 1 key in hashtable")
-                    if len(tmp[tmp.keys()[0]]) > 0:
-                        val += tmp[tmp.keys()[0]][-1]
+                    if len(tmp[list(tmp.keys())[0]]) > 0:
+                        val += tmp[list(tmp.keys())[0]][-1]
                         txt += p1 + ", "
             else:
                 print(c1.name + ' is not running') if c1.is_running == False else None
@@ -278,11 +260,11 @@ class ERMonitor(object):
         return {self.name: self._rates}
 
     def start(self):
-        for m in self._monitors.itervalues():
+        for m in self._monitors.values():
             m.start()
 
     def is_alive(self):
-        return True if True in [x.is_alive() for x in self._monitors.itervalues()] else False
+        return True if True in [x.is_alive() for x in self._monitors.values()] else False
 
 
 class Plotter():
@@ -330,11 +312,11 @@ class LCDNumber():
             return
 
         if self._avg == False:
-            d = self._monitor.getData().values()[0][-1]
+            d = list(self._monitor.getData().values())[0][-1]
             d /= self._div
             self._plot.display(d)
         else:
-            vals = self._monitor.getData().values()[0]
+            vals = list(self._monitor.getData().values())[0]
             d = sum(vals)/len(vals)
             d /= self._div
             self._plot.display(d)
@@ -369,43 +351,63 @@ class MainWindow(QtGui.QMainWindow):
         self._plotters = []
         self._stop_event = ste = threading.Event()
 
+        wishful_controller_ip = ("127.0.0.1", 44444)
+
         # Downlink monitors
-        self._vr1Split1DownlinkMon = Monitor(name='split1',
+        self._vr1Split1DownlinkMon = WiSHFULMonitor(name='Split1 to Split2 Rate',
                                              stopflag=ste,
-                                             ip='192.168.10.101',
-                                             port=8081,
-                                             params={'VR1 Split 1-2': [('rate0', 8), ('rate1', 8)]},)
-        self._vr1Split2DownlinkMon = Monitor(name='split2',
+                                             control_addr = wishful_controller_ip,
+                                             func="vr1tx_split1_downlink")
+        self._vr1Split2DownlinkMon = WiSHFULMonitor(name='Split2 to Split3 Rate',
                                              stopflag=ste,
-                                             ip='192.168.10.102',
-                                             port=8082,
-                                             params={'VR1 Split 2-3': [('rate', 32), ]},)
-        self._vr1Split3DownlinkMon = Monitor(name='split3',
+                                             control_addr = wishful_controller_ip,
+                                             func="vr1tx_split2_downlink")
+        self._vr1Split3DownlinkMon = WiSHFULMonitor(name='Split3 to USRP rate',
                                              stopflag=ste,
-                                             ip='192.168.10.103',
-                                             port=8083,
-                                             params={'VR1 Split 3-USRP': [('rate', 32), ]},)
-        self._vr2Split1DownlinkMon= Monitor(name='vr2',
+                                             control_addr = wishful_controller_ip,
+                                             func="vr1tx_split3_downlink")
+        self._vr2Split1DownlinkMon= WiSHFULMonitor(name='vr2tx',
                                       stopflag=ste,
-                                      ip='192.168.10.113',
-                                      port=8081,
-                                      params={'VR 2 - USRP': [('tx_iq_rate', 32), ]},)
-        #self._usrpDownlinkMon = Monitor(name='usrp',
-        #                                stopflag=ste,
-        #                                ip='192.168.10.104',
-        #                                port=8084,
-        #                                params={'VR1 IQ': [('vr1_iq_txrate', 32), ],
-        #                                        'VR2 IQ': [('vr2_iq_txrate', 32), ]},)
-        self._usrpVr1DownlinkMon = Monitor(name='usrp',
+                                      control_addr = wishful_controller_ip,
+                                      func="vr2tx_downlink")
+        self._usrpVr1DownlinkMon = WiSHFULMonitor(name='usrp',
                                            stopflag=ste,
-                                           ip='192.168.10.104',
-                                           port=8084,
-                                           params={'VR1 IQ': [('vr1_iq_txrate', 32), ],})
-        self._usrpVr2DownlinkMon = Monitor(name='usrp',
+                                           control_addr = wishful_controller_ip,
+                                           func="usrp_vr1_downlink")
+        self._usrpVr2DownlinkMon = WiSHFULMonitor(name='usrp',
                                            stopflag=ste,
-                                           ip='192.168.10.104',
-                                           port=8084,
-                                           params={'VR2 IQ': [('vr2_iq_txrate', 32), ],})
+                                           control_addr = wishful_controller_ip,
+                                           func="usrp_vr2_downlink")
+        ##self._vr1Split1DownlinkMon = Monitor(name='vr1tx-split1',
+        ##                                     stopflag=ste,
+        ##                                     ip='192.168.10.101',
+        ##                                     port=8081,
+        ##                                     params={'VR1 Split 1-2': [('rate0', 8), ('rate1', 8)]},)
+        ##self._vr1Split2DownlinkMon = Monitor(name='vr1tx-split2',
+        ##                                     stopflag=ste,
+        ##                                     ip='192.168.10.102',
+        ##                                     port=8082,
+        ##                                     params={'VR1 Split 2-3': [('rate', 32), ]},)
+        ##self._vr1Split3DownlinkMon = Monitor(name='vr1tx-split3',
+        ##                                     stopflag=ste,
+        ##                                     ip='192.168.10.103',
+        ##                                     port=8083,
+        ##                                     params={'VR1 Split 3-USRP': [('rate', 32), ]},)
+        ##self._vr2Split1DownlinkMon= Monitor(name='vr2tx',
+        ##                              stopflag=ste,
+        ##                              ip='192.168.10.113',
+        ##                              port=8081,
+        ##                              params={'VR 2 - USRP': [('tx_iq_rate', 32), ]},)
+        ##self._usrpVr1DownlinkMon = Monitor(name='usrp',
+        ##                                   stopflag=ste,
+        ##                                   ip='192.168.10.104',
+        ##                                   port=8084,
+        ##                                   params={'VR1 IQ': [('vr1_iq_txrate', 32), ],})
+        ##self._usrpVr2DownlinkMon = Monitor(name='usrp',
+        ##                                   stopflag=ste,
+        ##                                   ip='192.168.10.104',
+        ##                                   port=8084,
+        ##                                   params={'VR2 IQ': [('vr2_iq_txrate', 32), ],})
         self._erDownlinkMon = ERMonitor(name='Downlink',
                                         stopflag=ste,
                                         manager=manager,
@@ -426,26 +428,42 @@ class MainWindow(QtGui.QMainWindow):
 
 
         # Uplink monitors
-        self._vr1Split1UplinkMon = Monitor(name='split1',
+        self._vr1Split1UplinkMon = WiSHFULMonitor(name='vr1tx-split1',
                                            stopflag=ste,
-                                           ip='192.168.10.101',
-                                           port=8081,
-                                           params={'Split 1': [('iq_rxrate', 32), ]},)
-        self._vr2Split1UplinkMon = Monitor(name='vr2',
+                                           control_addr = wishful_controller_ip,
+                                           func="vr1tx_split1_uplink")
+        self._vr2Split1UplinkMon = WiSHFULMonitor(name='vr2tx',
                                            stopflag=ste,
-                                           ip='192.168.10.113',
-                                           port=8081,
-                                           params={'VR 2': [('iq_rxrate', 32), ]},)
-        self._usrpVr1UplinkMon = Monitor(name='usrp',
+                                           control_addr = wishful_controller_ip,
+                                           func="vr2tx_uplink")
+        self._usrpVr1UplinkMon = WiSHFULMonitor(name='usrp',
                                          stopflag=ste,
-                                         ip='192.168.10.104',
-                                         port=8084,
-                                         params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],},)
-        self._usrpVr2UplinkMon = Monitor(name='usrp',
+                                         control_addr = wishful_controller_ip,
+                                         func="usrp_vr1_uplink")
+        self._usrpVr2UplinkMon = WiSHFULMonitor(name='usrp',
                                          stopflag=ste,
-                                         ip='192.168.10.104',
-                                         port=8084,
-                                         params={'VR2 IQ': [('vr2_iq_rxrate', 32), ],},)
+                                         control_addr = wishful_controller_ip,
+                                         func="usrp_vr2_uplink")
+        ##self._vr1Split1UplinkMon = Monitor(name='vr1tx-split1',
+        ##                                   stopflag=ste,
+        ##                                   ip='192.168.10.101',
+        ##                                   port=8081,
+        ##                                   params={'Split 1': [('iq_rxrate', 32), ]},)
+        ##self._vr2Split1UplinkMon = Monitor(name='vr2tx',
+        ##                                   stopflag=ste,
+        ##                                   ip='192.168.10.113',
+        ##                                   port=8081,
+        ##                                   params={'VR 2': [('iq_rxrate', 32), ]},)
+        ##self._usrpVr1UplinkMon = Monitor(name='usrp',
+        ##                                 stopflag=ste,
+        ##                                 ip='192.168.10.104',
+        ##                                 port=8084,
+        ##                                 params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],},)
+        ##self._usrpVr2UplinkMon = Monitor(name='usrp',
+        ##                                 stopflag=ste,
+        ##                                 ip='192.168.10.104',
+        ##                                 port=8084,
+        ##                                 params={'VR2 IQ': [('vr2_iq_rxrate', 32), ],},)
 
         self._erUplinkMon = ERMonitor(name='Uplink',
                                       stopflag=ste,
@@ -464,17 +482,12 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         # CPU Monitors
-        self._edgeCPUMon = Monitor(name='edge-cpu',
-                                     stopflag=ste,
-                                     ip='192.168.10.104',
-                                     port=8084,
-                                     params={'CPU': [('cpu_percent', 1.0), ]},)
-
-        self._regionalCPUMon = CPUMonLocal(name='regional-cpu', stopflag=ste)
+        self._regionalCPUMon = CPUMonitor(name='regional-cpu', addr='localhost', stopflag=ste)
+        self._edgeCPUMon     = CPUMonitor(name='edge-cpu', addr='192.168.10.20', stopflag=ste)
 
         # RAM Monitors
-        self._regionalRAMMon = RAMMonLocal(name='regional-ram', stopflag=ste)
-        self._edgeRAMMon = RAMMonRemote(name='edge-ram', stopflag=ste)
+        self._regionalRAMMon = RAMMonitor(name='regional-ram', addr = 'localhost', stopflag=ste)
+        self._edgeRAMMon     = RAMMonitor(name='edge-ram', addr = '192.168.10.20', stopflag=ste)
 
 
         # plots downlink
@@ -847,7 +860,6 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
 
-
         # RAM PLOTS
         self._plotters.append(
             Plotter(plot=self.ui.regionalRAMPlot,
@@ -856,15 +868,14 @@ class MainWindow(QtGui.QMainWindow):
                     yrange=(0,100),
             )
         )
-        
+
         self._plotters.append(
             Plotter(plot=self.ui.edgeRAMPlot,
-                    title='Regional RAM usage [%]',
+                    title='Edge RAM usage [%]',
                     monitor=  self._edgeRAMMon,
                     yrange=(0,100),
             )
         )
-
 
         # RAM LCDs
         palette = self.ui.regionalRAMLCD.palette()
@@ -909,26 +920,55 @@ class MainWindow(QtGui.QMainWindow):
 
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
-        self._timer.start(1000)
+        self._timer.start(2000)
 
     def migrateVr1Split1(self, button):
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split1', split_loc)
 
+        if split_loc == "Regional":
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_d.jpg")))
+        elif split_loc == "Edge":
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.jpg")))
+        else:
+            print("Unknown remote location at Vr1Split2: " + str(split_loc))
+
     def migrateVr1Split2(self, button):
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split2', split_loc)
+
+        if split_loc == "Regional":
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.jpg")))
+        elif split_loc == "Edge":
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.jpg")))
+        else:
+            print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
     def migrateVr1Split3(self, button):
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split3', split_loc)
 
+        if split_loc == "Regional":
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_a.jpg")))
+        elif split_loc == "Edge":
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.jpg")))
+        else:
+            print("Unknown remote location at Vr1Split3: " + str(split_loc))
+
     def migrateVr2Split(self, button):
         split_loc = str(button.text())
         bs2.migrate(split_loc)
 
-    def closeEvent(self, event
-    ):
+        if split_loc == "Regional":
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_a.jpg")))
+        elif split_loc == "Edge":
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_b.jpg")))
+        else:
+            print("Unknown remote location at Vr2Split: " + str(split_loc))
+
+
+
+    def closeEvent(self, event):
         self._stop_event.set()
         manager.stopAll()
 
@@ -950,7 +990,7 @@ def init():
         time.sleep(1)
 
 if __name__ == '__main__':
-    init()
+    #init()
     app = QtGui.QApplication(sys.argv)
     w = MainWindow()
     w.show()

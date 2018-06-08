@@ -4665,7 +4665,7 @@
     <key>xmlrpc_server</key>
     <param>
       <key>addr</key>
-      <value>ip</value>
+      <value>127.0.0.1</value>
     </param>
     <param>
       <key>alias</key>
