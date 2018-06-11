@@ -11,16 +11,19 @@ __email__ = "kistm@tcd.ie"
 import gevent, threading
 import xmlrpc.server as xmlserver
 
+
+from ilock import ILock
+
 # WiSHFUL imports
 import wishful_controller
 import wishful_upis as upis
 import wishful_module_gnuradio
 
-
-
 valid_nodes = ["vr1tx-split1", "vr1tx-split2", "vr1tx-split3", "vr2tx", "usrp"]
-
 nodes = {}
+
+amplitude1 = 0.1
+amplitude2 = 0.1
 
 values = {}
 for n in valid_nodes:
@@ -43,8 +46,6 @@ conf = {
 		"vr2tx"        : 8081, 
 		"usrp"         : 8084, 
     }
-
-
 }
 
 getters = {
@@ -69,35 +70,38 @@ controller.add_module(moduleName="discovery",
 def new_node(node):
     print("New node appeared: Name: %s" % (node.name, ))
 
-    if node.name in valid_nodes: 
-        nodes[node.name] = node
-        program_name = node.name
-        program_code = open(conf['files'][program_name], "r").read()
-        program_args = "" 
-        program_port = conf['port'][program_name]
 
-        controller.blocking(False).node(node).radio.activate_radio_program({'program_name': program_name, 'program_code': program_code, 'program_args': program_args,'program_type': 'py', 'program_port': program_port})
+    with ILock("controller"):
+        if node.name in valid_nodes: 
+            nodes[node.name] = node
+            program_name = node.name
+            program_code = open(conf['files'][program_name], "r").read()
+            program_args = "" 
+            program_port = conf['port'][program_name]
+
+            controller.blocking(False).node(node).radio.activate_radio_program({'program_name': program_name, 'program_code': program_code, 'program_args': program_args,'program_type': 'py', 'program_port': program_port})
+            print("Started program %s" % (program_name, ))
 
 
 @controller.node_exit_callback()
 def node_exit(node, reason):
-    if node in nodes.values():
-        del nodes[node.name]
-    print(("NodeExit : NodeID : {} Reason : {}".format(node.id, reason)))
-
-
-@controller.add_callback(upis.radio.get_parameters)
-def get_vars_response(group, node, data):
-    """ This function implements a callback called when ANY get_* function is called in ANY of the nodes
-
-    :param group: Experiment group name
-    :param node: Node used to execute the UPI
-    :param data: ::TODO::
-    """
-    print("{} get_channel_reponse : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
+    with ILock("controller"):
+        if node in nodes.values():
+            del nodes[node.name]
+        print(("NodeExit : NodeName : {}   Reason : {}".format(node.name, reason)))
 
 def main():
 
+    # remove node during migration.
+    def stop_monitoring(nodename):
+        node_exit(nodes[nodename], 'Migrated')
+
+    def set_vr1_amplitude(value):
+        global amplitude1
+        amplitude1 = value
+    def set_vr2_amplitude(value):
+        global amplitude2
+        amplitude2 = value
     # Downlink monitors
     def get_vr1tx_split1_downlink():
         return values['vr1tx-split1']['rate0']*8 + values['vr1tx-split1']['rate1']*8
@@ -122,7 +126,12 @@ def main():
     def get_usrp_vr2_uplink():
         return values['usrp']['vr2_iq_rxrate']*32
 
-    server = xmlserver.SimpleXMLRPCServer(("127.0.0.1", 44444), allow_none=True)
+    server = xmlserver.SimpleXMLRPCServer(("127.0.0.1", 44444), allow_none=True, logRequests=False)
+
+    server.register_function(stop_monitoring)
+    server.register_function(set_vr1_amplitude)
+    server.register_function(set_vr2_amplitude)
+
     server.register_function(get_vr1tx_split1_downlink)
     server.register_function(get_vr1tx_split2_downlink)
     server.register_function(get_vr1tx_split3_downlink)
@@ -137,7 +146,6 @@ def main():
     server_thread.daemon = True
     server_thread.start()
 
-
     # We expect two agents (tx and rx).
     # Observation: we dont check if the agents connectict are in fact the ones that we want.
     while len(nodes) < len(valid_nodes):
@@ -145,15 +153,21 @@ def main():
         gevent.sleep(2)
 
     while True:
-        for node in nodes.values():
-            values[node.name] = controller.node(node).radio.get_parameters(getters[node.name])
-            print(node.name + ':  ' + str(values[node.name]))
-        gevent.sleep(1)
+            for node in nodes.values():
+                with ILock("controller"):
+                    print("Getting info from: " + node.name)
+                    values[node.name] = controller.node(node).radio.get_parameters(getters[node.name])
+
+                    if node.name == 'usrp':
+                        controller.node(nodes['usrp']).radio.set_parameters({'amplitude1': amplitude1, 'amplitude2': amplitude2})
+            
+            gevent.sleep(1)
 
 if __name__ == '__main__':
     controller.start()
     try: 
         main()
     except Exception as e:
+        print("Caught Exception into main controller loop: " + str(e))
         for node in nodes:
             controller.node(node).radio.deactivate_radio_program(node.name)

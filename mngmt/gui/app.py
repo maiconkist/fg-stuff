@@ -3,6 +3,7 @@ sys.path.insert(0, os.getcwd())
 
 from PyQt4 import QtGui, QtCore
 import pyqtgraph as qtg
+import xmlrpc.client
 from collections import OrderedDict
 
 from gui import Ui_MainWindow
@@ -14,6 +15,9 @@ try:
 except AttributeError:
     def _fromUtf8(s):
         return s
+
+wishful_controller_ip = ("127.0.0.1", 44444)
+server = xmlrpc.client.ServerProxy("http://%s:%d" % wishful_controller_ip )
 
 manager = Manager()
 manager.addHost(host_name="Regional",
@@ -36,18 +40,21 @@ bs2 = VirtualRadioSingle(name='vr2tx',
 qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
 
-class WiSHFULMonitor(threading.Thread):
-    MAX_ITEMS = 50
 
-    def __init__(self, name, stopflag, control_addr, func):
+MAX_ITEMS = 500
+
+
+class WiSHFULMonitor(threading.Thread):
+    MAX_ITEMS = 5000
+
+    def __init__(self, name, stopflag, server, func):
         threading.Thread.__init__(self)
         self.name = name
         self.stopflag = stopflag
         self._func = func
         self.rates = []
+        self.server = server
 
-        import xmlrpc.client
-        self.server = xmlrpc.client.ServerProxy("http://%s:%d" % control_addr)
 
     def run(self):
         print("Starting thread to monitor " + self.name)
@@ -60,7 +67,7 @@ class WiSHFULMonitor(threading.Thread):
             s = float(getattr(self.server, "get_" + self._func)())
             self.rates.append(s)
 
-            while len(self.rates) > WiSHFULMonitor.MAX_ITEMS:
+            while len(self.rates) > MAX_ITEMS:
                 self.rates.pop(0)
 
         except Exception as e:
@@ -78,16 +85,15 @@ class WiSHFULMonitor(threading.Thread):
 
 
 class Monitor(threading.Thread):
-    MAX_ITEMS = 50
+    MAX_ITEMS = 5000
 
-    def __init__(self, name, stopflag, ip, port, params):
+    def __init__(self, name, stopflag, server, params):
         threading.Thread.__init__(self)
         self.name = name
         self.stopflag = stopflag
         self._params = params
 
-        import xmlrpc.client
-        self.server = xmlrpc.client.ServerProxy("http://%s:%d" % (ip, port))
+        self.server = server
         self.rates = {k: [0, ] for k in self._params}
 
     def run(self):
@@ -102,7 +108,7 @@ class Monitor(threading.Thread):
                 s = [float(getattr(self.server, "get_" + param[0])()) * param[1] for param in self._params[k]]
                 self.rates[k].append(sum(s))
 
-                while len(self.rates[k]) > Monitor.MAX_ITEMS:
+                while len(self.rates[k]) > MAX_ITEMS:
                     self.rates[k].pop(0)
             except Exception as e:
                 print(e)
@@ -119,7 +125,7 @@ class Monitor(threading.Thread):
 
 
 class RAMMonitor(threading.Thread):
-    MAX_ITEMS = 50
+    MAX_ITEMS = 5000
 
     def __init__(self, name, addr, stopflag):
         threading.Thread.__init__(self)
@@ -147,7 +153,7 @@ class RAMMonitor(threading.Thread):
     def update(self):
         self.rates.append(float(self.getter()))
 
-        while len(self.rates) > Monitor.MAX_ITEMS:
+        while len(self.rates) > MAX_ITEMS:
             self.rates.pop(0)
 
     def getData(self):
@@ -161,7 +167,7 @@ class RAMMonitor(threading.Thread):
 
 
 class CPUMonitor(threading.Thread):
-    MAX_ITEMS = 50
+    MAX_ITEMS = 5000
 
     def __init__(self, name, addr, stopflag):
         threading.Thread.__init__(self)
@@ -187,7 +193,7 @@ class CPUMonitor(threading.Thread):
     def update(self):
         self.rates.append(float(self.getter()))
 
-        while len(self.rates) > Monitor.MAX_ITEMS:
+        while len(self.rates) > MAX_ITEMS:
             self.rates.pop(0)
 
     def getData(self):
@@ -219,9 +225,11 @@ class MonitorList(object):
             e.start()
 
 
-class ERMonitor(object):
+class ERMonitor(threading.Thread):
     def __init__(self, name, stopflag, manager, regional_name, edge_name,  monitors, links, label):
+        threading.Thread.__init__(self)
         self.name      = name
+        self.stopflag = stopflag
         self._manager  = manager
         self._rname = regional_name
         self._ename = edge_name
@@ -230,7 +238,13 @@ class ERMonitor(object):
         self._label = label
         self.links = links
 
+
+
     def getData(self):
+        return {self.name: self._rates}
+
+
+    def update(self):
         val = 0
         txt = ""
 
@@ -254,21 +268,22 @@ class ERMonitor(object):
         self._rates.append(val)
         self._label.setText(txt)
 
-        while len(self._rates) > Monitor.MAX_ITEMS:
+        while len(self._rates) > MAX_ITEMS:
             self._rates.pop(0)
 
-        return {self.name: self._rates}
-
-    def start(self):
+    def run(self):
         for m in self._monitors.values():
-            m.start()
+            if not m. is_alive():
+                m.start()
 
-    def is_alive(self):
-        return True if True in [x.is_alive() for x in self._monitors.values()] else False
+        print("Starting thread to monitor " + self.name)
+        while not self.stopflag.wait(1):
+            self.update()
+        print ("Closing thread " + self.name)
 
 
 class Plotter():
-    MAX_ITEMS = 30
+    MAX_ITEMS = 5000
 
     def __init__(self, plot, title, monitor, xrange=None, yrange=None):
         self._plot = plot
@@ -287,7 +302,7 @@ class Plotter():
         plot.addLegend()
 
         self._lines = {}
-        for t, pcolor in zip(monitor.getData(), ['r', 'b', 'g', 'c', 'm', 'y', 'k', 'w']):
+        for t, pcolor in zip(monitor.getData(), ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']):
             self._lines[t] = plot.plot(pen=pcolor, name=t)
 
         if not monitor.is_alive():
@@ -351,32 +366,31 @@ class MainWindow(QtGui.QMainWindow):
         self._plotters = []
         self._stop_event = ste = threading.Event()
 
-        wishful_controller_ip = ("127.0.0.1", 44444)
 
         # Downlink monitors
         self._vr1Split1DownlinkMon = WiSHFULMonitor(name='Split1 to Split2 Rate',
                                              stopflag=ste,
-                                             control_addr = wishful_controller_ip,
+                                             server = server,
                                              func="vr1tx_split1_downlink")
         self._vr1Split2DownlinkMon = WiSHFULMonitor(name='Split2 to Split3 Rate',
                                              stopflag=ste,
-                                             control_addr = wishful_controller_ip,
+                                             server = server,
                                              func="vr1tx_split2_downlink")
         self._vr1Split3DownlinkMon = WiSHFULMonitor(name='Split3 to USRP rate',
                                              stopflag=ste,
-                                             control_addr = wishful_controller_ip,
+                                             server = server,
                                              func="vr1tx_split3_downlink")
         self._vr2Split1DownlinkMon= WiSHFULMonitor(name='vr2tx',
                                       stopflag=ste,
-                                      control_addr = wishful_controller_ip,
+                                      server = server,
                                       func="vr2tx_downlink")
         self._usrpVr1DownlinkMon = WiSHFULMonitor(name='usrp',
                                            stopflag=ste,
-                                           control_addr = wishful_controller_ip,
+                                           server = server,
                                            func="usrp_vr1_downlink")
         self._usrpVr2DownlinkMon = WiSHFULMonitor(name='usrp',
                                            stopflag=ste,
-                                           control_addr = wishful_controller_ip,
+                                           server = server,
                                            func="usrp_vr2_downlink")
         ##self._vr1Split1DownlinkMon = Monitor(name='vr1tx-split1',
         ##                                     stopflag=ste,
@@ -430,19 +444,19 @@ class MainWindow(QtGui.QMainWindow):
         # Uplink monitors
         self._vr1Split1UplinkMon = WiSHFULMonitor(name='vr1tx-split1',
                                            stopflag=ste,
-                                           control_addr = wishful_controller_ip,
+                                           server = server,
                                            func="vr1tx_split1_uplink")
         self._vr2Split1UplinkMon = WiSHFULMonitor(name='vr2tx',
                                            stopflag=ste,
-                                           control_addr = wishful_controller_ip,
+                                           server = server,
                                            func="vr2tx_uplink")
         self._usrpVr1UplinkMon = WiSHFULMonitor(name='usrp',
                                          stopflag=ste,
-                                         control_addr = wishful_controller_ip,
+                                         server = server,
                                          func="usrp_vr1_uplink")
         self._usrpVr2UplinkMon = WiSHFULMonitor(name='usrp',
                                          stopflag=ste,
-                                         control_addr = wishful_controller_ip,
+                                         server = server,
                                          func="usrp_vr2_uplink")
         ##self._vr1Split1UplinkMon = Monitor(name='vr1tx-split1',
         ##                                   stopflag=ste,
@@ -521,7 +535,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # LCD downlinks
         palette = self.ui.vr1Split1DownlinkLCD.palette()
-        make_it_green(palette)
+        make_it_red(palette)
         self.ui.vr1Split1DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split1DownlinkLCD,
@@ -530,7 +544,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.vr1Split1DownlinkAvgLCD.palette()
-        make_it_green(palette)
+        make_it_red(palette)
         self.ui.vr1Split1DownlinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split1DownlinkAvgLCD,
@@ -541,7 +555,7 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         palette = self.ui.vr1Split2DownlinkLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.vr1Split2DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split2DownlinkLCD,
@@ -550,7 +564,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.vr1Split2DownlinkAvgLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.vr1Split2DownlinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.vr1Split2DownlinkAvgLCD,
@@ -923,6 +937,7 @@ class MainWindow(QtGui.QMainWindow):
         self._timer.start(2000)
 
     def migrateVr1Split1(self, button):
+        server.stop_monitoring("vr1tx-split1")
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split1', split_loc)
 
@@ -934,6 +949,7 @@ class MainWindow(QtGui.QMainWindow):
             print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
     def migrateVr1Split2(self, button):
+        server.stop_monitoring("vr1tx-split2")
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split2', split_loc)
 
@@ -945,6 +961,7 @@ class MainWindow(QtGui.QMainWindow):
             print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
     def migrateVr1Split3(self, button):
+        server.stop_monitoring("vr1tx-split3")
         split_loc = str(button.text())
         bs1.migrate('vr1tx-split3', split_loc)
 
@@ -956,6 +973,7 @@ class MainWindow(QtGui.QMainWindow):
             print("Unknown remote location at Vr1Split3: " + str(split_loc))
 
     def migrateVr2Split(self, button):
+        server.stop_monitoring("vr2tx")
         split_loc = str(button.text())
         bs2.migrate(split_loc)
 
@@ -967,14 +985,19 @@ class MainWindow(QtGui.QMainWindow):
             print("Unknown remote location at Vr2Split: " + str(split_loc))
 
 
-
     def closeEvent(self, event):
         self._stop_event.set()
-        manager.stopAll()
+        #manager.stopAll()
 
     def _updatePlot(self):
         for p in self._plotters:
             p.update()
+
+    def vr1Amplitude(self, value):
+        server.set_vr1_amplitude(value/100.0)
+
+    def vr2Amplitude(self, value):
+        server.set_vr2_amplitude(value/100.0)
 
 def init():
     manager.create(bs1)
@@ -990,7 +1013,7 @@ def init():
         time.sleep(1)
 
 if __name__ == '__main__':
-    #init()
+    init()
     app = QtGui.QApplication(sys.argv)
     w = MainWindow()
     w.show()

@@ -36,6 +36,7 @@ case "$1" in
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/tx_split/split1.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"vr2tx-split2")
 		ifconfig eth0 192.168.10.112
@@ -43,6 +44,7 @@ case "$1" in
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/tx_split/split2.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"vr2tx-split3")
 		ifconfig eth0 192.168.10.113
@@ -50,6 +52,7 @@ case "$1" in
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/tx_split/split3.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"vr1tx")
 		ifconfig eth0 192.168.10.103
@@ -57,6 +60,7 @@ case "$1" in
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/tx_single/vr1_tx.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"vr2tx")
 		ifconfig eth0 192.168.10.113
@@ -64,18 +68,21 @@ case "$1" in
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/tx_single/vr2_tx.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"usrp")
 		ifconfig eth0 192.168.10.104
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/usrp/usrp.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	"usrphydra")
 		ifconfig eth0 192.168.10.104
 		cd /root/fg-stuff/
 		#python /root/fg-stuff/usrp/usrp_hydra.py 2> /dev/null &
 		python3 /root/fg-stuff/wishful/agent.py 2> /dev/null &
+		echo $! > ${PIDFILE}
 		;;
 	*)
 		echo "1 argument is required"
