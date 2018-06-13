@@ -21,11 +21,11 @@ server = xmlrpc.client.ServerProxy("http://%s:%d" % wishful_controller_ip )
 
 manager = Manager()
 manager.addHost(host_name="Regional",
-                 ip="192.168.10.10:8443",
-                 cert=("./tests/lxd.crt", "./tests/lxd.key"))
+        ip="192.168.10.10:8443",
+        cert=("./tests/lxd.crt", "./tests/lxd.key"))
 manager.addHost(host_name="Edge",
-                ip="192.168.10.20:8443",
-                cert=("./tests/lxd.crt", "./tests/lxd.key"))
+        ip="192.168.10.20:8443",
+        cert=("./tests/lxd.crt", "./tests/lxd.key"))
 
 Container(name='usrp', origin='gnuradio', host='Edge', manageable=False)
 
@@ -41,11 +41,10 @@ qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
 
 
-MAX_ITEMS = 500
+MAX_ITEMS = 50
 
 
 class WiSHFULMonitor(threading.Thread):
-    MAX_ITEMS = 5000
 
     def __init__(self, name, stopflag, server, func):
         threading.Thread.__init__(self)
@@ -65,11 +64,11 @@ class WiSHFULMonitor(threading.Thread):
     def update(self):
         try:
             s = float(getattr(self.server, "get_" + self._func)())
+            if len(self.rates) > 3 and s == self.rates[-1] and s == self.rates[-2] and s == self.rates[-3]:
+                s = 0.0
             self.rates.append(s)
-
             while len(self.rates) > MAX_ITEMS:
                 self.rates.pop(0)
-
         except Exception as e:
             print(e)
             self.rates.append(0.0)
@@ -78,54 +77,30 @@ class WiSHFULMonitor(threading.Thread):
         avgs = []
         for i in range(0, len(self.rates)):
             try:
-                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+                avgs.append(sum(self.rates[max(i-5, 0):i]) / len(self.rates[max(0, i-5):i]))
             except:
                 avgs.append(self.rates[i])
+
         return {self.name : avgs}
 
 
-class Monitor(threading.Thread):
-    MAX_ITEMS = 5000
-
-    def __init__(self, name, stopflag, server, params):
-        threading.Thread.__init__(self)
+class ContainerMonitor(object):
+    def __init__(self, name, stopflag, labelsEdge, labelsRegional):
         self.name = name
         self.stopflag = stopflag
-        self._params = params
-
-        self.server = server
-        self.rates = {k: [0, ] for k in self._params}
-
-    def run(self):
-        print("Starting thread to monitor " + self.name)
-        while not self.stopflag.wait(1):
-            self.update()
-        print ("Closing thread " + self.name)
+        self.labelsEdge = labelsEdge
+        self.labelsRegional = labelsRegional
 
     def update(self):
-        for k in self.rates:
-            try:
-                s = [float(getattr(self.server, "get_" + param[0])()) * param[1] for param in self._params[k]]
-                self.rates[k].append(sum(s))
+        clist = manager.getLXDContainerList("Edge")
+        for i in self.labelsEdge:
+            i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
 
-                while len(self.rates[k]) > MAX_ITEMS:
-                    self.rates[k].pop(0)
-            except Exception as e:
-                print(e)
-                self.rates[k].append(0.0)
-
-    def getData(self):
-        avgs = []
-        for i in range(0, len(self.rates)):
-            try:
-                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
-            except:
-                avgs.append(self.rates[i])
-        return {self.name : avgs}
-
+        clist = manager.getLXDContainerList("Regional")
+        for i in self.labelsRegional:
+            i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
 
 class RAMMonitor(threading.Thread):
-    MAX_ITEMS = 5000
 
     def __init__(self, name, addr, stopflag):
         threading.Thread.__init__(self)
@@ -140,7 +115,6 @@ class RAMMonitor(threading.Thread):
             return xxx
 
         self.getter = getxxx()
-
         self.rates = [float(self.getter()), ]
 
     def run(self):
@@ -160,19 +134,20 @@ class RAMMonitor(threading.Thread):
         avgs = []
         for i in range(0, len(self.rates)):
             try:
-                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+                avgs.append(sum(self.rates[max(i-5, 0):i]) / len(self.rates[max(0, i-5):i]))
             except:
                 avgs.append(self.rates[i])
+
+
         return {self.name : avgs}
 
 
 class CPUMonitor(threading.Thread):
-    MAX_ITEMS = 5000
-
-    def __init__(self, name, addr, stopflag):
+    def __init__(self, name, addr, stopflag, label):
         threading.Thread.__init__(self)
         self.name = name
         self.stopflag = stopflag
+        self.label = label
 
         self.cmd = 'ssh connect@' + addr + ' "python -c \'import psutil; print(psutil.cpu_percent())\'"'
 
@@ -200,9 +175,13 @@ class CPUMonitor(threading.Thread):
         avgs = []
         for i in range(0, len(self.rates)):
             try:
-                avgs.append(sum(self.rates[max(i-10, 0):i]) / len(self.rates[max(0, i-10):i]))
+                avgs.append(sum(self.rates[max(i-5, 0):i]) / len(self.rates[max(0, i-5):i]))
             except:
                 avgs.append(self.rates[i])
+
+        clist = manager.getLXDContainerList(self.name)
+        self.label.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
+
         return {self.name : avgs}
 
 
@@ -283,7 +262,6 @@ class ERMonitor(threading.Thread):
 
 
 class Plotter():
-    MAX_ITEMS = 5000
 
     def __init__(self, plot, title, monitor, xrange=None, yrange=None):
         self._plot = plot
@@ -366,7 +344,6 @@ class MainWindow(QtGui.QMainWindow):
         self._plotters = []
         self._stop_event = ste = threading.Event()
 
-
         # Downlink monitors
         self._vr1Split1DownlinkMon = WiSHFULMonitor(name='Split1 to Split2 Rate',
                                              stopflag=ste,
@@ -380,48 +357,19 @@ class MainWindow(QtGui.QMainWindow):
                                              stopflag=ste,
                                              server = server,
                                              func="vr1tx_split3_downlink")
-        self._vr2Split1DownlinkMon= WiSHFULMonitor(name='vr2tx',
+        self._vr2Split1DownlinkMon= WiSHFULMonitor(name='NB-IoT to USRP',
                                       stopflag=ste,
                                       server = server,
                                       func="vr2tx_downlink")
-        self._usrpVr1DownlinkMon = WiSHFULMonitor(name='usrp',
+        self._usrpVr1DownlinkMon = WiSHFULMonitor(name='LTE IQ',
                                            stopflag=ste,
                                            server = server,
                                            func="usrp_vr1_downlink")
-        self._usrpVr2DownlinkMon = WiSHFULMonitor(name='usrp',
+        self._usrpVr2DownlinkMon = WiSHFULMonitor(name='NB-IoT IQ',
                                            stopflag=ste,
                                            server = server,
                                            func="usrp_vr2_downlink")
-        ##self._vr1Split1DownlinkMon = Monitor(name='vr1tx-split1',
-        ##                                     stopflag=ste,
-        ##                                     ip='192.168.10.101',
-        ##                                     port=8081,
-        ##                                     params={'VR1 Split 1-2': [('rate0', 8), ('rate1', 8)]},)
-        ##self._vr1Split2DownlinkMon = Monitor(name='vr1tx-split2',
-        ##                                     stopflag=ste,
-        ##                                     ip='192.168.10.102',
-        ##                                     port=8082,
-        ##                                     params={'VR1 Split 2-3': [('rate', 32), ]},)
-        ##self._vr1Split3DownlinkMon = Monitor(name='vr1tx-split3',
-        ##                                     stopflag=ste,
-        ##                                     ip='192.168.10.103',
-        ##                                     port=8083,
-        ##                                     params={'VR1 Split 3-USRP': [('rate', 32), ]},)
-        ##self._vr2Split1DownlinkMon= Monitor(name='vr2tx',
-        ##                              stopflag=ste,
-        ##                              ip='192.168.10.113',
-        ##                              port=8081,
-        ##                              params={'VR 2 - USRP': [('tx_iq_rate', 32), ]},)
-        ##self._usrpVr1DownlinkMon = Monitor(name='usrp',
-        ##                                   stopflag=ste,
-        ##                                   ip='192.168.10.104',
-        ##                                   port=8084,
-        ##                                   params={'VR1 IQ': [('vr1_iq_txrate', 32), ],})
-        ##self._usrpVr2DownlinkMon = Monitor(name='usrp',
-        ##                                   stopflag=ste,
-        ##                                   ip='192.168.10.104',
-        ##                                   port=8084,
-        ##                                   params={'VR2 IQ': [('vr2_iq_txrate', 32), ],})
+
         self._erDownlinkMon = ERMonitor(name='Downlink',
                                         stopflag=ste,
                                         manager=manager,
@@ -440,9 +388,8 @@ class MainWindow(QtGui.QMainWindow):
                                                  ('vr2tx',  'usrp')],
         )
 
-
         # Uplink monitors
-        self._vr1Split1UplinkMon = WiSHFULMonitor(name='vr1tx-split1',
+        self._vr1Split1UplinkMon = WiSHFULMonitor(name='USRP-LTE Uplink',
                                            stopflag=ste,
                                            server = server,
                                            func="vr1tx_split1_uplink")
@@ -450,34 +397,14 @@ class MainWindow(QtGui.QMainWindow):
                                            stopflag=ste,
                                            server = server,
                                            func="vr2tx_uplink")
-        self._usrpVr1UplinkMon = WiSHFULMonitor(name='usrp',
+        self._usrpVr1UplinkMon = WiSHFULMonitor(name='LTE IQ',
                                          stopflag=ste,
                                          server = server,
                                          func="usrp_vr1_uplink")
-        self._usrpVr2UplinkMon = WiSHFULMonitor(name='usrp',
+        self._usrpVr2UplinkMon = WiSHFULMonitor(name='NB-IoT IQ',
                                          stopflag=ste,
                                          server = server,
                                          func="usrp_vr2_uplink")
-        ##self._vr1Split1UplinkMon = Monitor(name='vr1tx-split1',
-        ##                                   stopflag=ste,
-        ##                                   ip='192.168.10.101',
-        ##                                   port=8081,
-        ##                                   params={'Split 1': [('iq_rxrate', 32), ]},)
-        ##self._vr2Split1UplinkMon = Monitor(name='vr2tx',
-        ##                                   stopflag=ste,
-        ##                                   ip='192.168.10.113',
-        ##                                   port=8081,
-        ##                                   params={'VR 2': [('iq_rxrate', 32), ]},)
-        ##self._usrpVr1UplinkMon = Monitor(name='usrp',
-        ##                                 stopflag=ste,
-        ##                                 ip='192.168.10.104',
-        ##                                 port=8084,
-        ##                                 params={'VR1 IQ': [('vr1_iq_rxrate', 32), ],},)
-        ##self._usrpVr2UplinkMon = Monitor(name='usrp',
-        ##                                 stopflag=ste,
-        ##                                 ip='192.168.10.104',
-        ##                                 port=8084,
-        ##                                 params={'VR2 IQ': [('vr2_iq_rxrate', 32), ],},)
 
         self._erUplinkMon = ERMonitor(name='Uplink',
                                       stopflag=ste,
@@ -496,13 +423,12 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         # CPU Monitors
-        self._regionalCPUMon = CPUMonitor(name='regional-cpu', addr='localhost', stopflag=ste)
-        self._edgeCPUMon     = CPUMonitor(name='edge-cpu', addr='192.168.10.20', stopflag=ste)
+        self._regionalCPUMon = CPUMonitor(name='Regional', addr='localhost', stopflag=ste, label = self.ui.regionalCPULabel)
+        self._edgeCPUMon     = CPUMonitor(name='Edge', addr='192.168.10.20', stopflag=ste, label =self.ui.edgeCPULabel)
 
         # RAM Monitors
-        self._regionalRAMMon = RAMMonitor(name='regional-ram', addr = 'localhost', stopflag=ste)
-        self._edgeRAMMon     = RAMMonitor(name='edge-ram', addr = '192.168.10.20', stopflag=ste)
-
+        self._regionalRAMMon = RAMMonitor(name='Regional', addr = 'localhost', stopflag=ste)
+        self._edgeRAMMon     = RAMMonitor(name='Edge', addr = '192.168.10.20', stopflag=ste)
 
         # plots downlink
         self._plotters.append(
@@ -523,7 +449,6 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
 
-
         self._plotters.append(
             Plotter(plot=self.ui.usrpDownlinkPlot,
                     title='Downlink',
@@ -531,7 +456,6 @@ class MainWindow(QtGui.QMainWindow):
                     yrange=(0,31*10**6)
             )
         )
-
 
         # LCD downlinks
         palette = self.ui.vr1Split1DownlinkLCD.palette()
@@ -615,7 +539,7 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         palette = self.ui.usrpVr1DownlinkLCD.palette()
-        make_it_blue(palette)
+        make_it_red(palette)
         self.ui.usrpVr1DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr1DownlinkLCD,
@@ -624,7 +548,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.usrpVr1DownlinkAvgLCD.palette()
-        make_it_blue(palette)
+        make_it_red(palette)
         self.ui.usrpVr1DownlinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr1DownlinkAvgLCD,
@@ -634,7 +558,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.usrpVr2DownlinkLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.usrpVr2DownlinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr2DownlinkLCD,
@@ -643,7 +567,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.usrpVr2DownlinkAvgLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.usrpVr2DownlinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr2DownlinkAvgLCD,
@@ -720,7 +644,7 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         palette = self.ui.usrpVr1UplinkLCD.palette()
-        make_it_blue(palette)
+        make_it_red(palette)
         self.ui.usrpVr1UplinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr1UplinkLCD,
@@ -729,7 +653,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.usrpVr1UplinkAvgLCD.palette()
-        make_it_blue(palette)
+        make_it_red(palette)
         self.ui.usrpVr1UplinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr1UplinkAvgLCD,
@@ -740,7 +664,7 @@ class MainWindow(QtGui.QMainWindow):
         )
 
         palette = self.ui.usrpVr2UplinkLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.usrpVr2UplinkLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr2UplinkLCD,
@@ -749,7 +673,7 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
         palette = self.ui.usrpVr2UplinkAvgLCD.palette()
-        make_it_red(palette)
+        make_it_green(palette)
         self.ui.usrpVr2UplinkAvgLCD.setPalette(palette)
         self._plotters.append(
             LCDNumber(plot=self.ui.usrpVr2UplinkAvgLCD,
@@ -932,9 +856,17 @@ class MainWindow(QtGui.QMainWindow):
             )
         )
 
+        self._plotters.append(
+                ContainerMonitor(name = "containerMonitor",
+                    stopflag = ste,
+                    labelsEdge = (self.ui.edgeCPULabel, self.ui.edgeRAMLabel),
+                    labelsRegional = (self.ui.regionalCPULabel, self.ui.regionalRAMLabel),
+                    )
+        )
+
         self._timer = QtCore.QTimer()
         self._timer.timeout.connect(self._updatePlot)
-        self._timer.start(2000)
+        self._timer.start(1000)
 
     def migrateVr1Split1(self, button):
         server.stop_monitoring("vr1tx-split1")
@@ -949,9 +881,14 @@ class MainWindow(QtGui.QMainWindow):
             print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
     def migrateVr1Split2(self, button):
+        server.stop_monitoring("vr1tx-split1")
         server.stop_monitoring("vr1tx-split2")
+        server.stop_monitoring("vr1tx-split3")
         split_loc = str(button.text())
-        bs1.migrate('vr1tx-split2', split_loc)
+
+        bs1.stop()
+        bs1._bundle['vr1tx-split2']  =Container(name='vr1tx-split2', origin='gnuradio', host=split_loc)
+        bs1.start()
 
         if split_loc == "Regional":
             self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.jpg")))
@@ -972,6 +909,9 @@ class MainWindow(QtGui.QMainWindow):
         else:
             print("Unknown remote location at Vr1Split3: " + str(split_loc))
 
+        updateCPUPplot()
+        updateRAMplot()
+
     def migrateVr2Split(self, button):
         server.stop_monitoring("vr2tx")
         split_loc = str(button.text())
@@ -984,20 +924,19 @@ class MainWindow(QtGui.QMainWindow):
         else:
             print("Unknown remote location at Vr2Split: " + str(split_loc))
 
-
     def closeEvent(self, event):
         self._stop_event.set()
-        #manager.stopAll()
+        manager.stopAll()
 
     def _updatePlot(self):
         for p in self._plotters:
             p.update()
 
     def vr1Amplitude(self, value):
-        server.set_vr1_amplitude(value/100.0)
+        server.set_vr1_amplitude(value/1000.0)
 
     def vr2Amplitude(self, value):
-        server.set_vr2_amplitude(value/100.0)
+        server.set_vr2_amplitude(value/1000.0)
 
 def init():
     manager.create(bs1)

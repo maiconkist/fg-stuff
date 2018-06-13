@@ -67,7 +67,6 @@ class Manager():
     def create(self, bundle):
         bundle.create()
 
-
     def stopAll(self):
         for l in self._container:
             l.stop()

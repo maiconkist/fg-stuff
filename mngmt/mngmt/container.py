@@ -1,4 +1,5 @@
 from mngmt import Manager
+import subprocess
 
 class Container(object):
 
@@ -78,8 +79,9 @@ class Container(object):
         print("Executing command `" + str(cmd) + "` in " + str(self.name) + "@" + str(self._host_name))
         if self.is_running:
             cmd_l = [c for c in cmd.split(' ')]
-            print(cmd_l)
             cmd_ret = self._pylxd_container.execute(cmd_l)
+            print(cmd_l)
+            cmd_ret =  subprocess.check_output(cmd_l, shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         else:
             print(self.name + " is not running. Cannot execute command `" + cmd + "`")
 
@@ -219,18 +221,21 @@ class VirtualRadioSplit(ContainerBundle):
 
         self.addContainer(name=name + '-split1', origin='gnuradio',
                           host=host_split1,
-                          #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split1',
-                          stop_cmd='killall python3')
+                          #start_cmd='/root/fg-stuff/start_container.sh ' + name + '-split1',
+                          #stop_cmd='killall python3; killall python; killall python2')
+                          )
 
         self.addContainer(name=name + '-split2', origin='gnuradio',
                           host=host_split2,
-                          #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split2',
-                          stop_cmd='killall python3')
+                          #start_cmd='/root/fg-stuff/start_container.sh ' + name + '-split2',
+                          #stop_cmd='killall python3; killall python; killall python2')
+                          )
 
         self.addContainer(name=name + '-split3', origin='gnuradio',
                           host=host_split3,
-                          #start_cmd='bash /root/fg-stuff/start_container.sh ' + name + '-split3',
-                          stop_cmd='killall python3')
+                          #start_cmd='/root/fg-stuff/start_container.sh ' + name + '-split3',
+                          #stop_cmd='killall python3; killall python; killall python2')
+                          )
 
 class VirtualRadioSingle(Container):
     def __init__(self, name, host, mode):
@@ -242,7 +247,8 @@ class VirtualRadioSingle(Container):
                            origin='gnuradio',
                            host=host,
                            #start_cmd='bash /root/fg-stuff/start_container.sh ' + mode,
-                           stop_cmd='killall python3')
+                           #stop_cmd='killall python3; killall python; killall python2')
+                           )
 
 class USRP(Container):
     def __init__(self, name, host):
@@ -251,7 +257,8 @@ class USRP(Container):
                            origin='gnuradio',
                            host=host,
                            #start_cmd='bash /root/fg-stuff/start_container.sh usrp',
-                           stop_cmd='killall python3')
+                           #stop_cmd='killall python3; killall python; killall python2')
+                           )
 
 class USRPHydra(Container):
     def __init__(self, name, host):
@@ -260,4 +267,5 @@ class USRPHydra(Container):
                            origin='gnuradio',
                            host=host,
                            #start_cmd='bash /root/fg-stuff/start_container.sh usrphydra',
-                           stop_cmd='killall python3')
+                           #stop_cmd='killall python3')
+                            )

@@ -1413,7 +1413,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>300e3</value>
+      <value>200e3</value>
     </param>
     <param>
       <key>type</key>
@@ -1468,7 +1468,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>300e3</value>
+      <value>200e3</value>
     </param>
     <param>
       <key>type</key>

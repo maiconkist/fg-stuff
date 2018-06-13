@@ -70,7 +70,6 @@ controller.add_module(moduleName="discovery",
 def new_node(node):
     print("New node appeared: Name: %s" % (node.name, ))
 
-
     with ILock("controller"):
         if node.name in valid_nodes: 
             nodes[node.name] = node
@@ -153,14 +152,15 @@ def main():
         gevent.sleep(2)
 
     while True:
-            for node in nodes.values():
-                with ILock("controller"):
+            with ILock("controller"):
+                for node in nodes.values():
                     print("Getting info from: " + node.name)
                     values[node.name] = controller.node(node).radio.get_parameters(getters[node.name])
 
                     if node.name == 'usrp':
                         controller.node(nodes['usrp']).radio.set_parameters({'amplitude1': amplitude1, 'amplitude2': amplitude2})
-            
+
+
             gevent.sleep(1)
 
 if __name__ == '__main__':

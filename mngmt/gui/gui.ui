@@ -24,11 +24,11 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage1">
      <attribute name="title">
-      <string>Virtual Radio 1</string>
+      <string>LTE</string>
      </attribute>
      <widget class="QRadioButton" name="radioButton">
       <property name="geometry">
@@ -515,7 +515,7 @@
        <number>100</number>
       </property>
       <property name="value">
-       <number>10</number>
+       <number>50</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -563,7 +563,7 @@
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Virtual Radio 2</string>
+      <string>NB-IoT</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
@@ -861,7 +861,7 @@
        <number>100</number>
       </property>
       <property name="value">
-       <number>10</number>
+       <number>50</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -1180,7 +1180,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabWidget_3Page1">
      <attribute name="title">
@@ -1611,6 +1611,58 @@
        <string>Current:</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_33">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>60</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge CPU usage:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="edgeCPULabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>60</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="regionalCPULabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_34">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Regional CPU usage:</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -1800,6 +1852,58 @@
        <enum>QLCDNumber::Flat</enum>
       </property>
      </widget>
+     <widget class="QLabel" name="regionalRAMLabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_35">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>60</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge RAM usage:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="edgeRAMLabel">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>60</y>
+        <width>341</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_36">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Regional RAM usage:</string>
+      </property>
+     </widget>
      <zorder>edgeRAMPlot</zorder>
      <zorder>regionalRAMPlot</zorder>
      <zorder>label_27</zorder>
@@ -1810,6 +1914,10 @@
      <zorder>edgeRAMAvgLCD</zorder>
      <zorder>label_30</zorder>
      <zorder>edgeRAMLCD</zorder>
+     <zorder>regionalRAMLabel</zorder>
+     <zorder>label_35</zorder>
+     <zorder>edgeRAMLabel</zorder>
+     <zorder>label_36</zorder>
     </widget>
    </widget>
   </widget>

@@ -2,7 +2,7 @@
 ip = 192.168.10.101
 headerport = 2100
 payloadport = 2101
-throttle=100000e9
+throttle=1e6
 xmlrpcport = 8081
 
 [split2]
@@ -21,7 +21,7 @@ port = 2300
 xmlrpcport = 8081
 
 [vr2_tx]
-ip = 192.168.10.113
+ip=192.168.10.113
 port = 2300
 xmlrpcport = 8081
 
