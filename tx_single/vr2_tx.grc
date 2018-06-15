@@ -1147,7 +1147,7 @@
     </param>
     <param>
       <key>samples_per_second</key>
-      <value>samprate</value>
+      <value>200e3</value>
     </param>
     <param>
       <key>type</key>

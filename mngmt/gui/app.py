@@ -43,7 +43,6 @@ qtg.setConfigOption('foreground', (0, 0, 0))
 
 MAX_ITEMS = 50
 
-
 class WiSHFULMonitor(threading.Thread):
 
     def __init__(self, name, stopflag, server, func):
@@ -53,7 +52,7 @@ class WiSHFULMonitor(threading.Thread):
         self._func = func
         self.rates = []
         self.server = server
-
+        self._lvalid = None
 
     def run(self):
         print("Starting thread to monitor " + self.name)
@@ -64,7 +63,10 @@ class WiSHFULMonitor(threading.Thread):
     def update(self):
         try:
             s = float(getattr(self.server, "get_" + self._func)())
-            if len(self.rates) > 3 and s == self.rates[-1] and s == self.rates[-2] and s == self.rates[-3]:
+            if len(self.rates) > 3 and ((s == self.rates[-1]) and s == self.rates[-2] and s == self.rates[-3]):
+                self._lvalid = s
+                s = 0.0
+            elif self.rates[-1] == 0.0 and self._lvalid == s:
                 s = 0.0
             self.rates.append(s)
             while len(self.rates) > MAX_ITEMS:
@@ -887,7 +889,7 @@ class MainWindow(QtGui.QMainWindow):
         split_loc = str(button.text())
 
         bs1.stop()
-        bs1._bundle['vr1tx-split2']  =Container(name='vr1tx-split2', origin='gnuradio', host=split_loc)
+        bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host=split_loc)
         bs1.start()
 
         if split_loc == "Regional":
@@ -912,6 +914,55 @@ class MainWindow(QtGui.QMainWindow):
         updateCPUPplot()
         updateRAMplot()
 
+
+    def vr1Toogled(self, toogled):
+        if self.ui.vr1ToogleAll.text() == "Stop All":
+            server.stop_monitoring("vr1tx-split1")
+            server.stop_monitoring("vr1tx-split2")
+            server.stop_monitoring("vr1tx-split3")
+            bs1.stop()
+            self.ui.vr1ToogleAll.setText("Start All")
+
+        elif self.ui.vr1ToogleAll.text() == "Start All":
+            bs1.start()
+            self.ui.vr1ToogleAll.setText("Stop All")
+
+
+    def vr1MigrateAllEdge(self, toogled):
+        print("--------------------------------------------------------------")
+        server.stop_monitoring("vr1tx-split1")
+        server.stop_monitoring("vr1tx-split2")
+        server.stop_monitoring("vr1tx-split3")
+ 
+        print("11111111111111111111111111111111111111111111111111111111111111")
+        bs1.stop()
+        print("22222222222222222222222222222222222222222222222222222222222222")
+        bs1._bundle['vr1tx-split1'] = Container(name='vr1tx-split1', origin='gnuradio', host='Edge')
+        bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host='Edge')
+        bs1._bundle['vr1tx-split3'] = Container(name='vr1tx-split3', origin='gnuradio', host='Edge')
+        bs1.start()
+
+        print("33333333333333333333333333333333333333333333333333333333333333")
+
+        self.ui.vr1Split1RadioEdge.setChecked(True)
+        self.ui.vr1Split2RadioEdge.setChecked(True)
+        self.ui.vr1Split3RadioEdge.setChecked(True)
+
+    def vr1MigrateAllRegional(self, toogled):
+        server.stop_monitoring("vr1tx-split1")
+        server.stop_monitoring("vr1tx-split2")
+        server.stop_monitoring("vr1tx-split3")
+
+        bs1.stop()
+        bs1._bundle['vr1tx-split1'] = Container(name='vr1tx-split1', origin='gnuradio', host='Regional')
+        bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host='Regional')
+        bs1._bundle['vr1tx-split3'] = Container(name='vr1tx-split3', origin='gnuradio', host='Regional')
+        bs1.start()
+
+        self.ui.vr1Split1RadioRegional.setChecked(True)
+        self.ui.vr1Split2RadioRegional.setChecked(True)
+        self.ui.vr1Split3RadioRegional.setChecked(True)
+
     def migrateVr2Split(self, button):
         server.stop_monitoring("vr2tx")
         split_loc = str(button.text())
@@ -924,6 +975,21 @@ class MainWindow(QtGui.QMainWindow):
         else:
             print("Unknown remote location at Vr2Split: " + str(split_loc))
 
+    def vr2Toogled(self, toogled):
+        if self.ui.vr2ToogleAll.text() == "Stop All":
+            server.stop_monitoring("vr2tx")
+            bs2.stop()
+            self.ui.vr2ToogleAll.setText("Start All")
+        elif self.ui.vr2ToogleAll.text() == "Start All":
+            bs2.start()
+            self.ui.vr2ToogleAll.setText("Stop All")
+
+    def vr1Amplitude(self, value):
+        server.set_vr1_amplitude(value/1000.0)
+
+    def vr2Amplitude(self, value):
+        server.set_vr2_amplitude(value/1000.0)
+
     def closeEvent(self, event):
         self._stop_event.set()
         manager.stopAll()
@@ -932,11 +998,6 @@ class MainWindow(QtGui.QMainWindow):
         for p in self._plotters:
             p.update()
 
-    def vr1Amplitude(self, value):
-        server.set_vr1_amplitude(value/1000.0)
-
-    def vr2Amplitude(self, value):
-        server.set_vr2_amplitude(value/1000.0)
 
 def init():
     manager.create(bs1)

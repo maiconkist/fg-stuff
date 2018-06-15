@@ -96,6 +96,7 @@ class Container(object):
         else:
             try:
                 self._pylxd_container.start(wait=True)
+                #subprocess.check_output("lxc start " + self.name,  )
             except Exception as e:
                 print(e)
 
@@ -119,11 +120,12 @@ class Container(object):
             self.execute(self._stop_cmd)
 
         print("Stopping container " + self.name)
-        while self.is_running:
-            try:
-                self._pylxd_container.stop(wait=True)
-            except Exception as e:
-                print("Error stopping container 1: " + str(e))
+        self._pylxd_container.stop(wait=True)
+        #while self.is_running:
+        #    try:
+        #        self._pylxd_container.stop(wait=True)
+        #    except Exception as e:
+        #        print("Error stopping container 1: " + str(e))
 
     def destroy(self):
         self.stop()

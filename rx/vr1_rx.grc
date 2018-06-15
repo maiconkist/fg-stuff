@@ -410,7 +410,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -657,7 +657,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -2149,7 +2149,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>txgain</value>
+      <value>1.0</value>
     </param>
     <param>
       <key>ant10</key>
@@ -4291,7 +4291,7 @@
     <key>xmlrpc_server</key>
     <param>
       <key>addr</key>
-      <value>127.0.0.17</value>
+      <value>127.0.0.1</value>
     </param>
     <param>
       <key>alias</key>
