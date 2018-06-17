@@ -17,25 +17,40 @@ except AttributeError:
         return s
 
 wishful_controller_ip = ("127.0.0.1", 44444)
+
+
 server = xmlrpc.client.ServerProxy("http://%s:%d" % wishful_controller_ip )
 
 manager = Manager()
-manager.addHost(host_name="Regional",
-        ip="192.168.10.10:8443",
-        cert=("./tests/lxd.crt", "./tests/lxd.key"))
-manager.addHost(host_name="Edge",
-        ip="192.168.10.20:8443",
-        cert=("./tests/lxd.crt", "./tests/lxd.key"))
 
-Container(name='usrp', origin='gnuradio', host='Edge', manageable=False)
 
-bs1 = VirtualRadioSplit(name='vr1tx',
-                        host_split1='Regional',
-                        host_split2='Regional',
-                        host_split3='Regional')
-bs2 = VirtualRadioSingle(name='vr2tx',
-                            host='Edge',
-                            mode='vr2tx')
+VM = True
+
+if not VM:
+    manager.addHost(host_name="Regional",
+            ip="192.168.10.10:8443",
+            cert=("./tests/lxd.crt", "./tests/lxd.key"))
+    manager.addHost(host_name="Edge",
+            ip="192.168.10.20:8443",
+            cert=("./tests/lxd.crt", "./tests/lxd.key"))
+
+    Container(name='usrp', origin='gnuradio', host='Edge', manageable=False)
+
+    bs1 = VirtualRadioSplit(name='vr1tx',
+                            host_split1='Regional',
+                            host_split2='Regional',
+                            host_split3='Regional')
+    bs2 = VirtualRadioSingle(name='vr2tx',
+                                host='Edge',
+                                mode='vr2tx')
+else:
+    class Server():
+        def __init__(self):
+            pass
+        def stop_monitoring(self, st):
+            pass
+
+    server = Server()
 
 qtg.setConfigOption('background', (232, 232, 232))
 qtg.setConfigOption('foreground', (0, 0, 0))
@@ -94,13 +109,14 @@ class ContainerMonitor(object):
         self.labelsRegional = labelsRegional
 
     def update(self):
-        clist = manager.getLXDContainerList("Edge")
-        for i in self.labelsEdge:
-            i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
+        if not VM:
+            clist = manager.getLXDContainerList("Edge")
+            for i in self.labelsEdge:
+                i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
 
-        clist = manager.getLXDContainerList("Regional")
-        for i in self.labelsRegional:
-            i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
+            clist = manager.getLXDContainerList("Regional")
+            for i in self.labelsRegional:
+                i.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
 
 class RAMMonitor(threading.Thread):
 
@@ -181,8 +197,9 @@ class CPUMonitor(threading.Thread):
             except:
                 avgs.append(self.rates[i])
 
-        clist = manager.getLXDContainerList(self.name)
-        self.label.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
+        if not VM:
+            clist = manager.getLXDContainerList(self.name)
+            self.label.setText(", ".join([r.name for r in clist if r.status == 'Running' ]))
 
         return {self.name : avgs}
 
@@ -229,28 +246,30 @@ class ERMonitor(threading.Thread):
         val = 0
         txt = ""
 
-        for p1, p2 in self.links:
-            if p1 not in self._monitors.keys() or p2 not in self._monitors.keys():
-                continue
-            c1 = self._manager.getContainer(p1)
-            c2 = self._manager.getContainer(p2)
-            if c1.is_running and c2.is_running:
-                if c1._host_name != c2._host_name:
-                    tmp = OrderedDict(self._monitors[p1].getData())
-                    if len(tmp.keys()) > 1:
-                        raise Exception("More than 1 key in hashtable")
-                    if len(tmp[list(tmp.keys())[0]]) > 0:
-                        val += tmp[list(tmp.keys())[0]][-1]
-                        txt += p1 + ", "
-            else:
-                print(c1.name + ' is not running') if c1.is_running == False else None
-                print(c2.name + ' is not running') if c2.is_running == False else None
 
-        self._rates.append(val)
-        self._label.setText(txt)
+        if not VM:
+            for p1, p2 in self.links:
+                if p1 not in self._monitors.keys() or p2 not in self._monitors.keys():
+                    continue
+                c1 = self._manager.getContainer(p1)
+                c2 = self._manager.getContainer(p2)
+                if c1.is_running and c2.is_running:
+                    if c1._host_name != c2._host_name:
+                        tmp = OrderedDict(self._monitors[p1].getData())
+                        if len(tmp.keys()) > 1:
+                            raise Exception("More than 1 key in hashtable")
+                        if len(tmp[list(tmp.keys())[0]]) > 0:
+                            val += tmp[list(tmp.keys())[0]][-1]
+                            txt += p1 + ", "
+                else:
+                    print(c1.name + ' is not running') if c1.is_running == False else None
+                    print(c2.name + ' is not running') if c2.is_running == False else None
 
-        while len(self._rates) > MAX_ITEMS:
-            self._rates.pop(0)
+            self._rates.append(val)
+            self._label.setText(txt)
+
+            while len(self._rates) > MAX_ITEMS:
+                self._rates.pop(0)
 
     def run(self):
         for m in self._monitors.values():
@@ -304,6 +323,9 @@ class LCDNumber():
 
     def update(self):
         if not self._plot.isVisible():
+            return
+
+        if VM:
             return
 
         if self._avg == False:
@@ -426,11 +448,19 @@ class MainWindow(QtGui.QMainWindow):
 
         # CPU Monitors
         self._regionalCPUMon = CPUMonitor(name='Regional', addr='localhost', stopflag=ste, label = self.ui.regionalCPULabel)
-        self._edgeCPUMon     = CPUMonitor(name='Edge', addr='192.168.10.20', stopflag=ste, label =self.ui.edgeCPULabel)
+
+        if not VM:
+            self._edgeCPUMon     = CPUMonitor(name='Edge', addr='192.168.10.20', stopflag=ste, label =self.ui.edgeCPULabel)
+        else:
+            self._edgeCPUMon     = CPUMonitor(name='Edge', addr='localhost', stopflag=ste, label =self.ui.edgeCPULabel)
 
         # RAM Monitors
         self._regionalRAMMon = RAMMonitor(name='Regional', addr = 'localhost', stopflag=ste)
-        self._edgeRAMMon     = RAMMonitor(name='Edge', addr = '192.168.10.20', stopflag=ste)
+
+        if not VM:
+            self._edgeRAMMon     = RAMMonitor(name='Edge', addr = '192.168.10.20', stopflag=ste)
+        else:
+            self._edgeRAMMon     = RAMMonitor(name='Edge', addr = 'localhost', stopflag=ste)
 
         # plots downlink
         self._plotters.append(
@@ -873,12 +903,14 @@ class MainWindow(QtGui.QMainWindow):
     def migrateVr1Split1(self, button):
         server.stop_monitoring("vr1tx-split1")
         split_loc = str(button.text())
-        bs1.migrate('vr1tx-split1', split_loc)
+
+        if not VM:
+            bs1.migrate('vr1tx-split1', split_loc)
 
         if split_loc == "Regional":
-            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_d.jpg")))
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.png")))
         elif split_loc == "Edge":
-            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.jpg")))
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_a.png")))
         else:
             print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
@@ -888,30 +920,36 @@ class MainWindow(QtGui.QMainWindow):
         server.stop_monitoring("vr1tx-split3")
         split_loc = str(button.text())
 
-        bs1.stop()
-        bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host=split_loc)
-        bs1.start()
+
+        if not VM:
+            bs1.stop()
+            bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host=split_loc)
+            bs1.start()
 
         if split_loc == "Regional":
-            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.jpg")))
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.png")))
         elif split_loc == "Edge":
-            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.jpg")))
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.png")))
         else:
             print("Unknown remote location at Vr1Split2: " + str(split_loc))
 
     def migrateVr1Split3(self, button):
         server.stop_monitoring("vr1tx-split3")
         split_loc = str(button.text())
-        bs1.migrate('vr1tx-split3', split_loc)
+
+        if not VM:
+            bs1.migrate('vr1tx-split3', split_loc)
 
         if split_loc == "Regional":
-            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_a.jpg")))
+            print("que loucura")
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_d.png")))
         elif split_loc == "Edge":
-            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_b.jpg")))
+            print("bicho")
+            self.ui.vr1SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr1_split_c.png")))
         else:
             print("Unknown remote location at Vr1Split3: " + str(split_loc))
 
-        updateCPUPplot()
+        updateCPUplot()
         updateRAMplot()
 
 
@@ -920,11 +958,14 @@ class MainWindow(QtGui.QMainWindow):
             server.stop_monitoring("vr1tx-split1")
             server.stop_monitoring("vr1tx-split2")
             server.stop_monitoring("vr1tx-split3")
-            bs1.stop()
+
+            if not VM:
+                bs1.stop()
             self.ui.vr1ToogleAll.setText("Start All")
 
         elif self.ui.vr1ToogleAll.text() == "Start All":
-            bs1.start()
+            if not VM:
+                bs1.start()
             self.ui.vr1ToogleAll.setText("Stop All")
 
 
@@ -933,16 +974,15 @@ class MainWindow(QtGui.QMainWindow):
         server.stop_monitoring("vr1tx-split1")
         server.stop_monitoring("vr1tx-split2")
         server.stop_monitoring("vr1tx-split3")
- 
-        print("11111111111111111111111111111111111111111111111111111111111111")
-        bs1.stop()
-        print("22222222222222222222222222222222222222222222222222222222222222")
+
+        if not VM:
+            bs1.stop()
         bs1._bundle['vr1tx-split1'] = Container(name='vr1tx-split1', origin='gnuradio', host='Edge')
         bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host='Edge')
         bs1._bundle['vr1tx-split3'] = Container(name='vr1tx-split3', origin='gnuradio', host='Edge')
-        bs1.start()
 
-        print("33333333333333333333333333333333333333333333333333333333333333")
+        if not VM:
+            bs1.start()
 
         self.ui.vr1Split1RadioEdge.setChecked(True)
         self.ui.vr1Split2RadioEdge.setChecked(True)
@@ -953,11 +993,14 @@ class MainWindow(QtGui.QMainWindow):
         server.stop_monitoring("vr1tx-split2")
         server.stop_monitoring("vr1tx-split3")
 
-        bs1.stop()
-        bs1._bundle['vr1tx-split1'] = Container(name='vr1tx-split1', origin='gnuradio', host='Regional')
-        bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host='Regional')
-        bs1._bundle['vr1tx-split3'] = Container(name='vr1tx-split3', origin='gnuradio', host='Regional')
-        bs1.start()
+
+        if not VM:
+            bs1.stop()
+            bs1._bundle['vr1tx-split1'] = Container(name='vr1tx-split1', origin='gnuradio', host='Regional')
+            bs1._bundle['vr1tx-split2'] = Container(name='vr1tx-split2', origin='gnuradio', host='Regional')
+            bs1._bundle['vr1tx-split3'] = Container(name='vr1tx-split3', origin='gnuradio', host='Regional')
+
+            bs1.start()
 
         self.ui.vr1Split1RadioRegional.setChecked(True)
         self.ui.vr1Split2RadioRegional.setChecked(True)
@@ -966,22 +1009,26 @@ class MainWindow(QtGui.QMainWindow):
     def migrateVr2Split(self, button):
         server.stop_monitoring("vr2tx")
         split_loc = str(button.text())
-        bs2.migrate(split_loc)
+
+        if not VM:
+            bs2.migrate(split_loc)
 
         if split_loc == "Regional":
-            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_a.jpg")))
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_a.png")))
         elif split_loc == "Edge":
-            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_b.jpg")))
+            self.ui.vr2SplitView.setPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/vr2_split_b.png")))
         else:
             print("Unknown remote location at Vr2Split: " + str(split_loc))
 
     def vr2Toogled(self, toogled):
         if self.ui.vr2ToogleAll.text() == "Stop All":
             server.stop_monitoring("vr2tx")
-            bs2.stop()
+            if not VM:
+                bs2.stop()
             self.ui.vr2ToogleAll.setText("Start All")
         elif self.ui.vr2ToogleAll.text() == "Start All":
-            bs2.start()
+            if not VM:
+                bs2.start()
             self.ui.vr2ToogleAll.setText("Stop All")
 
     def vr1Amplitude(self, value):
@@ -991,8 +1038,9 @@ class MainWindow(QtGui.QMainWindow):
         server.set_vr2_amplitude(value/1000.0)
 
     def closeEvent(self, event):
-        self._stop_event.set()
-        manager.stopAll()
+        if not VM:
+            self._stop_event.set()
+            manager.stopAll()
 
     def _updatePlot(self):
         for p in self._plotters:
@@ -1013,7 +1061,9 @@ def init():
         time.sleep(1)
 
 if __name__ == '__main__':
-    init()
+
+    if not VM:
+        init()
     app = QtGui.QApplication(sys.argv)
     w = MainWindow()
     w.show()
